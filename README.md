@@ -8,7 +8,6 @@ I have three potential themes that I want to tackle while I am doing my PhD.
 
 <ol>
   <li> Recovering distributed IP parameters from airborne time domain EM data </li>
-  
-note ::
-
-  ...
+  <li> Galvanic source IP </li>
+  <li> Frequency domain IP </li>  
+</ol>
