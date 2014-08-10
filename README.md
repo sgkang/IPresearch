@@ -1,4 +1,3 @@
-IPresearch_DC
-=============
+Seogi's IP research
+===================
 
-IP research without any EM coupling
