@@ -11,3 +11,7 @@ I have three potential themes that I want to tackle while I am doing my PhD.
   <li> Galvanic source IP </li>
   <li> Frequency domain IP </li>  
 </ol>
+
+Now I am working on the first topic and started putting my researches on web through github. 
+If you want to see my current progresses about this topic, see this <a href="http://www.seogi.me/s/research/atemip.html">web page </a>
+
