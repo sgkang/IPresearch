@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
@@ -66,7 +67,6 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="">What is induced polarization ?</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#mechansims-of-ip">Mechansims of IP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#complex-conductivity">Complex conductivity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#maxwell-s-equations">Maxwell&#8217;s equations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#conceptual-model">Conceptual model</a></li>
 </ul>
 </li>
@@ -192,18 +192,119 @@
 \newcommand{\sigpert}{\delta\sigma}\]</div>
 <div class="section" id="what-is-induced-polarization">
 <h1>What is induced polarization ?<a class="headerlink" href="#what-is-induced-polarization" title="Permalink to this headline">¶</a></h1>
-<p>Induced polarizatino (IP) phenmenon is simply considered as dispersive electrical conductivity effect on electromagnetic (EM) response. Typically in direct current (DC)-IP application IP phenomenon is usually considered as overvoltage response in on-time.</p>
+<p>Induced polarization (IP) phenmenon is simply considered as dispersive electrical conductivity effect on electromagnetic (EM) response. There are few models including Cole-Cole and stretched exponential models.
+The mosted used application is direct current (DC)-IP application, and in this case IP phenomenon is typically considered as overvoltage response in on-time. A simple understanding of this phenomenon is following: polarization charge builds up on earth, which acts like a capacitor, and this impedes the current flow. Decreased ability of current flow can be considered as the lowered conductivity, which generates overvoltage response as shown below.</p>
+<div class="align-center figure">
+<img alt="alternate text" src="../_images/DCIPcurve.png" style="width: 400px;" />
+<p class="caption">Overvoltage effect in DC-IP measurments.</p>
+</div>
+<p>This is a typical IP response for a specific geophysical application. For different EM application, IP phenomenon may induce different response from overvoltage effect. For instance, in airborne time domain EM data, which uses coincident loop system, those are negative values.</p>
 <div class="section" id="mechansims-of-ip">
 <h2>Mechansims of IP<a class="headerlink" href="#mechansims-of-ip" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="constricity-polarization">
+<h3>Constricity polarization<a class="headerlink" href="#constricity-polarization" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="membrane-polarization">
+<h3>Membrane polarization<a class="headerlink" href="#membrane-polarization" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="constriccity-polarization">
+<h3>Constriccity polarization<a class="headerlink" href="#constriccity-polarization" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="electrode-polarization">
+<h3>Electrode polarization<a class="headerlink" href="#electrode-polarization" title="Permalink to this headline">¶</a></h3>
+</div>
 </div>
 <div class="section" id="complex-conductivity">
 <h2>Complex conductivity<a class="headerlink" href="#complex-conductivity" title="Permalink to this headline">¶</a></h2>
+<p>IP phenomenon in EM responses can be explained by complex conductivity model, which is frequency dependent. An often-used representation for complex conductivity in the frequency domain is the Cole-Cole model:</p>
+<div class="math" id="equation-ColeCole">
+<span class="eqno">(1)</span>\[\sigma(\omega) = \sigma_{\infty} - \sigma_{\infty}\frac{\eta}{1+(1-\eta)(\imath\omega\tau)^c} = \sigma_{\infty} + \triangle\sigma(\omega)\]</div>
+<p>where <span class="math">\(\sigma_{\infty}\)</span> is the conductivity at infinite frequency, <span class="math">\(\eta\)</span> is the intrinsic chareability, <span class="math">\(\tau\)</span> is the time constant and <span class="math">\(c\)</span> is the frequency dependency. By applying inverse Fourier transform with time dependency, <span class="math">\(e^{\imath\omega t}\)</span>, we have</p>
+<div class="math" id="equation-sigma_time">
+<span class="eqno">(2)</span>\[\begin{equation}
+        \sigma(t) = \mathscr{F}^{-1}[\sigma(\omega)] = \sigma_{\infty}\delta(t) + \triangle\sigma(t)
+\end{equation}\]</div>
+<p>where <span class="math">\(\delta(t)\)</span> is Dirac delta function and <span class="math">\(\mathscr{F}^{-1}[\cdot]\)</span> is inverse Fourier transform operator. Assuming <span class="math">\(c=1\)</span>, we can easily evaluate <span class="math">\(\triangle\sigma(t)\)</span>, and this corresponds to Debye model. By evaluating inverse Fourier transform of <span class="math">\(\dsig(\omega)\)</span>, we have</p>
+<div class="math" id="equation-deltasigma_time">
+<span class="eqno">(3)</span>\[\begin{equation}
+        \dsig(t)  = -\siginf\frac{\eta}{(1-\eta)\tau}e^{-\frac{t}{(1-\eta)\tau}}u(t),
+\end{equation}\]</div>
+<p>where <span class="math">\(u(t)\)</span> is Heaviside step function.</p>
+<div class="align-center figure">
+<img alt="alternate text" src="../_images/FDandTDCole.png" style="width: 800px;" />
+<p class="caption">Cole-Cole model in frequency domain and time domain. Left and right panel indicate frequency and time domain Cole-Cole model, respectively.</p>
 </div>
-<div class="section" id="maxwell-s-equations">
-<h2>Maxwell&#8217;s equations<a class="headerlink" href="#maxwell-s-equations" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="conceptual-model">
 <h2>Conceptual model<a class="headerlink" href="#conceptual-model" title="Permalink to this headline">¶</a></h2>
+<p>Consider Maxwell&#8217;s equations in time domain:</p>
+<div class="math" id="equation-total_farad">
+<span class="eqno">(4)</span>\[\begin{equation}
+        \curl{\e} = -\frac{\partial \b}{\partial t}
+\end{equation}\]</div>
+<div class="math" id="equation-total_coulomb">
+<span class="eqno">(5)</span>\[\begin{equation}
+        \curl{\frac{1}{\mu} \b} - \j= \j_{s}
+\end{equation}\]</div>
+<p>where <span class="math">\(\e\)</span> is the electric field (<cite>V/m</cite>), <span class="math">\(\b\)</span> is the magnetic flux density (<span class="math">\(Wb/m^2\)</span>) and <span class="math">\(\mu\)</span> is the magnetic permeability (<cite>H/m</cite>). Here <span class="math">\(\j\)</span> is the conduction current. In the frequency domain the current density <span class="math">\(\J\)</span> is related to conductivity via <span class="math">\(\J(\omega) = \sigma(\omega)\E(\omega)\)</span> where <span class="math">\(\E\)</span> is the electric field. Substituting equation <a href="#equation-ColeCole">(1)</a> yields:</p>
+<div class="math">
+\[\begin{equation}
+        \J(\omega) = \siginf\E(\omega)+\triangle\sigma(\omega)\E(\omega) =\siginf\E(\omega)+\vec{J}_a(\omega),
+\end{equation}\]</div>
+<p>where <span class="math">\(\J^{\ a}(\omega)\)</span> is the anomalous current density.
+Converting this relationship to time domain using a Fourier transform yields:</p>
+<div class="math" id="equation-ohmslaw1">
+<span class="eqno">(6)</span>\[\begin{equation}
+        \j(t) = \sigma(t)\otimes \e(t)
+\end{equation}\]</div>
+<p>where <span class="math">\(\otimes\)</span> indicates time convolution. For causal signals, which is defined when <cite>t ge 0</cite>, convolution between <cite>a(t)</cite> and <cite>b(t)</cite> can be written as</p>
+<div class="math" id="equation-convolution">
+<span class="eqno">(7)</span>\[\begin{equation}
+        a(t) \otimes b(t) = \int_0^t a(u) b(t-u) du.
+\end{equation}\]</div>
+<p>That is the current density depends upon the previous history of the electric field. Substituting equation :eq: <cite>sigma_time</cite> yields:</p>
+<div class="math" id="equation-ohmslaw2">
+<span class="eqno">(8)</span>\[\begin{equation}
+        \j(t) = \siginf\e(t) + \dsig(t)\otimes\e(t) = \siginf\e(t) + \j^{\ a}(t),
+\end{equation}\]</div>
+<p>where <span class="math">\(\j^{\ a}(t) = \dsig(t)\otimes\e(t)\)</span>.</p>
+<p>As an example consider a chargeable block with the complex conductivity that is subjected to a constant electric field, <span class="math">\(\e^{ss}\)</span> at t = 0, and it does not change due to a chargeable body thus <span class="math">\(\e(t) = \e^{ss}u(t)\)</span>.</p>
+<div class="align-center figure">
+<img alt="alternate text" src="../_images/ChargeableBlock.png" style="width: 400px;" />
+<p class="caption">A chargeable block with the complex conductivity, which is subjected to a constant electric field.</p>
+</div>
+<p>Due to this, the first term in equation <a href="#equation-ohmslaw2">(8)</a> can be considered as the current density if there were no polarization effects; the second term are the polarization currents. In our system where <span class="math">\(\e\)</span> is constant, those can be respectively considered as the fundamental current, <span class="math">\(\j^{F}\)</span> and the IP current <span class="math">\(\j^{IP}\)</span>, which is the same term as <span class="math">\(\j^{\ a}\)</span>. By using Cole-Cole model with <span class="math">\(c=1\)</span>  and evaluating convolution in the anomalous current density we have</p>
+<div class="math" id="equation-IPdensity">
+<span class="eqno">(9)</span>\[\begin{equation}
+        \j^{IP}(t) = -\eta\siginf [1-e^{-\frac{t}{(1-\eta)\tau}}]\e^{ss} = -\peta(t)\siginf\e^{ss}
+\end{equation}\]</div>
+<p>with the final value at <span class="math">\(t = \infty\)</span> yielding <span class="math">\(\j^{\ a}=-\eta\siginf\e^{ss}=-\eta\j^F\)</span>, and thus <span class="math">\(\j = \siginf(1-\eta)\e^{ss}\)</span>. That is, the polarization is a fraction, <span class="math">\(\eta\)</span> of the fundamental current density, <span class="math">\(\j^F\)</span>, and is in the opposite direction to <span class="math">\(\j^F\)</span>. This mathematical representation  about anomalous current density in terms of Cole-Cole model agrees with Seigel&#8217;s  result. Thus, we have total current:</p>
+<div class="math" id="equation-ohmslaw3">
+<span class="eqno">(10)</span>\[\begin{equation}
+        \j(t) = \j^{F}(t) + \j^{IP}(t) = \siginf(1-\peta(t))\e^{ss},
+\end{equation}\]</div>
+<p>where <span class="math">\(\peta(t) = \frac{\dsig(t)\otimes u(t)}{\siginf}\)</span>.
+We can define an effective conductivity as</p>
+<div class="math" id="equation-sigeff">
+<span class="eqno">(11)</span>\[\begin{equation}
+        \sigma_{eff}(t) = \frac{\j(t)}{\e^{ss}} = \siginf(1-\peta(t)) = \siginf + \delta\sigma(t).
+\end{equation}\]</div>
+<p>For <span class="math">\(t \rightarrow \infty\)</span>, <span class="math">\(\peta\rightarrow \eta\)</span> (the intrinsic chargeability) and <span class="math">\(\sigma_{eff} = \siginf(1-\eta)\)</span>, which is well used result.</p>
+<p>Conversely, based on equation <a href="#equation-sigeff">(11)</a>, we define an perturbed conductivity as</p>
+<div class="math" id="equation-sigpert">
+<span class="eqno">(12)</span>\[\begin{equation}
+        \delta\sigma(t) = -\siginf\peta(t) =\frac{\dsig(t)\otimes \e(t)}{\e^{ss}}
+\end{equation}\]</div>
+<p>Then we can rewrite equation <a href="#equation-ohmslaw3">(10)</a> as</p>
+<div class="math">
+\[\begin{equation}
+        \j(t) = (\siginf + \delta\sigma(t))\e(t)
+\end{equation}\]</div>
+<p>This is a fundamental statement of linearization in time domain electrical field IP (EIP)  and magnetic field IP (MIP) responses, since it allows us to expand Maxwell&#8217;s operator in terms of <span class="math">\(\sigpert(t)\)</span> for each time channel.</p>
+<div class="align-center figure">
+<img alt="alternate text" src="../_images/Convolution_es.png" style="width: 800px;" />
+<p class="caption">Convolution of time dependent conductivity (<span class="math">\(\sigma(t)\)</span>) and step-on electric field in x-direction.</p>
+</div>
 </div>
 </div>
 

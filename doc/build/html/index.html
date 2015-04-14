@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
@@ -66,7 +67,6 @@
 <li class="toctree-l1"><a class="reference internal" href="IPtheory/api_IPIntro.html">What is induced polarization ?</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="IPtheory/api_IPIntro.html#mechansims-of-ip">Mechansims of IP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="IPtheory/api_IPIntro.html#complex-conductivity">Complex conductivity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="IPtheory/api_IPIntro.html#maxwell-s-equations">Maxwell&#8217;s equations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="IPtheory/api_IPIntro.html#conceptual-model">Conceptual model</a></li>
 </ul>
 </li>
@@ -107,13 +107,17 @@
             
   <div class="section" id="recovering-distributed-ip-information-from-em-data">
 <h1>Recovering distributed IP information from EM data<a class="headerlink" href="#recovering-distributed-ip-information-from-em-data" title="Permalink to this headline">¶</a></h1>
-<p>Contents:</p>
+<p>The electrical conductivity of earth materials can be frequency dependent due to the build-up of charges that occur under the application of an electric field.  Effectively, the rock is electrically polarized. Polarization charges can accumulate whenever there is an electric field in a medium and so the transmitter can be a galvanic or inductive source. Although every measurments on time domain, based on the transmitting wavefore, electromagnetic (EM) response in time can be transformed to frequency domain so that we can have complex response, which has amplitude and phase.</p>
+<p>Currently, induced polarzation (IP) phenomenon EM data is broadly used in the areas including minining, ground water and oil and gas applications. Fundamental understanding of this phenomenon on laboratory scale has been throughly treated. However, extracting IP response on various types of EM data: galvanic / inductive / time / frequency to recover distribution of IP parameters has not been tackled yet.</p>
+<p>Therefore, for my PhD research, I clearly identify characteristics of IP responses in current EM systems. And decouple IP responses from the observation, to distinguish IP response embedded in the observation. For the restoration of distributed IP parameter, first I linearize IP response as a function of pseudo-chargeability. Natural next step is towards using non-linear kernel to restore instrinsic IP parameters from the earth.</p>
+</div>
+<div class="section" id="contents">
+<h1>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="IPtheory/api_IPIntro.html">What is induced polarization ?</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="IPtheory/api_IPIntro.html#mechansims-of-ip">Mechansims of IP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="IPtheory/api_IPIntro.html#complex-conductivity">Complex conductivity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="IPtheory/api_IPIntro.html#maxwell-s-equations">Maxwell&#8217;s equations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="IPtheory/api_IPIntro.html#conceptual-model">Conceptual model</a></li>
 </ul>
 </li>
@@ -165,7 +169,7 @@
 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
+            URL_ROOT:'',
             VERSION:'0.0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
