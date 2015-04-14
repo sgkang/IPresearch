@@ -154,3 +154,41 @@ def CondSphereAnalFunB(x, y, z, R, x0, y0, z0, sig1, sig2, E0, flag):
 		Hz[~ind] = sig1*(E0/r[~ind]**3*(R**3)*rf1*( y[~ind]))        
 
 	return np.reshape(mu_0*Hx, x.shape, order='F'), np.reshape(mu_0*Hy, x.shape, order='F'), np.reshape(mu_0*Hz, x.shape, order='F')
+
+
+
+def SphereGeometric(xyz, R, x0, y0, z0):
+    """
+    	Compute geometric factor a sphere 
+        * (x0,y0,z0)
+        * (x0, y0, z0 ): is the center location of sphere
+        * r: is the radius of the sphere
+
+    .. math::
+
+        \mathbf{E}_0 = E_0\hat{x}
+
+
+    """
+    x = xyz[:,0]-x0
+    y = xyz[:,1]-y0
+    z = xyz[:,2]-z0
+
+    ind = np.sqrt((x)**2+(y)**2+(z)**2 ) < R
+    r = Utils.mkvc(np.sqrt((x)**2+(y)**2+(z)**2 ))
+
+    Gx = np.zeros(x.size)
+    Gy = np.zeros(x.size)
+    Gz = np.zeros(x.size)
+
+    # Inside of the sphere
+    Gx[ind] = 1
+    Gy[ind] = 0.
+    Gz[ind] = 0.
+    # Outside of the sphere
+    Gx[~ind] = 1./r[~ind]**5*(R**3)*(2*x[~ind]**2-y[~ind]**2-z[~ind]**2)
+    Gy[~ind] = 1./r[~ind]**5*(R**3)*(3*x[~ind]*y[~ind])
+    Gz[~ind] = 1./r[~ind]**5*(R**3)*(3*x[~ind]*z[~ind])
+
+    return ind, np.c_[Gx, Gy, Gz]
+

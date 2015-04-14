@@ -1,5 +1,5 @@
 from SimPEG import Problem, Survey, Utils, Maps
-from mumps import DMumpsContext
+# from mumps import DMumpsContext
 import BiotSavart
 import numpy as np
 from sys import stdout
