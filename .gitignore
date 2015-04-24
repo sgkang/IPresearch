@@ -48,3 +48,5 @@ docs/_build/
 *.bbl
 *.toc
 *.blg
+*.fdb_latexmk
+*.fls
