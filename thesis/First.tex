@@ -94,7 +94,7 @@
 %%-------------------------------
 \newcommand{\peta}{\tilde{\eta}}
 \newcommand{\eFmax}{\e^{F}_{max}}
-\newcommand{\dip}{\dip}
+\newcommand{\dip}{d^{IP}}
 \newcommand{\sigpert}{\delta\sigma}
 
 \begin{document}
@@ -127,7 +127,7 @@ An often-used representation for complex conductivity in the frequency domain is
   \sigma(\omega) = \sigma_{\infty} - \sigma_{\infty}\frac{\eta}{1+(1-\eta)(\imath\omega\tau)^c} = \sigma_{\infty} + \triangle\sigma(\omega),
   \label{eq: sigma_freq}
 \end{equation}
-where $\sigma_{\infty}$ is the conductivity at infinite frequency, $\eta$ is the intrinsic chareability, $\tau$ is the time constant and $c$ is the frequency dependency. Real and imaginary parts of complex conductivity in frequency domain are shown in Figure ~\ref{Fig:FDandTDCole}(a) with Cole-Cole parameters: $\siginf$ = 0.01 S/m, $\eta $ = 0.5, $\tau$ = 0.01 and $c$=1. By applying inverse Fourier transform with time dependency, $e^{\imath\omega t}$, we have
+where $\sigma_{\infty}$ is the conductivity at infinite frequency, $\eta$ is the intrinsic chareability, $\tau$ is the time constant and $c$ is the frequency dependency. Real and imaginary parts of complex conductivity in frequency domain are shown in Figure ~\ref{Fig:FDandTDCole}(a) with Cole-Cole parameters: $\siginf$ = $10^{-2}$ S/m, $\eta $ = 0.5, $\tau$ = 0.01 and $c$=1. By applying inverse Fourier transform with time dependency, $e^{\imath\omega t}$, we have
 \begin{equation}
   \sigma(t) = \mathscr{F}^{-1}[\sigma(\omega)] = \sigma_{\infty}\delta(t) + \triangle\sigma(t)
   \label{eq: sigma_time}
@@ -629,15 +629,17 @@ The magnitude of $\vec{A}^{IP}$ is proportional to $\omega$ in frequency domain.
 % Therefore, in the end, by substituting equation (\ref{F: jip_approx}) to equations (\ref{F: BiotbIP}) and (\ref{F: BiotbIPdt}), we can set a linear inverse problem, which restore each time channel of $\peta(t)$, separately. For this, it is important that we need to know 3D distribution of $\siginf$, which is not trivial in practice. However, we have some chances that we can restore reasonable $\siginf$ distribution by applying 3D inversion to the measured ATEM data with exception of significantly contaminated data by IP effect (CITEyang2014).
 \clearpage
 
-
 %% ===========================================================================
 %% SECTION
 %% ===========================================================================
 \section{IP inversion methodology}
+
+%%% ===========================================================================
+%%% SUBSUBSECTION
 \subsection{IP inversion procedure}
 Considering practical point of view, the IP inversion of TEM data can have multiple steps including some processings and the application of the 3D inversion. Therefore, we suggest a procedure of the 3D IP inversion for TEM data as following.
 
-To obtain the fundamental EM response, $d^F$, (a) invert ATEM data and recover a 3D conductivity model ($\sigma_{est}$). This may involve omitting data that are obviously contaminated
+To obtain the fundamental EM response, $d^F$, (a) invert TEM data and recover a 3D conductivity model ($\sigma_{est}$). This may involve omitting data that are obviously contaminated
 with IP signals, such as the existence of negative transients in coincident loop surveys. (b)Forward modelling then yields an approximate value of $d^F$ and subtract it from the observations, $d$. However, we cannot get the correct $d^F$, since the estimated conductivity is not exact. (c) Therefore the computed $\dip$ data may have some errors containing both a residual field due to the incorrect conductivity ($\triangle d[\siginf](t)$) and some noises ($n(t)$). 
 To examine these more closely we write
 \begin{equation}
@@ -650,7 +652,29 @@ where $\dip_{obs}$ is raw $\dip$ data, $\dip$ is the true IP data, $n$ is additi
 \end{equation}
 (d) The final data are linearly related to a pseudo-chargeability through a sensitivity function shown in equation (\ref{eq: dIP_lineareq}). (e) The $\dip$ at various time channels can be inverted individually. The pseudo-chargeability models may be useful in themselves or they may be further processed to estimate Cole-Cole, or equivalent parameters.
 
+%%% ===========================================================================
+%%% SUBSUBSECTION
+\subsection{An equivalent pseudo-chargeability}
+We derived a linearized kernel function of $\dip$ response as a function of the pseudo-chargeability ($\peta(t)$) for various types of surveys including TEM, EIP and MIP. Note that the pseudo-chargeability is defined for each transmitter that is, they are different for each transmitter, because each transmitter will have different excitation of the earth. This indicates that IP response should be defined as 
+\begin{equation}
+  \dip_k(t) = J_k[\peta_k (t)], \ \ k=1, \ldots, nTx,
+\end{equation}
+the subscript $k$ indicates $k$-th sounding and $nTx$ is the number of soundings. Reminding that our goal is the 3D IP inversion using this linearized kernel function, this induces a problem that we have $nTx$ pseudo-chargeability distribution that we need to recover. Setting up an inverse problem in this cause extremely non-unique problem thus, we want to recover an equivalent pseudo-chargeability ($\peta_{eqv}$), which represents pseudo-chargeability from every sounding with reasonable explanation of the IP responses. 
 
+From the definition shown in equation (\ref{eq: pseudochargeability}), we recognize that the pseudo-chargeability is fraction of the polarization and the reference current. Using the normalization of the polarization current with the reference current, which will be different for each transmitter, we want to make pseudo-chargeability as an independent property for each transmitter. This will depend on $w^e(t)$, because the pseudo-chargeability is the convolution between $\peta^{I}(t)$ and $w^e(t)$:
+\begin{equation}
+  \peta_k(t) = \peta^{I}(t) \otimes w^e_k(t),
+  \label{eq: pseudochargeability_petaI}
+\end{equation}
+Therefore, if $w^e_k$ is same for all sounding locations, then we can let $\peta_{eqv} = \peta_k$, $k=1, \ldots, nTx$. Based on this we obtain a linear equation for IP responses as
+\begin{equation}
+  \dip_i =J[\peta_{eqv \ i}],
+  \label{eq: pseudochargeability_equivalent}
+\end{equation}
+where the sensitivity function, $J[\cdot]$ takes $\peta_{eqv \ i}$, and outputs $\dip_i$ responses for all soundings at the $i$-th time. Availability of the equivalent pseudo-chargeability may different from different types of surveys and conductivity structures thus, it should be carefully investigated. 
+
+%%% ===========================================================================
+%%% SUBSUBSECTION
 \subsection{3D IP inversion with linearized kernel}
 To set up an linear inverse problem we rewrite equation (\ref{eq: dIP_lineareq}) as
 \begin{eqnarray}
@@ -685,6 +709,7 @@ where $\mathbf{W}_s$ is a diagonal matrix, and $\mathbf{W}_x$, $\mathbf{W}_y$ an
     \label{eq: weight_mat}
 \end{equation}
 where $\mathbf{w}$ is a column vector for weighting each model parameters.
+
 
 %% =======================================================================
 %% SECTION
@@ -742,9 +767,7 @@ To summarize, the conductive case has the strongest IP signal due to the greater
   \label{F:IPresp2}
 \end{figure}
 \clearpage
-
 %Seog commenti: This mainly because galvanic current is the main source of the IP effects for both canonical and resistive cases, while for conductive case vortex current is the main source of the IP effect. 
-
 %% =======================================================================
 %% SUBSECTION
 %% =======================================================================
@@ -844,7 +867,6 @@ where $\siginf\e^{IP} = -\vec{a}^{IP}_J - \grad \phi^{IP}_J$. This is Helmholtz 
   \label{F:jpolvsj1IP}
 \end{figure}
 \clearpage
-
 %% =======================================================================
 %% SUBSUBSECTION
 \subsection{A potential for recovering IP parameters}
@@ -856,201 +878,256 @@ Although the physical understanding of the linearized kernel function is importa
   \caption{(a) The normalized time history of the fundamental electric field ($w^e(t)$) for all three cases. Black, blue and red colors correspondingly indicate canonical, conductive and resistive cases. (b) Comparisons of the observed (line) and predicted (empty circles) pseudo-chargeability at the center pixel in the IP body for three cases.}
   \label{F:wepetathree}
 \end{figure}
+%%===================================================================
+\subsection{Interrogation of the 3D ATEM-IP inversion}
+%%===================================================================
+\subsubsection{Validation for an equivalent pseudo-chargeability}
+For the 3D IP inversion using the linearized kernel function, we assume an equivalent pseudo-chargeability (equation (\ref{eq: pseudochargeability_equivalent})). If the $w^e_k(t)$ for each sounding is same, our assumption is true as shown in equation (\ref{eq: pseudochargeability_petaI}). 
+To investigate this, we choose four sounding locations along the profile line at Norting 0 m, which are located at Easting -400, -300, -200 and -100 m. The normalized time history of the electric field at the center pixel of the IP body for those four soundings are shown in Figure \ref{F:we_multiTx}. 
+In this figure, those for canonical (a), conductive (b), and resistive (c) cases are shown. For all three cases the time for the maximum amplitude delays as the sounding location gets farther from the IP body. Similar to the observation from Figure \ref{F:wepetathree}, the order for the most delayed peak time is 1) conductive, 2) canonical, and 3) resistive. Although the peak amplitude of the $w^e_k$ for four soundings are same as 1, delayed peak time of $w^e_k$ are different for four soundings. 
+Therefore, our assumption of the equivalent pseudo-chargeability for the ATEM case can be arguable. For the clear manifestation of this issue, we set up a validation procedure: a) we evaluate $\peta_k(t)$ from all soundings. 
+Considering the definition of $\dip$ datum (equation \ref{eq: dIP_lineareq}), (b) we only select several soundings (8 or 9), which has greater product of pseudo-chargeability and Jacobian (P-J product) at the center pixel of the IP body. 
+(c) We compute averaged $w^e$ and $\peta$ using $w^e_k$ and $\peta_k$ for those selected soundings. 
+Finally, (d) we evaluated $\dip$ responses for every sounding using this averaged $\peta$, and compare these with true $\dip$ responses. 
+% Evaluate each pseudo-chargeability for all Txs
+Using $w^e_k$, we computed $\peta_k$ for for all sounding locations at 7.08 ms. Figure \ref{F:Peta_multiTx} shows those $\peta_k$ for all three cases. Because 7.08 ms is after the time for the peak amplitude of $w^e_k(t)$, we observe increasing pseudo-chargeability farther from the IP body.
+% P-J product and choose higher ones
+Figure \ref{F:PJproduct} shows, P-J product for all three cases at the same time. We chose 8 soundings for the canonical and resistive cases, and 9 soundings for the conductive case considering the symmetry of the selected soundings. Selected sounding locations are marked as empty circles on both Figures \ref{F:Peta_multiTx} and \ref{F:PJproduct}. Selected soundings are located near the IP body for all three cases, whereas the conductive case show different pattern for the selected sounding locations from two other cases due to the dominant vortex current induced in the IP body.  
+% Compose average pseudo-chargeability
+We compute averaged $w^e$ and $\peta$ using the selected soundings. Figure \ref{F:AvgWeandPeta} show averaged $w^e$ (a) and $\peta$ (b) at the center pixel of the IP body for canonical (black), conductive (blue), and resistive (red) cases.
+% Compute $\dip$ using average peta and compare with $\dip$
+Using the averaged $\peta$, we evaluate approximate $\dip$ response. Figures \ref{F:trueapproxdIP} shows comparison of the true and approximate $\dip$ response at 7.08 ms with the Rx number plot. True (black dot with line) and approximate (empty circle) $\dip$ responses show reasonable match except for the resistive case. The magnitude of the approximate $\dip$ response is much less than the true one, which is consistent result from Figure \ref{F:compIPresp}. To investigate the reliability of the approximate $\dip$ response in terms of geometry, we provided plan view maps of them. Figure \ref{F:trueapproxdIPplan} show plan view maps of the true (a) and  approximate (b) $\dip$ responses for the canonical (left panel), conductive (middle panel), and resistive (right panel) cases. Here we did not set the range of the colorbar same to better recognize the geometry of the responses. For all three cases, the geometry of the approximated $\dip$ response are similar to the true ones. Even for the resistive case, the geometry of the approximate $\dip$ response is reasonable, although its magnitude is much smaller than true one. Based on this, we can expect that the magnitude of the recovered pseudo-chargeability from the resistive case may be much greater than the true one, whereas its geometry may be reasonable. Above analyses support the reliability of the equivalent pseudo-chargeability (equation (\ref{eq: pseudochargeability_equivalent})) for ATEM case. 
+
+\begin{figure}[htb]
+  \centering  \includegraphics[width=1.0\textwidth]{figures/threecasesavg/we_multiTx.png}
+  \caption{The normalized time history of the electric field ($w^e(t)$) at the center pixel of the IP body for (a) canonical, (b) conductive, and (c) resistive cases. Solid lines, dashed lines, stars and solid circles indicate four different transmitters located at Easting -400, -300, -200 and -100 m  along the profile line at Northing 0 m. }
+  \label{F:we_multiTx}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering  \includegraphics[width=1.0\textwidth]{figures/threecasesavg/Peta_multiTx.png}
+  \caption{Pseudo-chargeability on the center pixel of the IP body at 7.08 ms for all soundings. Canonical (a), conductive (b), and resistive (c) cases are shown. Empty circles indicate the selected sounding locations to compute averaged pseudo-chargeability.}
+  \label{F:Peta_multiTx}
+\end{figure}
+\begin{figure}[htb]
+  \centering  \includegraphics[height=0.2\textheight]{figures/threecasesavg/PJproduct.png}
+  \caption{Pseudo-chargeability and Jacobian (P-J) product at the center pixel of the IP body ($t$ = 7.08 ms) for all soundings. Canonical (a), conductive (b), and resistive (c) cases are shown. We chose top eight (canonical and resistive cases) or nine (conductive case) greatest amplitude of the P-J product from all sounding locations considering the symmetry on the plane (See Figure \ref{F:we_multiTx}), and marked these as empty circles. }
+  \label{F:PJproduct}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering \includegraphics[height=0.2\textheight]{figures/threecasesavg/AvgWeandPeta.png}
+  \caption{Averaged (a) $w^e$ and (b) $\peta$ from the selected sounding locations shown in Figure \ref{F:we_multiTx}.}
+  \label{F:AvgWeandPeta}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering \includegraphics[width=1.0\textwidth]{figures/threecasesavg/trueapproxdIP.png}
+  \caption{Comparison of true (solid circle with line) and approximate (empty circles) $b_z^{IP}$ responses at 7.08 ms as a function of sounding number. Canonical (a), conductive (b) and resistive (c) cases are shown. }
+  \label{F:trueapproxdIP}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering \includegraphics[width=1.0\textwidth]{figures/threecasesavg/trueapproxdIPplan.png}
+  \caption{Comparison of true (a) and approximate (b) $b_z^{IP}$ responses at 7.08 ms on plan view map. Canonical (left column), conductive (middle column) and resistive (right column) cases are shown.}
+  \label{F:trueapproxdIPplan}
+\end{figure}
+
 
 %% =======================================================================
 %% SUBSUBSECTION 
 
-% \subsection{Linear inversion}
-% We apply linear inversion to restore 3D distribution of pseudo-chargeability at each time channels. In order to validate our inversion algorithm, we first generated synthetic IP data, $\dip_{syn}$ for both canonical and conductive models using forward equation shown in equation (\ref{eq: BiotbIPdt_approx}). Floor noise of $0.01max(|\mathbf{d}^{obs}|)$ was added to $\dip_{syn}$, and we set this as our uncertainty ($\epsilon$). Here data type is $\frac{\partial b_z}{\partial t}$. We use same survey configuration that we used to compute $\dip$ responses. As shown in Table 1, the number of data for each time channel is 121, since we have 121 stations. Our model parameter do not include air, thus the number of model parameters: 41$\times$41$\times$20=33620. Since our sensitivity function has higher values near the surface, we need to balance this biased sensitivity distribution. This has been carefully treated in magnetic inversion (CITE). Based on this, we use $\mathbf{w} = (\mathbf{z}+z_0)^{-1.5}$ with $z_0$=0 for model weighting shown in equation (\ref{eq: weight_mat}). Here $\mathbf{z}$ is discretized depth for all model parameters, $z_0$ indicates the depth of the earth surface. Other inversion parameters are shown in Table 1. A constant, related to initial $\beta$, $r_{\beta}$ is set to 1. To generate sensitivity matrix shown in equation (\ref{eq: dbIPdt_linear}), we used true background conductivity model for both cases. Same Cole-Cole parameters are used ($\eta$=0.2, $\tau$=0.005 and $c$=1), and for $\peta$ we used $\peta^{I}$, which was shown in equation (\ref{eq: intrinsic_peta}) when $c$=1.
+% % \subsection{Linear inversion}
+% % We apply linear inversion to restore 3D distribution of pseudo-chargeability at each time channels. In order to validate our inversion algorithm, we first generated synthetic IP data, $\dip_{syn}$ for both canonical and conductive models using forward equation shown in equation (\ref{eq: BiotbIPdt_approx}). Floor noise of $0.01max(|\mathbf{d}^{obs}|)$ was added to $\dip_{syn}$, and we set this as our uncertainty ($\epsilon$). Here data type is $\frac{\partial b_z}{\partial t}$. We use same survey configuration that we used to compute $\dip$ responses. As shown in Table 1, the number of data for each time channel is 121, since we have 121 stations. Our model parameter do not include air, thus the number of model parameters: 41$\times$41$\times$20=33620. Since our sensitivity function has higher values near the surface, we need to balance this biased sensitivity distribution. This has been carefully treated in magnetic inversion (CITE). Based on this, we use $\mathbf{w} = (\mathbf{z}+z_0)^{-1.5}$ with $z_0$=0 for model weighting shown in equation (\ref{eq: weight_mat}). Here $\mathbf{z}$ is discretized depth for all model parameters, $z_0$ indicates the depth of the earth surface. Other inversion parameters are shown in Table 1. A constant, related to initial $\beta$, $r_{\beta}$ is set to 1. To generate sensitivity matrix shown in equation (\ref{eq: dbIPdt_linear}), we used true background conductivity model for both cases. Same Cole-Cole parameters are used ($\eta$=0.2, $\tau$=0.005 and $c$=1), and for $\peta$ we used $\peta^{I}$, which was shown in equation (\ref{eq: intrinsic_peta}) when $c$=1.
 
-% \begin{table}[ht]
-% \caption{Parameters used in Projected Gauss Newton inversion.} % title of Table
-% \centering % used for centering table
-% \begin{tabular}{c c} % centered columns (4 columns)
-% \hline\hline %inserts double horizontal lines
-% Inversion parameters & Value \\
-% [0.1ex] % inserts table
-% \hline
-% The number of data &    11$\times$11=121 \\
-% The number of models &  41$\times$41$\times$20=33620 \\
-% $\alpha_s$ &  $10^{-5}$\\
-% $\alpha_x$ &  1\\
-% $\alpha_y$ &  1\\
-% $\alpha_z$ &  1\\
-% Initial $\beta$ &  $r_{\beta}\frac{\mathbf{x}^T\mathbf{J}^T\mathbf{J}\mathbf{x}}{\mathbf{x}^T\mathbf{W}_m^T\mathbf{W}_m\mathbf{x}}$\\
-% Decrease rate of $\beta$ &  0.5\\
-% The number of $\beta$ iteration & 2\\
-% $\mathbf{m}_{ref}$ & $10^{-10}$ \\
-% Uncertainty & $\epsilon$=$0.01$max($|\mathbf{d}^{obs}|$) \\
-% Bound constraint & $\mathbf{m} > 0$\\
-% \hline %inserts single line
-% \end{tabular}
-% \label{table:1} % is used to refer this table in the text
-% \end{table}
+% % \begin{table}[ht]
+% % \caption{Parameters used in Projected Gauss Newton inversion.} % title of Table
+% % \centering % used for centering table
+% % \begin{tabular}{c c} % centered columns (4 columns)
+% % \hline\hline %inserts double horizontal lines
+% % Inversion parameters & Value \\
+% % [0.1ex] % inserts table
+% % \hline
+% % The number of data &    11$\times$11=121 \\
+% % The number of models &  41$\times$41$\times$20=33620 \\
+% % $\alpha_s$ &  $10^{-5}$\\
+% % $\alpha_x$ &  1\\
+% % $\alpha_y$ &  1\\
+% % $\alpha_z$ &  1\\
+% % Initial $\beta$ &  $r_{\beta}\frac{\mathbf{x}^T\mathbf{J}^T\mathbf{J}\mathbf{x}}{\mathbf{x}^T\mathbf{W}_m^T\mathbf{W}_m\mathbf{x}}$\\
+% % Decrease rate of $\beta$ &  0.5\\
+% % The number of $\beta$ iteration & 2\\
+% % $\mathbf{m}_{ref}$ & $10^{-10}$ \\
+% % Uncertainty & $\epsilon$=$0.01$max($|\mathbf{d}^{obs}|$) \\
+% % Bound constraint & $\mathbf{m} > 0$\\
+% % \hline %inserts single line
+% % \end{tabular}
+% % \label{table:1} % is used to refer this table in the text
+% % \end{table}
 
-% Linear inversions are applied $\dip_{syn}$ data at t=4.7 ms so that corresponding $\peta^I$ value for IP body is 8.52. In Figure ~\ref{F: Peta_dipsyn_ch38}a and b, we presented inverted peudo-chargeablity models for both canonical and conductive models, respectively. To show reliability of our inversion, observed and predicted data for both canonical and conductive model were shown in Figure ~\ref{F: ObsPred_syn_ch38}a and b, respectively. Observed and predicted data for both cases show reasonable matches. Also, both inversions were reached to th target misfit. In both cases, geometry of IP body was well imaged in right location, whereas estimated $\peta$ for canonical model shows somewhat blurred image compared to that for conductive model. Recovered $\peta$ values in the IP body for both cases were $~$1.5 and $~$4.4, whereas true $\peta$ value for the IP body was 8.72. As Figure ~\ref{F: ObsPred_syn_ch38}a and b, $\dip_{syn}$ for canonical model shows broader distribution than that for conductive model, which may explain different magnitude of restored $\peta$ for both cases. These observations of recovered $\peta$ for both cases shows that recovered model from conductive model can have bigger magnitude compared to canonical model. In addition, by comparing $\dip_{syn}$ shown in the left panel of Figure ~\ref{F: ObsPred_syn_ch38}a and b with true $\dip$ data shown in the right panels of Figures ~\ref{F: EMIPresp2_case1}b and ~\ref{F: EMIPresp2_case2}b, we recognize that their geometric distribution for both cases are analogous, whereas their absolute values are different. This suggest the reliability of our linearization approach.
+% % Linear inversions are applied $\dip_{syn}$ data at t=4.7 ms so that corresponding $\peta^I$ value for IP body is 8.52. In Figure ~\ref{F: Peta_dipsyn_ch38}a and b, we presented inverted peudo-chargeablity models for both canonical and conductive models, respectively. To show reliability of our inversion, observed and predicted data for both canonical and conductive model were shown in Figure ~\ref{F: ObsPred_syn_ch38}a and b, respectively. Observed and predicted data for both cases show reasonable matches. Also, both inversions were reached to th target misfit. In both cases, geometry of IP body was well imaged in right location, whereas estimated $\peta$ for canonical model shows somewhat blurred image compared to that for conductive model. Recovered $\peta$ values in the IP body for both cases were $~$1.5 and $~$4.4, whereas true $\peta$ value for the IP body was 8.72. As Figure ~\ref{F: ObsPred_syn_ch38}a and b, $\dip_{syn}$ for canonical model shows broader distribution than that for conductive model, which may explain different magnitude of restored $\peta$ for both cases. These observations of recovered $\peta$ for both cases shows that recovered model from conductive model can have bigger magnitude compared to canonical model. In addition, by comparing $\dip_{syn}$ shown in the left panel of Figure ~\ref{F: ObsPred_syn_ch38}a and b with true $\dip$ data shown in the right panels of Figures ~\ref{F: EMIPresp2_case1}b and ~\ref{F: EMIPresp2_case2}b, we recognize that their geometric distribution for both cases are analogous, whereas their absolute values are different. This suggest the reliability of our linearization approach.
 
-% \begin{figure}[htb]
-%   \centering
-%   \includegraphics[width=\textwidth]{figures/synthetic/PetaCase1_syn_ch38.png}\\
-%   (a)
-%   \includegraphics[width=\textwidth]{figures/synthetic/PetaCase2_syn_ch38.png}\\
-%   (b)
-%   \caption{Slices of estimated $\peta$ distributions at $t = $ 4.7 ms by inverting $\dip_{syn}$. (a) Canonical model. (b)  Conductive model. Left and right panel show plan and section view at -125 m depth and 0 m northing. Black dashed lines outline IP body. }
-%   \label{F: Peta_dipsyn_ch38}
-% \end{figure}
+% % \begin{figure}[htb]
+% %   \centering
+% %   \includegraphics[width=\textwidth]{figures/synthetic/PetaCase1_syn_ch38.png}\\
+% %   (a)
+% %   \includegraphics[width=\textwidth]{figures/synthetic/PetaCase2_syn_ch38.png}\\
+% %   (b)
+% %   \caption{Slices of estimated $\peta$ distributions at $t = $ 4.7 ms by inverting $\dip_{syn}$. (a) Canonical model. (b)  Conductive model. Left and right panel show plan and section view at -125 m depth and 0 m northing. Black dashed lines outline IP body. }
+% %   \label{F: Peta_dipsyn_ch38}
+% % \end{figure}
 
-% \begin{figure}[htb]
-%   \centering
-%   \includegraphics[width=\textwidth]{figures/synthetic/ObsPred_syn_ch38_case1.png}\\
-%   (a)
-%   \includegraphics[width=\textwidth]{figures/synthetic/ObsPred_syn_ch38_case2.png}\\
-%   (b)
-%   \caption{Slices of estimated $\peta$ distributions at $t = $ 4.7 ms by inverting $\dip_{syn}$. (a) Canonical model. (b)  Conductive model. Left and right panel show plan and section view at -125 m depth and 0 m northing. Black dashed lines outline IP body. }
-%   \label{F: ObsPred_syn_ch38}
-% \end{figure}
+% % \begin{figure}[htb]
+% %   \centering
+% %   \includegraphics[width=\textwidth]{figures/synthetic/ObsPred_syn_ch38_case1.png}\\
+% %   (a)
+% %   \includegraphics[width=\textwidth]{figures/synthetic/ObsPred_syn_ch38_case2.png}\\
+% %   (b)
+% %   \caption{Slices of estimated $\peta$ distributions at $t = $ 4.7 ms by inverting $\dip_{syn}$. (a) Canonical model. (b)  Conductive model. Left and right panel show plan and section view at -125 m depth and 0 m northing. Black dashed lines outline IP body. }
+% %   \label{F: ObsPred_syn_ch38}
+% % \end{figure}
 
-% On the other hand, we consider true $\dip$ data at t=4.7 ms, which was generated by subtracting $d^{F}$ from $d$ as shown in the right panels of Figures ~\ref{F: EMIPresp2_case1}b and ~\ref{F: EMIPresp2_case2}b. Since $\peta$ is convoluted property of electric field and $\peta^{I}$, we need to evaluate restored $\peta$ can suggest meaningful information about the embedded IP body. Same survey configuration and inversion parameters were used as above examples for $\dip_{syn}$ except $r_{\beta}$=0.1. In Figure ~\ref{F: Peta_dip_ch38}a and b, we presented restored pseudo-chargeability models for both canonical and conductive models, respectively. Both inversions for canonical and conductive models were reached to the target misfit. Recovered $\peta$ models for both cases show reasonable geometry of IP body, whereas absolute magnitude of them are quite different from $\peta^{I}$. However, $\peta$ is convoluted property of $\e(t)$ and $\peta^{I}$ so that absolute value of restored $\peta$ does not have meaningful information. Therefore, restored $\peta$ can suggest geometry of IP body in the earth. Similar patterns from recovered $\peta$ models of $\dip_{syn}$ can be observed here: restored model from canonical model show broader distribution and smaller magnitude of $\peta$ than that from conductive model. Accordingly, identification of relative strength of $\peta^I$ for different IP bodies might depend on background conductivity model. In addition, to investigate effect of wrong background model, we invert $\dip$ data for conductive model using sensitivity matrix generated for canonical model. Restored $\peta$ distribution is shown in Figure ~\ref{F: Peta_case2_wrong_ch38} and it is almost same as Figure ~\ref{F: Peta_dip_ch38}b, which used correct sensitivity matrix. This shows the robustness of our inversion to background conductivity model. However, note that this effect in EM decoupling process can be more significant.
+% % On the other hand, we consider true $\dip$ data at t=4.7 ms, which was generated by subtracting $d^{F}$ from $d$ as shown in the right panels of Figures ~\ref{F: EMIPresp2_case1}b and ~\ref{F: EMIPresp2_case2}b. Since $\peta$ is convoluted property of electric field and $\peta^{I}$, we need to evaluate restored $\peta$ can suggest meaningful information about the embedded IP body. Same survey configuration and inversion parameters were used as above examples for $\dip_{syn}$ except $r_{\beta}$=0.1. In Figure ~\ref{F: Peta_dip_ch38}a and b, we presented restored pseudo-chargeability models for both canonical and conductive models, respectively. Both inversions for canonical and conductive models were reached to the target misfit. Recovered $\peta$ models for both cases show reasonable geometry of IP body, whereas absolute magnitude of them are quite different from $\peta^{I}$. However, $\peta$ is convoluted property of $\e(t)$ and $\peta^{I}$ so that absolute value of restored $\peta$ does not have meaningful information. Therefore, restored $\peta$ can suggest geometry of IP body in the earth. Similar patterns from recovered $\peta$ models of $\dip_{syn}$ can be observed here: restored model from canonical model show broader distribution and smaller magnitude of $\peta$ than that from conductive model. Accordingly, identification of relative strength of $\peta^I$ for different IP bodies might depend on background conductivity model. In addition, to investigate effect of wrong background model, we invert $\dip$ data for conductive model using sensitivity matrix generated for canonical model. Restored $\peta$ distribution is shown in Figure ~\ref{F: Peta_case2_wrong_ch38} and it is almost same as Figure ~\ref{F: Peta_dip_ch38}b, which used correct sensitivity matrix. This shows the robustness of our inversion to background conductivity model. However, note that this effect in EM decoupling process can be more significant.
 
-% \begin{figure}[htb]
-%   \centering
-%   \includegraphics[width=\textwidth]{figures/synthetic/PetaCase1_true_ch38.png}\\
-%   (a)
-%   \includegraphics[width=\textwidth]{figures/synthetic/PetaCase2_true_ch38.png}\\
-%   (b)
-%   \caption{Slices of estimated $\peta$ distributions at $t = $ 4.7 ms  by inverting $\dip$. (a) Canonical model. (b)  Conductive model.. Left and right panel show plan and section view at -125 m depth and 0 m northing. }
-%   \label{F: Peta_dip_ch38}
-% \end{figure}
+% % \begin{figure}[htb]
+% %   \centering
+% %   \includegraphics[width=\textwidth]{figures/synthetic/PetaCase1_true_ch38.png}\\
+% %   (a)
+% %   \includegraphics[width=\textwidth]{figures/synthetic/PetaCase2_true_ch38.png}\\
+% %   (b)
+% %   \caption{Slices of estimated $\peta$ distributions at $t = $ 4.7 ms  by inverting $\dip$. (a) Canonical model. (b)  Conductive model.. Left and right panel show plan and section view at -125 m depth and 0 m northing. }
+% %   \label{F: Peta_dip_ch38}
+% % \end{figure}
 
-% \begin{figure}[htb]
-%   \centering
-%   \includegraphics[width=\textwidth]{figures/synthetic/PetaCase2_wrong_ch38.png}
-%   \caption{Slices of estimated $\peta$ distributions at $t = $ 4.7 ms for conductive model with incorrect background conductivity model. Left and right panel show plan and section view at -125 m depth and 0 m northing. }
-%   \label{F: Peta_case2_wrong_ch38}
-% \end{figure}
+% % \begin{figure}[htb]
+% %   \centering
+% %   \includegraphics[width=\textwidth]{figures/synthetic/PetaCase2_wrong_ch38.png}
+% %   \caption{Slices of estimated $\peta$ distributions at $t = $ 4.7 ms for conductive model with incorrect background conductivity model. Left and right panel show plan and section view at -125 m depth and 0 m northing. }
+% %   \label{F: Peta_case2_wrong_ch38}
+% % \end{figure}
 
-% Finally, using same survey and inversion set-ups, we inverted 14 time channels of $\\dip$ ranging from 1 to 10 ms for both cases. We presented time decaying curves of restored $\peta$ models at (0, 0, -125) for both cases in Figure ~\ref{F: Peta_Center}a and b. Since we already recognized absolute value of the estimated pseudo-chargeability, $\peta_{est}$ is not meaningful, significant magnitude difference between $\peta^{est}$ and $\peta^I$ makes sense. However, we identify slope of $\peta^{est}$ and $\peta^I$ looks similar in later time channels (2-10 ms) for both cases. Taking log to equation (\ref{eq: intrinsic_peta}) yields
-% \begin{equation}
-%     log(\peta^{I}) = log(\frac{\eta}{(1-\eta)\tau}) - \frac{1}{(1-\eta)\tau}t,
-% \end{equation}
-% which can be considered as linear equation. To estimate slope of the above equation, $- \frac{1}{(1-\eta)\tau}$, we fit active set of the recovered pseudo chageability, $\peta^{est}_{active}$ ranging from 2.5 ms to 10 ms. Estimated slopes for canonical and conductive models are -203 and -218 when the true slope is -250. Corresponding relative errors are 12 and 13$\%$. This is promising result, which suggests potential of restoring intrinsic Cole-Cole parameters from recovered $\peta$ model at each time channel.
+% % Finally, using same survey and inversion set-ups, we inverted 14 time channels of $\\dip$ ranging from 1 to 10 ms for both cases. We presented time decaying curves of restored $\peta$ models at (0, 0, -125) for both cases in Figure ~\ref{F: Peta_Center}a and b. Since we already recognized absolute value of the estimated pseudo-chargeability, $\peta_{est}$ is not meaningful, significant magnitude difference between $\peta^{est}$ and $\peta^I$ makes sense. However, we identify slope of $\peta^{est}$ and $\peta^I$ looks similar in later time channels (2-10 ms) for both cases. Taking log to equation (\ref{eq: intrinsic_peta}) yields
+% % \begin{equation}
+% %     log(\peta^{I}) = log(\frac{\eta}{(1-\eta)\tau}) - \frac{1}{(1-\eta)\tau}t,
+% % \end{equation}
+% % which can be considered as linear equation. To estimate slope of the above equation, $- \frac{1}{(1-\eta)\tau}$, we fit active set of the recovered pseudo chageability, $\peta^{est}_{active}$ ranging from 2.5 ms to 10 ms. Estimated slopes for canonical and conductive models are -203 and -218 when the true slope is -250. Corresponding relative errors are 12 and 13$\%$. This is promising result, which suggests potential of restoring intrinsic Cole-Cole parameters from recovered $\peta$ model at each time channel.
 
-% \begin{figure}[htb]
-%   \centering
-%   \includegraphics[width=0.8\textwidth]{figures/synthetic/PetaCase1_center.png} \\(a)\\
-%   \includegraphics[width=0.8\textwidth]{figures/synthetic/PetaCase2_center.png} \\(b)
-%   \caption{Time decaying curves of recovered and intrinsic pseudo chargeability at (0, 0, -125). (a) Canonical model. (b) Conductive model. Black dashed and solid line with solid circle indicate $\peta^{I}$ and $\peta^{est}$. Empty circles indicate active set of $\peta^{est}$, which are used to compute slope of time decaying $\peta^{est}$ in semi-log plot. }
-%   \label{F: Peta_Center}
-% \end{figure}
+% % \begin{figure}[htb]
+% %   \centering
+% %   \includegraphics[width=0.8\textwidth]{figures/synthetic/PetaCase1_center.png} \\(a)\\
+% %   \includegraphics[width=0.8\textwidth]{figures/synthetic/PetaCase2_center.png} \\(b)
+% %   \caption{Time decaying curves of recovered and intrinsic pseudo chargeability at (0, 0, -125). (a) Canonical model. (b) Conductive model. Black dashed and solid line with solid circle indicate $\peta^{I}$ and $\peta^{est}$. Empty circles indicate active set of $\peta^{est}$, which are used to compute slope of time decaying $\peta^{est}$ in semi-log plot. }
+% %   \label{F: Peta_Center}
+% % \end{figure}
 
-% \clearpage
-% \subsection{Field example: Mt. Milligan}
-% % \subsection{EIP}
-% % \subsection{MIP}
-% % \subsection{EM-IP with grounded source}
-% % \subsection{EM-IP with inductive source (ATEM) }
+% % \clearpage
+% % \subsection{Field example: Mt. Milligan}
+% % % \subsection{EIP}
+% % % \subsection{MIP}
+% % % \subsection{EM-IP with grounded source}
+% % % \subsection{EM-IP with inductive source (ATEM) }
 
-% \clearpage
+% % \clearpage
 
-%% =======================================================================
-%% SECTION (Appendix)
-%% =======================================================================
+% %% =======================================================================
+% %% SECTION (Appendix)
+% %% =======================================================================
 
-% \section{Appendix}
-% \subsection{Derivation of the sensitivity   in discretized space}
-% The numerical evaluation of Maxwell's equations for the steady-state case can be derived by discretizing the system in space using finite volume (FV) method with weak formulation (CITE). For the discretization, we assume that the electric field $\e$ is discretized by grid function $\de$ on cell edges and magnetic flux density $\b$ is discretized by grid fuction $\db$ on cell faces. Electrical potential $\phi$ is discretized by grid fucntion  $\phi$ on cell nodes. For clear representation of the derivation, recall Maxwell's equations in steady state as
-% \begin{align}
-%   \j = \sigma\e = -\sigma\grad \phi, \\
-%   -\div \j = \div \j_s, \\
-%   \j\big|_{\partial \Omega}\cdot\hat{n} = 0,
-%   \label{eq:DCBCneumann}
-% \end{align}
-% where $\partial \Omega$ indicates boundary surface of the system and $\hat{n}$ is the normal vector of the boundary surface. Modified from CITE, weak form of those equations can be written as
-% \begin{align}
-%   (\j, \vec{w}) + (\sigma \grad \phi, \vec{w}) = 0, \\
-%   -(\j, \grad \psi) = (\j_s, \grad \psi).
-% \end{align}
-% The inner products $(\j, \vec{w})$, $(\sigma \grad \phi, \vec{w})$,  $(\j, \grad \psi)$ and $(\j_s, \grad \psi)$ are edge based products. Here we define the inner product as
-% \begin{equation}
-%   (\vec{a}, \vec{b}) = \int_{\Omega} \vec{a}\cdot\vec{b} dv,
-% \end{equation}
-% where $\Omega$ is the volume of the system. By discretizing $\grad$ operator and the inner product in space, we obtain
-% \begin{equation}
-%   \Me\dj + \MeSig\dgrad\phi = 0,
-%   \label{eq:DCdisceq1}
-% \end{equation}
-% \begin{equation}
-%   -\dgrad^T \Me\dj = \dgrad^T \Me\dj_s,
-%   \label{eq:DCdisceq2}
-% \end{equation}
-% where $\mathbf{M}^e_i$ is the mass matrices, which discretize the edge based inner product (CITE). This inner products are defined  as
-% \begin{align}
-%   \mathbf{M}^e_i = \diag(\Ace^T\diag(\vol)\mathbf{i}).
-% \end{align}
-% Here, $\mathbf{i}$ indicates a grid function on cell center like $\sigma$, and $\vol$ is the grid function for the cell volume. The averaging matrix $\Ace$ averages discrete function defined on the edges to the cell center. The mass matrix $\Me$ without subscript $i$ indicates that $\mathbf{i}$ is equal to the identity column vector of which all elements are one. By substituting equation (\ref{eq:DCdisceq1}) to (\ref{eq:DCdisceq2}), we have
-% \begin{equation}
-%   \A^{DC}\phi = \mathbf{rhs}^{DC},
-%   \label{eq:DCdiscLin}
-% \end{equation}
-% where $\A^{DC} = \dgrad^T \MeSig\dgrad$ and $\mathbf{rhs}^{DC} = \dgrad^T \Me\dj_s$. Sensitivity function of $\phi$ can be derived by taking derivative to equation (\ref{eq:DCdiscLin}) in terms of $\sigma$:
-% \begin{equation}
-%   \frac{\partial \phi}{\partial \sigma} = -(\A^{DC})^{-1}\dgrad^T\diag(\dgrad\phi)\Ace^T\diag(\vol).
-%   \label{eq:DCsensedisc}
-% \end{equation}
-% We recall that continuous sensitivity function shown in equation (\ref{eq: senseDC}), which can be modified as
-% \begin{equation}
-%   \frac{\partial \phi}{\partial \sigma} = -[\div\sigma\grad]^{-1}\div\grad\phi.
-%   \label{eq:DCsensecont}
-% \end{equation}
-% One can intuitively identify that continuous sensitivity function shown in equation (\ref{eq:DCsensecont}) can be discretized as equation (\ref{eq:DCsensedisc}) with the boundary condition specified on equation (\ref{eq:DCBCneumann}). This approach shows that some advantages of working in discretized space even for the derivation of continuous function (CITE).
+% % \section{Appendix}
+% % \subsection{Derivation of the sensitivity   in discretized space}
+% % The numerical evaluation of Maxwell's equations for the steady-state case can be derived by discretizing the system in space using finite volume (FV) method with weak formulation (CITE). For the discretization, we assume that the electric field $\e$ is discretized by grid function $\de$ on cell edges and magnetic flux density $\b$ is discretized by grid fuction $\db$ on cell faces. Electrical potential $\phi$ is discretized by grid fucntion  $\phi$ on cell nodes. For clear representation of the derivation, recall Maxwell's equations in steady state as
+% % \begin{align}
+% %   \j = \sigma\e = -\sigma\grad \phi, \\
+% %   -\div \j = \div \j_s, \\
+% %   \j\big|_{\partial \Omega}\cdot\hat{n} = 0,
+% %   \label{eq:DCBCneumann}
+% % \end{align}
+% % where $\partial \Omega$ indicates boundary surface of the system and $\hat{n}$ is the normal vector of the boundary surface. Modified from CITE, weak form of those equations can be written as
+% % \begin{align}
+% %   (\j, \vec{w}) + (\sigma \grad \phi, \vec{w}) = 0, \\
+% %   -(\j, \grad \psi) = (\j_s, \grad \psi).
+% % \end{align}
+% % The inner products $(\j, \vec{w})$, $(\sigma \grad \phi, \vec{w})$,  $(\j, \grad \psi)$ and $(\j_s, \grad \psi)$ are edge based products. Here we define the inner product as
+% % \begin{equation}
+% %   (\vec{a}, \vec{b}) = \int_{\Omega} \vec{a}\cdot\vec{b} dv,
+% % \end{equation}
+% % where $\Omega$ is the volume of the system. By discretizing $\grad$ operator and the inner product in space, we obtain
+% % \begin{equation}
+% %   \Me\dj + \MeSig\dgrad\phi = 0,
+% %   \label{eq:DCdisceq1}
+% % \end{equation}
+% % \begin{equation}
+% %   -\dgrad^T \Me\dj = \dgrad^T \Me\dj_s,
+% %   \label{eq:DCdisceq2}
+% % \end{equation}
+% % where $\mathbf{M}^e_i$ is the mass matrices, which discretize the edge based inner product (CITE). This inner products are defined  as
+% % \begin{align}
+% %   \mathbf{M}^e_i = \diag(\Ace^T\diag(\vol)\mathbf{i}).
+% % \end{align}
+% % Here, $\mathbf{i}$ indicates a grid function on cell center like $\sigma$, and $\vol$ is the grid function for the cell volume. The averaging matrix $\Ace$ averages discrete function defined on the edges to the cell center. The mass matrix $\Me$ without subscript $i$ indicates that $\mathbf{i}$ is equal to the identity column vector of which all elements are one. By substituting equation (\ref{eq:DCdisceq1}) to (\ref{eq:DCdisceq2}), we have
+% % \begin{equation}
+% %   \A^{DC}\phi = \mathbf{rhs}^{DC},
+% %   \label{eq:DCdiscLin}
+% % \end{equation}
+% % where $\A^{DC} = \dgrad^T \MeSig\dgrad$ and $\mathbf{rhs}^{DC} = \dgrad^T \Me\dj_s$. Sensitivity function of $\phi$ can be derived by taking derivative to equation (\ref{eq:DCdiscLin}) in terms of $\sigma$:
+% % \begin{equation}
+% %   \frac{\partial \phi}{\partial \sigma} = -(\A^{DC})^{-1}\dgrad^T\diag(\dgrad\phi)\Ace^T\diag(\vol).
+% %   \label{eq:DCsensedisc}
+% % \end{equation}
+% % We recall that continuous sensitivity function shown in equation (\ref{eq: senseDC}), which can be modified as
+% % \begin{equation}
+% %   \frac{\partial \phi}{\partial \sigma} = -[\div\sigma\grad]^{-1}\div\grad\phi.
+% %   \label{eq:DCsensecont}
+% % \end{equation}
+% % One can intuitively identify that continuous sensitivity function shown in equation (\ref{eq:DCsensecont}) can be discretized as equation (\ref{eq:DCsensedisc}) with the boundary condition specified on equation (\ref{eq:DCBCneumann}). This approach shows that some advantages of working in discretized space even for the derivation of continuous function (CITE).
 
-% \subsection{Discretization of linear IP problem}
-% In order to restore distributed $\peta(x, y, z; t)$ in 4D space, first we need to discretize Biot-Savart law shown in equations (\ref{eq: BiotbIP_approx}) and (\ref{eq: BiotbIPdt_approx}). In addition, based on the discretization that we choose, we need to compute $\e^{F}_{max}$. In our discretization $\j^{IP}$ and  $\tilde{\eta}_w$ are defined on the cell center, and those for each time channel are constant in a cell volume, whereas $\e^{F}_{max}$ is defined on the cell edges. We define the number of cells and edges in 3D space as nC and nE, respectively. Assuming we have discretized IP current densitivity distribution ($\dj^{IP}_{cc}$), which has dimension: [(3nC)$\times$1] and defined on the cell center, since $\j^{IP}$ has three components, we first discretize integration operator including cross product ($\int_{v}\frac{ \times \hat{r}}{r^2}dv$) as
-% \begin{equation}
-%   \mathbf{G}_{Biot} =
-%   \begin{bmatrix}
-%        \mathbf{e}^T &  \mathbf{0}   & \mathbf{0}  \\
-%        \mathbf{0}   &  \mathbf{e}^T & \mathbf{0}  \\
-%        \mathbf{0}   &  \mathbf{0}   & \mathbf{e}^T
-%     \end{bmatrix}
-%   \begin{bmatrix}
-%        \mathbf{0}     &   \mathbf{S}_z   & -\mathbf{S}_y  \\
-%       -\mathbf{S}_z   &   \mathbf{0}     &  \mathbf{S}_x  \\
-%        \mathbf{S}_y   &  -\mathbf{S}_x   &  \mathbf{0}
-%     \end{bmatrix},
-%  \end{equation}
-% where
-% \begin{eqnarray*}
-%   \mathbf{S}_i =\diag(\mathbf{r}_i \oplus \frac{1}{\mathbf{r}^2}), \ i = x, \ y, \ z
-% \end{eqnarray*}
-% and $\mathbf{e}$ is a column vector of which element is 1 and has the dimension: [nC$\times$1], $\diag(\cdot)$ is the diagonal matrix and $\oplus$ is the Hadamard product. Then we consider discrete expression for $\j^{IP}$ shown in equation (\ref{eq: jip_approx}), and modify this equation as
-% \begin{eqnarray}
-%   \dj^{IP}_{cc}(t) = -\mathbf{S}\diag(\de^{F}_{max})\Ace^T\diag(\vol)\diag(\siginf)\peta(t),
-% \end{eqnarray}
-% where
-% \begin{eqnarray}
-%   \mathbf{S} = \mathbf{A}^{e}_{ccv}\Me^{-1}[-\MeSigInf \mathbf{G} \A_{\siginf}^{-1}\mathbf{G}^T + \mathbf{I}] \diag(\de^{F}_{max})\Ace^T\diag(\vol)\diag(\siginf).
-% \end{eqnarray}
-% and $\mathbf{A}^{e}_{ccv}$ is discrete averaging matrix from edge to cell center with consideration of three component vector so that dimension of this matrix is [3nC$\times$nE]. Thus, we can have linear equation for $k^{th}$ time channel as
-% \begin{eqnarray*}
-%   \db^{IP}_k = -\Gbiot \mathbf{S} \peta_k,
-% \end{eqnarray*}
-% where sub-index $k$ indcates $k^{th}$ time channel. Finally, by letting
-% \begin{equation}
-%   \mathbf{J} = -\Gbiot\mathbf{S},
-%   \label{eq: Sense}
-% \end{equation}
-% we have
-% \begin{eqnarray}
-%   \db^{IP}_k = -\mathbf{J}\peta_k,
-%   \label{eq: bIP_linear}
-% \end{eqnarray}
-% where $\mathbf{J}$ is the Jacobian matrix of the linear equation, and since $\mathbf{J}$ is not time-dependent we also have
-% \begin{eqnarray}
-%   \frac{\partial\db^{IP}_k}{\partial t} = -\mathbf{J}\frac{\partial}{\partial t}\peta_k.
-%   \label{eq: dbIPdt_linear}
-% \end{eqnarray}
-% Therefore, we can restore distributed $\peta(t)$ or $\frac{\partial}{\partial t}\peta(t)$ based on the data type we have. Note that problems shown in equations (\ref{eq: bIP_linear}) and (\ref{eq: dbIPdt_linear}) are linear problems; thus, by solving linear inverse problem for each time channel we can recover distributed IP parameters. Detailed description about discrete operators are shown in Appendix ??.
+% % \subsection{Discretization of linear IP problem}
+% % In order to restore distributed $\peta(x, y, z; t)$ in 4D space, first we need to discretize Biot-Savart law shown in equations (\ref{eq: BiotbIP_approx}) and (\ref{eq: BiotbIPdt_approx}). In addition, based on the discretization that we choose, we need to compute $\e^{F}_{max}$. In our discretization $\j^{IP}$ and  $\tilde{\eta}_w$ are defined on the cell center, and those for each time channel are constant in a cell volume, whereas $\e^{F}_{max}$ is defined on the cell edges. We define the number of cells and edges in 3D space as nC and nE, respectively. Assuming we have discretized IP current densitivity distribution ($\dj^{IP}_{cc}$), which has dimension: [(3nC)$\times$1] and defined on the cell center, since $\j^{IP}$ has three components, we first discretize integration operator including cross product ($\int_{v}\frac{ \times \hat{r}}{r^2}dv$) as
+% % \begin{equation}
+% %   \mathbf{G}_{Biot} =
+% %   \begin{bmatrix}
+% %        \mathbf{e}^T &  \mathbf{0}   & \mathbf{0}  \\
+% %        \mathbf{0}   &  \mathbf{e}^T & \mathbf{0}  \\
+% %        \mathbf{0}   &  \mathbf{0}   & \mathbf{e}^T
+% %     \end{bmatrix}
+% %   \begin{bmatrix}
+% %        \mathbf{0}     &   \mathbf{S}_z   & -\mathbf{S}_y  \\
+% %       -\mathbf{S}_z   &   \mathbf{0}     &  \mathbf{S}_x  \\
+% %        \mathbf{S}_y   &  -\mathbf{S}_x   &  \mathbf{0}
+% %     \end{bmatrix},
+% %  \end{equation}
+% % where
+% % \begin{eqnarray*}
+% %   \mathbf{S}_i =\diag(\mathbf{r}_i \oplus \frac{1}{\mathbf{r}^2}), \ i = x, \ y, \ z
+% % \end{eqnarray*}
+% % and $\mathbf{e}$ is a column vector of which element is 1 and has the dimension: [nC$\times$1], $\diag(\cdot)$ is the diagonal matrix and $\oplus$ is the Hadamard product. Then we consider discrete expression for $\j^{IP}$ shown in equation (\ref{eq: jip_approx}), and modify this equation as
+% % \begin{eqnarray}
+% %   \dj^{IP}_{cc}(t) = -\mathbf{S}\diag(\de^{F}_{max})\Ace^T\diag(\vol)\diag(\siginf)\peta(t),
+% % \end{eqnarray}
+% % where
+% % \begin{eqnarray}
+% %   \mathbf{S} = \mathbf{A}^{e}_{ccv}\Me^{-1}[-\MeSigInf \mathbf{G} \A_{\siginf}^{-1}\mathbf{G}^T + \mathbf{I}] \diag(\de^{F}_{max})\Ace^T\diag(\vol)\diag(\siginf).
+% % \end{eqnarray}
+% % and $\mathbf{A}^{e}_{ccv}$ is discrete averaging matrix from edge to cell center with consideration of three component vector so that dimension of this matrix is [3nC$\times$nE]. Thus, we can have linear equation for $k^{th}$ time channel as
+% % \begin{eqnarray*}
+% %   \db^{IP}_k = -\Gbiot \mathbf{S} \peta_k,
+% % \end{eqnarray*}
+% % where sub-index $k$ indcates $k^{th}$ time channel. Finally, by letting
+% % \begin{equation}
+% %   \mathbf{J} = -\Gbiot\mathbf{S},
+% %   \label{eq: Sense}
+% % \end{equation}
+% % we have
+% % \begin{eqnarray}
+% %   \db^{IP}_k = -\mathbf{J}\peta_k,
+% %   \label{eq: bIP_linear}
+% % \end{eqnarray}
+% % where $\mathbf{J}$ is the Jacobian matrix of the linear equation, and since $\mathbf{J}$ is not time-dependent we also have
+% % \begin{eqnarray}
+% %   \frac{\partial\db^{IP}_k}{\partial t} = -\mathbf{J}\frac{\partial}{\partial t}\peta_k.
+% %   \label{eq: dbIPdt_linear}
+% % \end{eqnarray}
+% % Therefore, we can restore distributed $\peta(t)$ or $\frac{\partial}{\partial t}\peta(t)$ based on the data type we have. Note that problems shown in equations (\ref{eq: bIP_linear}) and (\ref{eq: dbIPdt_linear}) are linear problems; thus, by solving linear inverse problem for each time channel we can recover distributed IP parameters. Detailed description about discrete operators are shown in Appendix ??.
 
 \clearpage
 \bibliographystyle{plain}
