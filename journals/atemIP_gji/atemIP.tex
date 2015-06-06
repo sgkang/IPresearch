@@ -161,10 +161,10 @@ where $\delta(t)$ is Dirac delta function and $\mathscr{F}^{-1}[\cdot]$ is inver
 \end{equation}
 where intrinsic pseudo-chargeability, $\peta^{I}(t)$ is
 \begin{equation}
-    \peta^{I}(t) = \frac{\eta}{(1-\eta)\tau}e^{-\frac{t}{(1-\eta)\tau}}u(t)
+    \peta^{I}(t) = -\frac{\dsig(t)}{\siginf}. %=\frac{\eta}{(1-\eta)\tau}e^{-\frac{t}{(1-\eta)\tau}}u(t)
     \label{eq: intrinsic_peta}
 \end{equation}
-and $u(t)$ is Heaviside step function. This explicit expression for time domain Cole-Cole model can give us some insights about IP effect in time domain. Cole-Cole model in time domain is also shown in Figure ~\ref{Fig:FDandTDCole}. Used Cole-Cole parameters here are same as the above.
+Cole-Cole model in time domain is also shown in Figure ~\ref{Fig:FDandTDCole}. Used Cole-Cole parameters here are same as the above.
 
 \begin{figure}
   \centering
@@ -264,7 +264,7 @@ where the polarization current ($\j^{pol}$) is
 \end{equation}
 The polarization current is the convolution between $\dsig (t)$ and the total electric field. 
 Thus, if the electric field has different characteristic for the inductive and galvanic sources, this will be incorporated in the polarization current.
-We consider two cases: a) galvanic source without EM induction and b) inductive source with EM induction. The first case corresponds to Electrical IP (EIP; Seigel), and the second on is ISIP.
+We consider two cases: a) galvanic source without EM induction and b) inductive source with EM induction. The first case corresponds to Electrical IP (EIP; Seigel), and the second one is ISIP.
 Figure \ref{F:DCEM_F_current} shows the magnitude of the fundamental electric field ($\e^{F}$) in the earth for those two cases. 
 For the galvanic source, the electric field is instantaneous due to the steady-state electric field (Figure \ref{F:DCEM_F_current} (a)). 
 However, for the inductive source, the electric field on off-time is not zero, but increases to the peak then decays as shown in Figure \ref{F:DCEM_F_current} (b). 
@@ -281,7 +281,7 @@ where the reference current ($\j^{ref}$) is defined as
 \end{equation}
 Here $\eref$ is the reference electric field. 
 Both $\j^{\ ref}$ and $\eref$ are static field that is independent on time. 
-The pseudo-chargeability is the fraction of the polarization current and the reference current. From the definition of the polarization current, we can simply expect magnitude of the IP response is proportional to that of the pseudo-chargeability, and it varies it time. 
+The pseudo-chargeability is the fraction of the polarization current and the reference current. From the definition of the polarization current, we can simply expect magnitude of the IP response is proportional to that of the pseudo-chargeability, and it varies in time. 
 The pseudo-chargeability is an important property because we are going to linearize IP response as a function of the pseudo chargeability. 
 To evaluate the pseudo-chargeability, we have to identify the reference current or electric fields. 
 For the EIP case, the choice of the reference current is obvious because the electric field is independent on time without IP effect as shown in Figure \ref{F:DCEM_F_current}a). 
@@ -412,20 +412,105 @@ On the other hand, we must carefully investigate the assumptions that we have ma
 %% =============================================================================
 
 \section{IP inversion methodology}
-The IP inversion of TEM data can have multiple steps including some processings and the application of the 3D inversion. Therefore, we suggest a procedure of the 3D IP inversion for TEM data as following.
-To obtain the fundamental EM response, $d^F$, (a) invert ATEM data and recover a 3D conductivity model ($\sigma_{est}$). 
+
+%%% ===========================================================================
+%%% SUBSECTION
+\subsection{IP inversion procedure}
+The IP inversion of ATEM data can have multiple steps including some processings and the application of the 3D inversion. We suggest a procedure of the 3D IP inversion for ATEM data as following.
+To obtain the fundamental EM response, $d^F$, (1) invert ATEM data and recover a 3D conductivity model ($\sigma_{est}$). 
 This may involve omitting data that are obviously contaminated with IP signals, such as the existence of negative transients in coincident loop surveys. 
-(b) Forward modelling then yields an approximate value of $d^F$ and subtract it from the observations, $d$. 
-However, we cannot get the correct $d^F$, since the estimated conductivity is not exact. 
-(c) Therefore the computed $\dip$ data may have some errors containing both a residual field due to the incorrect conductivity and some noises. This residual field potentially need to be removed with some processings. 
-(d) The final data are linearly related to a pseudo-chargeability through a sensitivity function shown in equation (\ref{eq: dIP_lineareq}). 
-(e) The $\dip$ at various time channels can be inverted individually. The pseudo-chargeability models may be useful in themselves or they can be further processed to estimate Cole-Cole, or equivalent IP parameters.
+(2) Forward modelling then yields an approximate value of $d^F$ and subtract it from the observations, $d$. 
+However, we cannot obtain the correct $d^F$, since the estimated conductivity is not exact. 
+(3) Therefore the computed $\dip$ data may have some errors containing both a residual field due to the incorrect conductivity and some noises. This residual field potentially need to be removed with some processings. 
+The final data are linearly related to a pseudo-chargeability through a sensitivity function shown in equation (\ref{eq: dIP_lineareq}). 
+(4) The $\dip$ at various time channels can be inverted individually. The pseudo-chargeability models may be useful in themselves or they can be further processed to estimate Cole-Cole, or equivalent IP parameters.
 
+%%% ===========================================================================
+%%% SUBSECTION
 \subsection{Equivalent pseudo-chargeability}
+We derived a linearized kernel function of $\dip$ response as a function of the pseudo-chargeability ($\peta(t)$) for general TEM surveys. 
+An important point of this derivation is that the pseudo-chargeability is defined for each sounding that is, they are different for each sounding. 
+This indicates that IP response should be defined as 
+\begin{equation}
+  \dip_k(t) = J_k[\peta_k (t)], \ \ k=1, \ldots, nTx,
+\end{equation}
+the subscript $k$ indicates $k$-th sounding and $nTx$ is the number of soundings. This  induces a significant problem for ATEM case because this survey contains numerous soundings.
+Setting up an inverse problem for 3D pseudo-chargeability of each sounding will cause extremely non-unique inverse problem. 
+To effectively deal with this issue, we suggest an equivalent pseudo-chargeability ($\peta_{eqv}$), which represents pseudo-chargeability from every sounding with reasonable explanation of the IP responses. 
 
-\subsection{3D IP inversion}
+From the definition shown in equation (\ref{eq: pseudochargeability}), we recognize that the pseudo-chargeability is fraction of the polarization and the reference current. 
+Using the normalization of the polarization current with the reference current, which will be different for each sounding, we make our best to express the pseudo-chargeability as an independent property for each sounding. 
+This will mainly depend on $w^e(t)$, because the pseudo-chargeability is the convolution between $\peta^{I}(t)$ and $w^e(t)$:
+\begin{equation}
+  \peta_k(t) = \peta^{I}(t) \otimes w^e_k(t),
+  \label{eq: pseudochargeability_petaI}
+\end{equation}
+Therefore, if $w^e_k$ is identical for every sounding, then we can let $\peta_{eqv} = \peta_k$, $k=1, \ldots, nTx$. 
+Based on this, we obtain a linear equation for IP responses as
+\begin{equation}
+  \dip_i =J[\peta_{eqv \ i}],
+  \label{eq: pseudochargeability_equivalent}
+\end{equation}
+where the sensitivity function, $J[\cdot]$ takes $\peta_{eqv \ i}$, and outputs $\dip_i$ responses for all soundings at the $i$-th time. 
+Reliability of the equivalent pseudo-chargeability for ATEM survey should be carefully investigated. 
+
+%%% ===========================================================================
+%%% SUBSECTION
+\subsection{3D IP inversion with linearized kernel}
+To set up an linear inverse problem we rewrite equation (\ref{eq: dIP_lineareq}) as
+\begin{eqnarray}
+  \mathbf{d}^{pred} = \mathbf{A}\mathbf{m},
+  \label{eq9}
+\end{eqnarray}
+where $\mathbf{A}$ is sensitivity matrix of linear problem, which corresponds to $\mathbf{J}$ shown in equation (\ref{eq: dIP_lineareq}) 
+Here, $\mathbf{d}^{pred}$ is IP responses at $i^{th}$ time channel ($\mathbf{d}^{IP}_i$), $\mathbf{m}$ is distributed model parameters, which can be either $\peta_{i}$ or $\frac{\partial}{\partial t}\peta_{i}$. 
+This presents that we invert each time channel of $d^{IP}$, separately. 
+Our inversion methodology is based upon that described in \cite{doug1994}. The solution to the inverse problem is the model $\mathbf{m}$ that solves the optimization problem
+\begin{eqnarray}
+  minimize \ \phi =  \phi_d(\mathbf{m}) + \phi_m(\mathbf{m})\nonumber \\
+  s.t. \ 0 \le \mathbf{m},
+  \label{eq10}
+\end{eqnarray}
+where $\phi_d$ is a measure of data misfit, $\phi_m$ is a user defined model objective function and $\beta$ is regularization or trade-off parameter. 
+We use the sum of the squares to measure data misfit
+\begin{eqnarray}
+  \phi_d = \| \mathbf{W_d}(\mathbf{A}\mathbf{m}-d^{obs}|)\|^2_2 =
+  \sum^N_{j=1}(\frac{\mathbf{d}^{pred}_j-\mathbf{d}^{obs}_j}{\epsilon_j}),
+  \label{eq11}
+\end{eqnarray}
+where $N$ is the number of the observed data and $\mathbf{W_d}$ is a diagonal data weighting matrix which contains the reciprocal of the esitmated uncertainty of each datum (
+$\epsilon_j$) on the main diagonal,  $\mathbf{d}^{obs}$ is a vector containing the observed data, $\mathbf{d}^{pred}$ is a vector containing calculated data from a linear equation given in equation (\ref{eq9}).
+The model objective function, $\phi_m$ is a measure of amount structure in the model and upon minimization this will generate a smooth model which is close to a reference model, $m_{ref}$. 
+We define $\phi_m$ as
+\begin{eqnarray}
+  \phi_m = \alpha_s\| \mathbf{W}_s\mathbf{W}(\mathbf{m}-\mathbf{m}_{ref})\|^2_2+
+       \alpha_x\| \mathbf{W}_x\mathbf{W}(\mathbf{m}-\mathbf{m}_{ref})\|^2_2+ \nonumber \\
+       \alpha_y\| \mathbf{W}_y\mathbf{W}(\mathbf{m}-\mathbf{m}_{ref})\|^2_2+
+       \alpha_z\| \mathbf{W}_z\mathbf{W}(\mathbf{m}-\mathbf{m}_{ref})\|^2_2,
+  \label{eq12}
+\end{eqnarray}
+where $\mathbf{W}_s$ is a diagonal matrix, and $\mathbf{W}_x$, $\mathbf{W}_y$ and $\mathbf{W}_z$ are discrete approximations of the first derivative operator in $x$, $y$ and $z$ directions, respectively.  
+The $\alpha$'s are weighting parameters that balance the relative importance of producing small or smooth models. We are inverting each time channel of $\dip$ datum, separately. Thus, we may not have intrinsic depth resolution in the inversion. To compensate this, similar to magnetic inversion (\cite{LiMag3D}), we apply depth weighting through model weighting matrix ($\mathbf{W}$):
+\begin{equation}
+    \mathbf{W} = \mathbf{diag}(\mathbf{z-z_0})^{1.5},
+    \label{eq: weight_mat}
+\end{equation}
+where $\mathbf{z}$ and $\mathbf{z_0}$ are discretized depth locations and reference depth in 3D domain.
 
 \subsection{Extracting intrinsic IP parameters}
+
+Output of our IP inversion is 3D distribution of the pseudo-chargeability at multiple time channels. 
+Thus the recovered pseudo-chargeability can be considered as 4D property. 
+As its name suggests, pseudo-chargeability is not intrinsic IP parameters like chargeability, but convoluted property between $\peta^{I}(t)$ and $w^{e}(t)$ as shown in equation \ref{eq: pseudochargeability_petaI}. 
+Assuming Debye model ($c$=1), we obtain
+\begin{equation}
+    \peta^{I}(t) = \frac{\eta}{(1-\eta)\tau}e^{-\frac{t}{(1-\eta)\tau}}u(t),
+    \label{eq: intrinsic_peta_debye}
+\end{equation}
+where $u(t)$ is Heaviside step function. 
+Since should have information about 3D conductivity after 3D IP inversion, we can compute  $w^e(t)$, which is time history of the electric field. 
+Accordingly, we can unravel recovered pseudo-chargeability to recover intrinsic IP parameters such as chargeability($\eta$) and time constant ($\tau$). 
+This will include solving an inverse problem for each cell. 
 
 %% =============================================================================
 %% Section. Numerical experiments
