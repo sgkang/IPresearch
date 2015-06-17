@@ -97,6 +97,7 @@
 \newcommand{\dip}{d^{IP}}
 \newcommand{\sigpert}{\delta\sigma}
 
+
 \begin{document}
 %generate the title
 
@@ -110,7 +111,6 @@
 %%% ===========================================================================
 
 \section{Introduction}
-
 %%% ===========================================================================
 %%% SECTION 
 %%% ===========================================================================
@@ -716,7 +716,7 @@ where $\mathbf{w}$ is a column vector for weighting each model parameters.
 %% =======================================================================
 
 \section{Application: airborne time domain EM}
-In order to investigate the suggested methodologies to restore distributed IP parameters from the IP responses in airborne time domain EM (ATEM) problem, we compose an IP body model, which includes the IP body in the half-space as shown in Figure~\ref{F: IPModel}. Cole-Cole parameters of this IP body are fixed to $\eta=$0.2, $\tau=$0.005 and $c=$1. Conductivity value of the half-space, ($\sigma_1$) is fixed to $10^{-3}$ S/m, whereas $\siginf$, which is same as $\sigma_2$ for the IP body varies. We have three different models, which we named canonical ($\sigma_2=\sigma_1$), conductive ($\sigma_2=10^2\times\sigma_1$) and resistive models ($\sigma_2=10^{-2}\times\sigma_1$).   For the discretization of 3D earth, $50\times50\times50$ m core cell is used and the number of cell in the domain is $41\times41\times40$. The size of the IP body is $250\times250\times250$ m and the top boundary of this IP body is located at $50$ m below the surface. In order to generate synthetic ATEM-IP data, we use EMTDIP code developed by \cite{Marchant2014}
+In order to investigate the suggested methodologies to restore distributed IP parameters from the IP responses in airborne time domain EM (ATEM) problem, we compose an IP body model, which includes the IP body in the half-space as shown in Figure~\ref{F: IPModel}. Cole-Cole parameters of this IP body are fixed to $\eta=$0.2, $\tau=$0.005 and $c=$1. Conductivity value of the half-space, ($\sigma_1$) is fixed to $10^{-3}$ S/m, whereas $\siginf$, which is same as $\sigma_2$ for the IP body varies. We have three different models, which we named canonical ($\sigma_2=\sigma_1$), conductive ($\sigma_2=10^2\times\sigma_1$) and resistive models ($\sigma_2=10^{-2}\times\sigma_1$).   For the discretization of 3D earth, $50\times50\times50$ m core cell is used and the number of cell in the domain is $41\times41\times40$. The size of the IP body is $250\times250\times200$ m and the top boundary of this IP body is located at $50$ m below the surface. In order to generate synthetic ATEM-IP data, we use EMTDIP code developed by \cite{Marchant2014}
 
 Survey geometry include 11 soundings in each 11 lines as shown in Figure \ref{F: IPModel}a. We use coincident-loop system and both Tx and Rx are located 30 m above the surface; the radius of the loop is 10 m. Step-off transmitter waveform is used and the range of the observed time channel is 0.01-10 ms. The observed responses can be either vertical component of $\b$ or $\frac{\partial \b}{\partial t}$ fields. Based on this set up, in this section, first we analyze ATEM responses with IP effect and identify $\dip$ embedded in the observed data. Second, we validate approximations in our linearization idea by comparing $\j^{IP}$ and $\j^{IP}_{approx}$. Furthermore, for the inverse problem, we will not recover pseudo-chargeability for each soundings but a representative pseudo-chargeability, which is same for every sounding. We also treat this issue while we are verifying our assumptions. 
 Based on this validation, third, we apply linear inversion to each time channel of $\dip$ data separately and restore 3D distribution of pseudo-chargeability for each time channel. Finally, we investigate the possibility of extracting intrinsic IP parameters from pseudo-chargeability with deconvolution approach. 
@@ -731,7 +731,6 @@ Based on this validation, third, we apply linear inversion to each time channel 
   \label{F: IPModel}
 \end{figure}
 \clearpage
-
 \subsection{Analyses of ATEM-IP responses}
 IP responses in ATEM data are different from different conductivity structure. Understanding different characteristics in IP response due to different conductivity can provide us important background physics. We use three different conductivity models: canonical, conductive and resistive. Then,  we proceed EM decoupling approach, which subtract $d^F$ from $d$,  assuming that we know true conductivity ($\siginf$), for all three cases and discuss features of IP response from different conductivity. 
 
@@ -879,7 +878,7 @@ Although the physical understanding of the linearized kernel function is importa
   \label{F:wepetathree}
 \end{figure}
 %%===================================================================
-\subsection{Interrogation of the 3D ATEM-IP inversion}
+% \subsection{Interrogation of the 3D ATEM-IP inversion}
 %%===================================================================
 \subsubsection{Validation for an equivalent pseudo-chargeability}
 For the 3D IP inversion using the linearized kernel function, we assume an equivalent pseudo-chargeability (equation (\ref{eq: pseudochargeability_equivalent})). If the $w^e_k(t)$ for each sounding is same, our assumption is true as shown in equation (\ref{eq: pseudochargeability_petaI}). 
