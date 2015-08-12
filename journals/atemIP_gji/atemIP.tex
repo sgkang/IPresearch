@@ -116,24 +116,47 @@
 % \newcommand{\btx}{\textsc{BibTeX}}
 
 \begin{document}
+
 \maketitle
+
+\abstract{We develop a procedure to invert time domain induced polarization (IP) data for inductive sources. 
+Our approach based upon the inversion methodology in electrical IP (EIP), which uses linear sensitivity function, although careful treatments are required for inductive source IP (ISIP). 
+The principal difference of inductive source IP (ISIP) from conventional EIP is the absence of steady-state electric field. 
+After turn-off of the current, the amplitude of the electric field starts from zero, reaches to peak then decays. 
+This different excitation mechanism will increase the complexity in polarization currents (i.e. vortex currents in a conductor).
+Thus, this difference should be incorporated in the linearization, and we effectively incorporate this using a proper reference electric field. 
+Because data type for inductive source is usually either magnetic field or its time derivative, we use Biot-Savart law to generate linearized sensitivity function. 
+Our inversion procedure has three following steps:
+1) Invert TEM data and recover 3D distribution of conductivity.
+2) To decouple IP responses embedded in the observations, we forward model TEM data and subtract this from the observations. Since the recovered conductivity is not correct, computed IP responses may include some residual fields, which possibly need to be removed with some post-processings. 
+3) By using linearized sensitivity function, we apply 3D IP inversion to each time channel and recover pseudo-chargeability. Post-interpretation of recovered pseudo-chargeability at multiple times allows us to recover intrinsic Cole-Cole parameters such as time constant and chargeability. 
+Although we mostly focused on airborne time domain EM (ATEM) data with coincident-loop configuration due to its distinctive IP signature in practice: negative response, the IP inversion procedure we design are generic can be applied to different types of TEM survey. 
+With numerical examples, we systematically test the capability of the linearization for ISIP responses for different conductivity structures. 
+Although the linearization was successful for each transmitter, different pseudo-chargeability for each transmitter was a critical issue to proceed inversion for ATEM data. 
+By deriving an effective pseudo-chargeability, which represents every pseudo-chargeability from different transmitters, and testing this, we successfully dealt with this issue to proceed usual IP inversion. 
+We illustrate our inversion procedure by inverting synthetic ISIP data.
+}
+
 \tableofcontents
 \clearpage
 
+%% =============================================================================
+%% Section. Intro.
+%% =============================================================================
 \section{Introduction}
 The electrical conductivity of earth materials can be frequency dependent with the effective conductivity decreasing with decreasing frequency due to the buildup of electric charges that occur under the application of an electric field.
 Effectively, the rock is electrically polarized. 
-Application of this induced polairzation (IP) technique has been particularly successful in mineral exploration for disseminated sulphide or porphyry deposits (CITES). Sucesses of the IP technique has been shown in geotechnical and enviromental problems as well (CITES). 
+Application of this induced polairzation (IP) technique has been particularly successful in mineral exploration for disseminated sulphide or porphyry deposits (\cite{Pelton1978, Fink1990}). Sucesses of the IP technique has been shown in geotechnical and enviromental problems as well (\cite{Kemna2012}). 
 % Doug
 % Finding this induced polarization (IP) response has been important in mineral exploration but it is also important in environmental problems, groundwater flow, and site characterization (CITES). 
-Polarization charges can accumulate whenever there is an electric field in a medium. In controlled source surveys, the transmitter can be a galvanic source (a generator attached to two grounded electrodes), or an inductive source (arising from current flowing in a wire loop). Most of the researches and applications have focused upon using grounded electrodes and measuring electric fields (EIP survey)  (\cite{seigel1959}). Magnetic fields arising from polarization currents (MIP survey) have also been successfully used, particularly in mineral exploration geologies characterized by a conductive overburden (\cite{seigel1974}). In recent years attention has also turned towards the use of inductive sources. (reasons:  resistive overburden difficult to put current into the ground; also for airborne surveys there is no choice).  Inductive source IP (ISIP), can have transmitters in the air or on the ground and the waveforms can be in either the frequency or time domain. Recently  (\cite{Marchant2012b}) showed how, by collecting data at two frequencies, it was possible to measure a datum that depended purely on IP signals and that these data can be inverted to recover a 3D distribution of chargeability. 
+Polarization charges can accumulate whenever there is an electric field in a medium. In controlled source surveys, the transmitter can be a galvanic source (a generator attached to two grounded electrodes), or an inductive source (arising from current flowing in a wire loop). Most of the researches and applications have focused upon using grounded electrodes and measuring electric fields called EIP survey (\cite{seigel1959}). Magnetic fields arising from polarization currents (MIP survey) have also been successfully used, particularly in mineral exploration geologies characterized by a conductive overburden (\cite{seigel1974}). In recent years attention has also turned towards the use of inductive sources. (reasons:  resistive overburden difficult to put current into the ground; also for airborne surveys there is no choice).  Inductive source IP (ISIP), can have transmitters in the air or on the ground and the waveforms can be in either the frequency or time domain. Recently  (\cite{Marchant2012b}) showed how, by collecting data at two frequencies, it was possible to measure a datum that depended purely on IP signals and that these data can be inverted to recover a 3D distribution of chargeability. 
 For time domain systems the observations of negative transients in coincident loop systems provide an distinctive verification of chargeable material (\cite{Weidelt1982}). These negative transients have been frequently observed (\cite{SmithandKlein,Kratzer2012,Kang2015a}). In addition, effects of chargeable objects on time domain system with inductive source has been carefully investigated (\cite{Smith1988a,Flis1989,ElKaliouby2004, Marchant2014}). 
 
-Extracting information about the complex conductivity can be done in a variety of ways. In principle it can be solved by finding a function $\sigma(x,y,z,\omega)$ or parameterizing the complex conductivity, usually with a Cole-Cole type model, and finding the distribution of those parameters(\cite{Yuval1997,Hordt2006}). Traditionally, however, with EIP and time domain waveforms, one first estimates the background conductivity from the asymptotic on-time data and then inverts off-time data to recover information about ``chargeability'' (\cite{doug1994}). This is carried out by solving an inverse problem using a linear function where the sensitivities depend upon geometry of the survey and the background conductivity. The recovered values are really pseudo-chargeability, and they have the same units as the data (eg. msec, mV/V). The same procedure can be used in frequency domain experiments but the data might have units or mrad, pfe (percent frequency effect). Inversion of IP data to recover 2D or 3D distributions of pseudo-chargeability are now commonly carried out. These inversions delineate locations of high pseudo-chargeability and the geometry of the bodies. MIP data can be inverted with the same methodology (\cite{Chen2003}). 
+Extracting information about the complex conductivity can be done in a variety of ways. In principle it can be solved by finding a function $\sigma(x,y,z,\omega)$ or parameterizing the complex conductivity, usually with a Cole-Cole type model, and finding the distribution of those parameters (\cite{Yuval1997,Hordt2006}). Traditionally, however, with EIP and time domain waveforms, one first estimates the background conductivity from the asymptotic on-time data and then inverts off-time data to recover information about ``chargeability'' (\cite{doug1994}). This is carried out by solving an inverse problem using a linear function where the sensitivities depend upon geometry of the survey and the background conductivity. The recovered values are really pseudo-chargeability, and they have the same units as the data (eg. msec, mV/V). The same procedure can be used in frequency domain experiments but the data might have units of mrad and pfe (percent frequency effect). Inversion of IP data to recover 2D or 3D distributions of pseudo-chargeability are now commonly carried out. These inversions delineate locations of high pseudo-chargeability and the geometry of the bodies. MIP data can be inverted with the same methodology (\cite{Chen2003}). 
 
 The physical mechanisms by which polarization charges and currents are established in the ground are independent of their type of transmitter and waveform; the important quantity is the time history of the electric field within the earth. The challenge posed by the use of  inductive sources is that steady state electric fields are not established inside the earth as they are for EIP or MIP surveys. The electric field at any location will increase to a maximum value and then decrease as the EM wave diffuses through. The EM fields at any position and time depend upon the convolution of the electric field with the time-dependent conductivity of the rock. Unravelling these complexities, and providing a framework for extracting information about IP characteristics of rocks, are issues we address in our paper. 
 
-Our procedure involves three principal steps: 1) estimating the 3D background conductivity, 2) carrying out an EM decoupling to produce IP data ($\dip$), and 3) inverting $\dip$ using a linear functional. Each of these steps requires special attention for inductive source data and approximations are required in order to proceed. We address these as they are encountered. Our paper proceeds as follows. We first outline our decomposition process for obtaining our $\dip$ data, define a pseudo-chargeability, and  show how our problem can be linearized. For ATEM surveys with multiple transmitters, we show how to generate a single linear inverse problem that can be solved for an effective pseudo-chargeability. The data and  pseudo-chargeability are linearly related through the Biot-Savart law and hence a depth weighting, required for other potential field inversions, is necessary to obtain geologic solutions. The inversion can be carried out at multiple times and a pseudo-chargeability as function of time can be generated. These results can be used to recover intrinsic decays of the chargeable rock units and thus potentially differentiate between rock types in the same manner as carried out by \cite{Yuval1997} using EIP data. In our numerical experiments, we investigate the above steps and procedures, test our assumptions, and evaluate the circumstances under which our technique might provide meaningful results. Although  we focus upon airborne TEM data, the analysis we present here is valid for surveys on the earth’s surface using inductive sources and also for grounded sources although many of the complications we deal with are not relevant. 
+Our procedure involves three principal steps: 1) estimating the 3D background conductivity, 2) carrying out an EM decoupling to produce IP data ($\dip$), and 3) inverting $\dip$ using a linear functional. Each of these steps requires special attention for inductive source data and approximations are required in order to proceed. We address these as they are encountered. Our paper proceeds as follows. We first outline our decomposition process for obtaining our $\dip$ data, define a pseudo-chargeability, and  show how our problem can be linearized. For ATEM surveys with multiple transmitters, we show how to generate a single linear inverse problem that can be solved for an effective pseudo-chargeability. The data and  pseudo-chargeability are linearly related through the Biot-Savart law and hence a depth weighting, required for other potential field inversions, is necessary to obtain geologic solutions. The inversion can be carried out at multiple times and a pseudo-chargeability as function of time can be generated. These results can be used to recover intrinsic decays of the chargeable rock units and thus potentially differentiate between rock types in the same manner as carried out by \cite{Yuval1997} using EIP data. In our numerical experiments, we investigate the above steps and procedures, test our assumptions, and evaluate the circumstances under which our technique might provide meaningful results. Although  we focus upon airborne TEM data, the analysis we present here is valid for surveys on the earth’'s surface using inductive sources and also for grounded sources although many of the complications we deal with are not relevant. 
     
 %% =============================================================================
 %% Section. Complex conductivity
@@ -322,7 +345,7 @@ where a projection ($P_0[\cdot]$) of an arbitrary function, $f(t)$ is
     f(t) & f(t) \ge 0 \\
     0 & \text{if } f(t) < 0, 
   \end{array}\right.
-  \label{eq: we}
+  \label{eq: P0}
 \end{equation}
 and
 \begin{equation}
@@ -506,7 +529,7 @@ Chargeability and time constant can be obtained by using $a$ and $b$:
   \tau =  \frac{a}{b}.
 \end{equation}
 We apply this inversion separately to each cell in the recovered pseudo-chargeability  in a manner similar to \cite[]{Yuval1997}.
-For the better representation of time-dependent conductivity, a different parameterization such as stretched-exponential (CITE) or Cole-Cole model with variable $c$ can be implemented. 
+For the better representation of time-dependent conductivity, a different parameterization such as stretched-exponential (\cite{Kohlrausch1854}) or Cole-Cole model with variable $c$ can be implemented. 
 
 % %%% ===========================================================================
 % %%% SUBSECTION
@@ -865,7 +888,7 @@ There is not a large difference between the two inversions  which suggests that 
 \subsubsection{Extracting intrinsic IP parameters}
 By applying our inversion to each time channel of $\dip$ data separately, we can recover 3D distributions of pseudo-chargeability at multiple times. 
 Pseudo-chargeability at each time carried different information about the state of polarization and we can use these to recover information about intrinsic IP parameters. 
-Diverse time-dependent conductivity models such Cole-Cole model and stretched exponential can be used for this interpretation.
+Diverse time-dependent conductivity models such Cole-Cole model and stretched-exponential can be used for this interpretation.
 We use the Cole-Cole model with $c$=1. 
 We parametrize pseudo-chargeability at a single pixel in terms of chargeability and time constant as described in Section \ref{section: extract_intrinsicIP}, and solve a small inverse problem. This parallels \cite[]{Yuval1997,Hordt2006}.
 
