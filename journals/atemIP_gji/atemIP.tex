@@ -795,28 +795,26 @@ At 0.86 ms, the observations are dominated by the fundamental response and no ne
 %%% SUBSECTION
 \subsection{Polarization currents}
 % Doug: What exactly is this section verifying wrt to any approximations?
-To evaluate the polarization current shown in equation (\ref{eq:polarization_current}) for the linear functional, we assumed $\e(t) \approx \eref \hat{w}(t)$, $\j^{\ ref}=\siginf \eref$ yielding $\j^{pol}(t) \approx -\j^{\ ref} \peta(t)$. This approximation will work when polarization currents developed from the charging or discharging process correspond to a reference current aligned in a onstant direction. Accordingly, the choice of a reference electric field is crucial. 
+To evaluate the polarization current shown in equation (\ref{eq:polarization_current}) for the linear functional, we assumed $\e(t) \approx \eref w^e(t)$ and defined our reference current as $\j^{ref}=\siginf \eref$. That yielded our approximation of the polarization current to be yielding $\j^{pol}(t) \approx -\j^{\ ref} \peta(t)$. This approximation states two crucial points: a) a polarization current correspond to a reference current aligned in a constant direction since $\peta(t)$ is scalar property. b) Direction of the polarization current does not change in time. 
+We investigate these by evaluating both reference and polarization currents. 
+From equation (\ref{eq:reference_electricfield}), the reference current can be considered as the maximum fundamental current occurred in time history. 
+To evaluate polarization currents we rearrange equation (\ref{eq:IP_current}) as $\j^{pol} = \j^{IP} - \siginf\e^{IP}$. Computation of this subtraction yields the polarization currents. 
 
-%The maximum electric field was chosen as the the reference electric field, which includes the time history of the fundamental electric field (equation (\ref{eq:reference_electricfield})). Since our focus here is the polarization current, analyzing the reference current is more insightful than the reference electric field. 
+Here we limit our attention to canonical and conductive models. 
+Figure ~\ref{F:ReferenceCurrent}a and b show reference currents for canonical and conductive models, respectively. 
+A transmitter is located at (-200 m, 0 m, 30 m) and marked as a white solid circle in the figure, where ($\cdot, \cdot, \cdot$) means a point at (easting, northing, depth).
+Reference currents for the canonical model are circular, centered to the transmitter location, and is decaying as further away from this location. 
+For conductive model, additional vortex currents induced in the conductor are observed.
+We compare these reference currents with polarization currents. 
+Figures ~\ref{F:Polarizationcurrent_early} show the plan and section view maps of the polarization currents at 0.86 ms.
+Comparisons of Figures ~\ref{F:ReferenceCurrent} and ~\ref{F:Polarizationcurrent_early} clearly show that polarization currents for both canonical and conductive models are oppositely aligned with reference currents for those models. 
+Figure ~\ref{F:Polarizationcurrent_late} show polarization currents at 6.7 ms, and direction of polarization currents are similar to those at 0.86 ms. 
+This illustrates that direction of polarization currents after 0.86 ms for both canoncial and conductive models are almost constant in time. 
 
-We first analyze the reference currents for the canonical and conductive models shown in Figure ~\ref{F:ReferenceCurrent}a and b, respectively. 
-Here a transmitter is located at (-200 m, 0 m, 30 m) and marked as a white solid circle, where ($\cdot, \cdot, \cdot$) means a point at (easting, northing, depth).  
-The fundamental current for the canonical model is circular, centered to the transmitter location, and is decaying as further away from this location. This feature is clearly captured in the reference current as shown in Figure ~\ref{F:ReferenceCurrent}a. 
-In the chargeable body, most of the currents are aligned in the northing direction. 
+For the EIP, we simply expect dipolar IP response originated from the linear-shaped polarization current in a chargeable medium (\cite{seigel1959}). 
+However, for the ISIP additional complexity arises due to vortex currents induced in a conductor because these generate complicated polarization currents with chargeable medium. 
+Our choice of reference currents effectively incorporates complicated direction of polarization currents for the conductive model. 
 
-The reference currents for the conductive body are more complex. The circular current observed in a uniform halfspace representing the canonical model case are observed, but the EM induction has produced vortex currents in the body. Both of these characteristics are observed in Figure ~\ref{F:ReferenceCurrent}b.   
-Especially in the body, the reference current is composed of linear currents aligned in northing direction and rotating currents in clockwise and counter-clockwise at plan and section view maps, respectively. 
-
-Figures ~\ref{F:Polarizationcurrent_early} and ~\ref{F:Polarizationcurrent_late} show the plan and section view maps of the polarization currents at 0.86 ms and 6.7 ms, respectively. 
-For the canonical model, polarization currents show linear currents alingned in northing direction, but opposite direction to the reference current. 
-Similar to the amplitude of the reference current, closer volumes to transmitter location in the body has greater amplitude of the polarization current. 
-Vortex currents induced by the conductor makes polarization currents more complicated compared to those for the canonical case. 
-This shows complexity in the ISIP compared to the EIP, because we can simply expect dipolar IP response originated from the linear-shaped polarization current in a chargeable body (\cite{seigel1959}) for the EIP.
-This complexity is effectively incorporated to the linear functional via the reference current. 
-Direction of polarization currents for conductive case is also aligned with the opposite direction of the reference current.
-Comparing two different times of the polarization currents show that direction of the polarizaiton currents almost constant at these times, whereas their amplitudes decrease as time increases. 
-
-% Seogi: Remove Rx in the figure
 \begin{figure}
   \figbox*{}{}{
   \includegraphics[width=1\textwidth]{figures/ReferenceCurrent.png} }
@@ -842,7 +840,6 @@ Comparing two different times of the polarization currents show that direction o
 %%% ===========================================================================
 %%% SUBSECTION
 \subsection{IP currents}
-
 The IP currents, as provided in equation (\ref{eq:IP_current}), are given as 
 \begin{linenomath*}
 \begin{equation}
