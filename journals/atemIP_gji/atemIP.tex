@@ -177,11 +177,11 @@ An often-used representation for complex conductivity in the frequency domain is
 where $\sigma_{\infty}$ is the conductivity at infinite frequency, $\eta$ is the intrinsic chareability, $\tau$ is the time constant and $c$ is the frequency dependency. Real and imaginary parts of complex conductivity in frequency domain are shown in Figure ~\ref{Fig:FDandTDCole}(a) with Cole-Cole parameters: $\siginf$ = $10^{-2}$ S/m, $\eta $ = 0.5, $\tau$ = 0.01, and $c$=1. By applying inverse Fourier transform with time dependency, $e^{\imath\omega t}$, we have
 \begin{linenomath*}
 \begin{equation}
-  \sigma(t) = \mathscr{F}^{-1}[\sigma(\omega)] = \sigma_{\infty}\delta(t) + \triangle\sigma(t)u(t),
+  \sigma(t) = \mathscr{F}^{-1}[\sigma(\omega)] = \sigma_{\infty}\delta(t) + \triangle\sigma(t),
   \label{eq: sigma_time}
 \end{equation}
 \end{linenomath*}
-where $\delta(t)$ is Dirac delta function, $u(t)$ is Heaviside step function, and $\mathscr{F}^{-1}[\cdot]$ is inverse Fourier transform operator. 
+where $\delta(t)$ is Dirac delta function, and $\mathscr{F}^{-1}[\cdot]$ is inverse Fourier transform operator. 
 We rewrite $\dsig(t)$ as 
 \begin{linenomath*}
 \begin{equation}
@@ -313,7 +313,7 @@ Combining equations (\ref{eq: sigma_time}) and  (\ref{eq: ohms_law_convolution})
 where the polarization current ($\j^{pol}$) is
 \begin{linenomath*}
 \begin{equation}
-  \j^{pol}(t) = \dsig(t)u(t) \otimes \e(t).
+  \j^{pol}(t) = \dsig(t) \otimes \e(t).
   \label{eq:polarization_current}
 \end{equation}
 \end{linenomath*}
@@ -674,7 +674,6 @@ The waveforms are different for each transmitter and hence this representation c
 \end{equation}
 \end{linenomath*}
 Our goal is to find an effective chargeability that produces the same net effect on the measured data. We search for a transmitter-independent $\peta_i$ such that 
-
 \begin{linenomath*}
 \begin{equation}
   q_i^{est} =\sum_{k=1}^{nTx} J_{k,i} \peta_i(t), \ \ i=1, \ldots, nC.
@@ -684,11 +683,19 @@ Our goal is to find an effective chargeability that produces the same net effect
 Minimizing the least squares difference between equations (\ref{eq: dip_hat}) and (\ref{eq: dip_tilde}) yields
 \begin{linenomath*}
 \begin{equation}
-  \peta_i(t) = \frac {\Sigma_{k=1}^{nTx} J_{k,i}^2\peta^k_i(t)} {\Sigma_{k=1}^{nTx} J_{k,i}^2}, \ \ i=1, \ldots, nC.
+  \peta_i(t) = \frac {\Sigma_{k=1}^{nTx} J_{k,i}^2\peta^k_i(t)} {\Sigma_{k=1}^{nTx} J_{k,i}^2} = \sum_{k=1}^{nTx} a^k_i \peta^k_i(t), \ \ i=1, \ldots, nC.
   \label{eq: petaeff}
 \end{equation}
 \end{linenomath*}
-With the above understanding about how $\peta_i$ relates to the $\peta_i^k$ from each transmitter we can proceed  as follows. Firstly, from equation we have 
+where normalized weight ($a^k_i$) is 
+\begin{linenomath*}
+\begin{equation}
+  a^k_i = \frac {J^2_{k,i}} {\Sigma_{k=1}^{nTx} J^2_{k,i}}, \ \ i=1, \ldots, nC.
+  \label{eq: normalized_weights}
+\end{equation}
+\end{linenomath*}
+
+With the above understanding about how $\peta_i$ relates to the $\peta_i^k$ from each transmitter we can proceed  as follows. Firstly, from equation (\ref{eq: pseudochargeability}) we have 
 \begin{linenomath*}
 \begin{equation}
   \peta_i^k(t) =\peta^I \otimes \hat{w}^{k}_i(t) 
@@ -702,22 +709,15 @@ In addition, by letting
   \peta_i(t) = \peta^I(t) \otimes w^e_i(t),
 \end{equation}
 \end{linenomath*}
-we define effective $w^e_i(t)$ as 
+we define effective time history of the electric field, $w^e_i(t)$ as 
 \begin{linenomath*}
 \begin{equation}
-  w^e_i(t)= \sum_{k=1}^{nTx} a^k_i \hat{w}^{k}_i(t), \ \ i=1, \ldots, nC,
+  w^e_i(t)= \sum_{k=1}^{nTx} a^k_i \hat{w}^{k}_i(t), \ \ i=1, \ldots, nC.
   \label{eq: we_eff}
 \end{equation}
 \end{linenomath*}
-where normalized weight ($a^k_i$) is 
-\begin{linenomath*}
-\begin{equation}
-  a^k_i = \frac {J^2_{k,i}} {\Sigma_{k=1}^{nTx} J^2_{k,i}}, \ \ i=1, \ldots, nC.
-  \label{eq: normalized_weights}
-\end{equation}
-\end{linenomath*}
 
-The above equations shows that the pseudo-chargeabilty for any pixel recovered from the inversion is equal to the convolution of the intrinsic pseudo-chargeability with a time function. Although it is somewhat involved, the time function associated with each pixel can be evaluated by knowing the electric fields associated with the fundamental EM problem. Ultimately this allows us to estimate the parameters associated with the intrinsic pseudo-chargeability in the same manner as outlined for the case with a single transmitter. Our ability to evaluate the time functions and test the validity of equation(\ref{eq: dipeff_kthTx}) will be treated in Section XXX.  
+The above equations shows that the pseudo-chargeabilty for any pixel recovered from the inversion is equal to the convolution of the intrinsic pseudo-chargeability with a time function. Although it is somewhat involved, the time function associated with each pixel can be evaluated by knowing the electric fields associated with the fundamental EM problem. Ultimately this allows us to estimate the parameters associated with the intrinsic pseudo-chargeability in the same manner as outlined for the case with a single transmitter. Our ability to evaluate the time functions and test the validity of equation(\ref{eq: dipeff_kthTx}) will be treated in Section \ref{subsection: Effective pseudo-chargeability for ATEM data}.  
 
 % Doug
 % This includes all grounded surveys with multiple transmitters and to a single source inductive EIP surveys.
@@ -846,10 +846,10 @@ Comparing two different times of the polarization currents show that direction o
 The IP currents, as provided in equation (\ref{eq:IP_current}), are given as 
 \begin{linenomath*}
 \begin{equation}
-  j^{IP}=\siginf  \e^{IP} + j^{pol}
+  \j^{IP}=\siginf  \e^{IP} + \j^{pol}
 \end{equation}
 \end{linenomath*}
-In most analyses, e.g. \cite{Smith1988a}, the term $\siginf \e^{IP}$ is neglected. In our work we have included this term but with an approximation that $\e^{IP} \approx -\nabla \phi$  (equation XXX). Here we can investigate these approximations, and under what circumstances they hold. Using the forward modelling we can evaluate $e^{IP}$.
+In most analyses, e.g. \cite{Smith1988a}, the term $\siginf \e^{IP}$ is neglected. In our work we have included this term but with an approximation that $\e^{IP} \approx -\nabla \phi$  (equation \ref{eq: eip_approx}). Here we can investigate these approximations, and under what circumstances they hold. Using the forward modelling we can evaluate $e^{IP}$.
 This field can be broken into galvanic and inductive parts using the Helmholtz decomposition: $\e=-\grad \phi-\vec{a}$ so that $\j^{IP} = \j^{pol} -\siginf \phi^{IP} - \siginf \vec{a}^{IP}$.
 In our work we have included the effects from the scalar potential but neglected entirely any contribution from the vector potential. 
 
@@ -861,17 +861,18 @@ In all cases, the polarization currents are the largest contribution to $\j^{IP}
 The second column in Figure \ref{F:IPcurrents_helmholtz_early} is related to the scalar potential for the electric field or effectively to the galvanic currents. 
 These exist both inside and outside the chargeable body.
 Again, these are largest for the conductive body. 
-We note that inside the body, these currents are in the opposite direction as the polarization currents. 
+We note that inside the body, these currents are mostly in the opposite direction as the polarization currents. 
 The third column is associated with the vector potential for the $\e^{IP}$ and is associated with vortex currents. 
 The effects of these currents has not been included in our linearized approximations. These currents are quite small for the canonical and resistive models. They are most noticeable for the conductive model where their amplitude starts to be comparable to the galvanic portion. We note that the direction of the vortex currents inside the body is the same as for the galvanic currents and opposite to the polarization currents. 
-To add quantitative substance we evaluate $\j^{IP} $ and its components at two locations in the body. These are denoted by XXX. For the conductive model they are smaller than the galvanic currents but their These currents are smaller than those arising from 
+To add quantitative substance we evaluate $\j^{IP} $ and its components at two locations in the body for conductive model. These are denoted by cross markers. For both points, polarization currents have the greatest strength and vortex currents are smaller than the galvanic currents. 
+At a location on right-side, IP current is smaller than polarization current, because galvanic and vortex IP currrents are in the opposite direction to the polarization currents. 
 
 The above figures provide insight about the three contributions $\j^{IP}$ but of ultimate interest is the effect of these currents on the measured data. 
 To examine contributions of the components of the IP current to the responses, we apply the Biot-Savart law to each current. It suffices to work with the conductive case. 
 Figure ~\ref{F:DecompjIPcond} shows IP responses computed from the polarization current (stars), galvanic (rectangles) and inductive portions (circles) of the IP current. Here solid and empty markers show negative and positive signs, respectively. 
 The polarization current has the major contribution to the IP response although it is larger than the true value. This overshoot is primarily negated by the galvanic portion of IP responses and further reduced because of the vortex currents. We notice that the contribution of the galvanic currents is generally larger than those due to the vortex currents except they are nearly equal near 0.4 ms. 
 At 6.7 ms, the amplitude of the  IP response due to the polarization current is about 130 percent of the true one, while galvanic portion is 30 percent. 
-This result alludes possible collapse of \cite{Smith1988a} assumption as time goes later, while our approach will gets better. 
+This result alludes \cite{Smith1988a} assumption is still reasonable, whereas contribution of galvanic portion to IP datum is getting more important as time goes later. 
 Inductive portion of IP responses always shows minor contribution compared to galvanic portion except for the time before 0.2 ms, and hence ignoring this inductive portion is reasonable for this case. 
 
 \begin{figure}
@@ -887,6 +888,17 @@ Inductive portion of IP responses always shows minor contribution compared to ga
   \caption{Comparisons of contributions of $\j^{pol}$, $-\siginf\grad \phi^{IP}$, and $-\siginf\vec{a}^{IP}$ to the observed IP responses. Solid line indicates true $b_z^{IP}$ responses. Stars, rectangles, and circles correspondingly indicate each IP response genrated by applying Biot-Savart law to $\j^{pol}$, $-\siginf\grad \phi^{IP}$, and $-\siginf\vec{a}^{IP}$. Empty and solid markers represent positive and negative values, respectively. }
   \label{F:DecompjIPcond}
 \end{figure}
+
+\begin{table}
+ \caption{Amplitudes of decomposed IP currents at two marked points (crosses) shown in Figure ~\ref{F:DecompjIPcond}(b). Units in $A/m^2$}
+ \label{T:DecompjIPcond}
+ \begin{tabular}{@{}lccccc}
+  Division & $\j^{IP}$ & $\j^{pol}$ & $-\siginf\grad \phi^{IP}$ & $-\siginf\vec{a}^{IP}$ \\
+  Left  & $5.0\times 10^{-10}$ & $4.2\times 10^{-10}$ & $7.4\times 10^{-11}$ & $4.3\times 10^{-12}$ \\
+  Right & $5.4\times 10^{-11}$ & $1.2\times 10^{-10}$ & $3.5\times 10^{-11}$ & $3.3\times 10^{-11}$ \\
+ \end{tabular}
+\end{table}
+
 \clearpage
 
 %%% ===========================================================================
@@ -953,6 +965,7 @@ The effective $w^e(t)$ is dominantly affected by the $w^e(t)$ at the center tran
 Similarly we evaluate effective $w^e(t)$ for every cell in the domain, and using this we compute effective pseudo-chargeability.
 With this we calcuate approximate IP responses using linear functional (equation(\ref{eq: dIP_lineareq})).
 Figure ~\ref{F:EquivPeta_True_Approx} show the comparison of true and approximate IP responses on plan view map at 0.86 ms. Relative distribution of true and IP responses at different transmitter locations is compatible whereas the amplitude of $\dip$ is underestimated; the maximum amplitude of the true $\dip$ is $\sim$2 times greater than that of the approximate $\dip$. 
+Similar trend was observed for the IP responses for a single transmitter as shown in Figure ~\ref{F:True_vs_approx_IPresp}. At 0.86 ms, true IP response was $\sim$1.5 times smaller than aprroximate one. 
 After 0.86 ms, distribution of IP response on map view does not change signficantly and both approximate $\dip$ responses show similar performances.
 Same anlayses was applied to canonical and resistive cases and showed similar results, although we have not shown here. 
 
@@ -1019,7 +1032,7 @@ When the conductivity is too small, the IP data have a positive bias and this pr
 The background conductivity is also needed when computing the sensitivity function, since we need the reference electric field, which is dependent on conductivity. 
 An incorrect conductivity will affect the sensitivity function as well. 
 In order to test this, we compute the sensitivity  matrix using a half-space conductivity model ($\siginf = \sigma_1$). 
-Figure \ref{F:True_vs_approx_sensitivity} compares the recovered pseudo-chargeability from the 3D IP inversion of the IP datum at 1.0 ms with the true and incorrect sensitivity function using half-space conductivity. 
+Figure \ref{F:True_vs_approx_sensitivity} compares the recovered pseudo-chargeability from the 3D IP inversion of the IP datum at 0.86 ms with the true and incorrect sensitivity function using half-space conductivity. 
 There is not a large difference between the two inversions  which suggests that an approximate conductivity may still provide sensitivities that are adequate for inversion. This parallels results from EIP where even an approximate conductivity can still yield good results when inverting the data. Thus there is some robustness in our sensitivity function with respect to an  incorrect conductivity and even if we  not have an accurate 3D conductivity model we can still apply our 3D IP inversion using half-space conductivity so long as the ATEM data includes distinctive IP response such as negative transients.
 
 \begin{figure}
