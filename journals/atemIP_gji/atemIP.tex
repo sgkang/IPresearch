@@ -6,7 +6,7 @@
 % \documentclass[a4paper, 11pt]{article}
 % \usepackage{fullpage}
 \usepackage[pdftex]{graphicx}
-\usepackage{mathrsfs, amsmath, amsfonts}
+\usepackage{mathrsfs, amsmath, amsfonts,xspace}
 \usepackage[pagewise, mathlines]{lineno}
 
 % \usepackage{framed, color, fancybox}
@@ -23,7 +23,7 @@
 %% =============================================================================
 %% My eqs
 %% =============================================================================
-
+\newcommand{\SimPEG}{\textsc{SimPEG}\xspace}
 \renewcommand{\div}{\nabla\cdot}
 \newcommand{\grad}{\vec \nabla}
 \newcommand{\curl}{{\vec \nabla}\times}
@@ -113,6 +113,7 @@
 \newcommand{\bzip}{b_z^{IP}}
 \newcommand{\dbzdtip}{\frac{\partial b_z^{IP}}{\partial t}}
 
+
 %% =============================================================================
 %% End of my eqs
 %% =============================================================================
@@ -185,13 +186,6 @@ where intrinsic pseudo-chargeability, $\peta^{I}(t)$ is defined as
 \end{equation}
 \end{linenomath*}
 Cole-Cole model in time domain is also shown in Fig. ~\ref{Fig:FDandTDCole}(b). Used Cole-Cole parameters here are same as the above.
-
-\begin{figure}
-  \figbox*{}{}{
-  \includegraphics[width=1.0\textwidth]{figures/FDandTDCole.png}}
-  \caption{Cole-Cole model in frequency domain (a) and time (b) domain. The Cole-Cole parameters are $\siginf$ = $10^{-2}$ S/m, $\eta $ = 0.5, $\tau$ = 0.01, and $c$=1.}
-  \label{Fig:FDandTDCole}
-\end{figure}
 
 %% =============================================================================
 %% Section. Decomposition of observed responses
@@ -329,7 +323,7 @@ where the reference current ($\j^{ref}$) is defined as
 Here $\eref$ is the reference electric field and both $\j^{\ ref}$ and $\eref$ are static fields that are independent of time. 
 The pseudo-chargeability defined in eq. (\ref{eq:pseudochargeability_0})  is the ratio of  the polarization current to the reference current. This is a small quantity and it plays an essential role in our linearization. 
 
-To evaluate the pseudo-chargeability, we have to identify the reference current or reference electric fields. For the EIP case, the electric field, when there is no IP present, is independent of time as shown in Fig. \ref{F:DCEM_F_current}(a) and any on-time value of the field can serve as a reference. For the inductive source however, the electric field does not achieve a steady-state, but increases to a  peak then decreases. 
+To evaluate the pseudo-chargeability, we have to identify the reference current or reference electric fields. For the EIP case, the electric field, when there is no IP present, is independent of time as shown in Fig. \ref{F:DCEM_F_current}(a). For the inductive source however, the electric field does not achieve a steady-state, but increases to a  peak then decreases. 
 % Doug: May be later
 % Moreover, the time history of the electric field will be different at each point in the earth. Our choice of the reference field is the value of $\e^{F}(t)$ at  the  time ($t^{\ ref}$) at which the  amplitude of the the electric field achieves its maximum value. 
 
@@ -352,13 +346,6 @@ By rearranging eq. (\ref{eq:pseudochargeability_0}), we obtain
 \end{linenomath*}
 This states that the polarization current has an opposite direction to the reference current, and is proportional to the pseudo-chargeability ($\peta(t)$). 
 This conceptual model about the polarization current shown in eq. (\ref{eq:polarization_current_concept}) is consistent with \cite{seigel1959}'s result. We note, that for any pixel, even though  $\eref$  attains the same value for an ISIP survey as for an EIP survey, the pseudo-chargeability resulting from  an ISIP survey  will be less than that from an EIP survey. We can infer from this that  linearization techniques, which  have worked so well in EIP problems, should be successful in ISIP problems. 
-
-\begin{figure}  
-  \figbox*{}{}{
-  \includegraphics[width=1.0\textwidth]{figures/DCEM_F_current.png} }
-  \caption{Conceptual diagram for the amplitude of the fundamental electric fields. (a) EIP and (b) ISIP cases.}
-  \label{F:DCEM_F_current}
-\end{figure}   
 
 %% ============================================================
 %% Section. Linearization
@@ -452,7 +439,7 @@ Thus, the electric field due to the IP effect can be expressed as a function of 
 This form is also applicable to the  EIP case.   
 
 For an inductive source, the data is often either $\b$ or its time derivative and hence we also need to compute $\b^{IP}$ or its time derivative.
-For this, we first compute $\j^{IP}$ then use the Biot-Savart law to compute $\b^{IP}$ or $\frac{\partial \b^{IP}}{\partial t}$. 
+For this, we first compute $\j^{IP}$ then use the Biot-Savart law. 
 By substituting eq. (\ref{eq: eip_approx_full}) into eq. (\ref{eq: jip_EMIP}), the approximated IP current density, $\j^{IP}_{approx}$ can be expressed as
 \begin{linenomath*}
 \begin{equation}
@@ -525,7 +512,7 @@ We rewrite eq. (\ref{eq: dIP_lineareq}) as
 \end{equation}
 \end{linenomath*}
 where $\mathbf{J}$ is the  sensitivity matrix of linear problem, which corresponds to $\mathbf{J}$ shown in eq. (\ref{eq: dIP_lineareq}). 
-Here, $\mathbf{d}^{pred}$ is IP responses at a single time channel, $\mathbf{m}$ is distributed model parameters, which can be either $\peta$ or $-\frac{\partial \peta}{\partial t}\big|$ at the same time. 
+Here, $\mathbf{d}^{pred}$ represents IP responses at a single time channel, $\mathbf{m}$ denotes model parameters, which can be either $\peta$ or $-\frac{\partial \peta}{\partial t}\big|$ at the same time. 
 In our work here we invert each time channel of $d^{IP}$, separately. 
 
 The solution to the inverse problem is the model $\mathbf{m}$ that solves the optimization problem
@@ -537,7 +524,7 @@ The solution to the inverse problem is the model $\mathbf{m}$ that solves the op
 \end{equation}
 \end{linenomath*}
 where $\phi_d$ is a measure of data misfit, $\phi_m$ is a user-defined model objective function and $\beta$ is regularization or trade-off parameter. We solve this optimization problem using a projected Gauss-Newton method \cite[]{Kelley}. 
-The value of $\beta$ in the iteration of this non-linear inversion is determined using a cooling technique where $\beta$ is progressively reduced from some high value. The inversion is stopped when the tolerance is reached (cf. \cite{DougTutorial, Kang2014}). 
+The value of $\beta$ is determined using a cooling technique where $\beta$ is progressively reduced from some high value. The inversion is stopped when the tolerance is reached (cf. \cite{DougTutorial, Kang2014}). 
 
 We use the sum of the squares to measure data misfit
 \begin{linenomath*}
@@ -547,13 +534,8 @@ We use the sum of the squares to measure data misfit
   \label{eq11}
 \end{equation}
 \end{linenomath*}
-<<<<<<< HEAD
-where $N$ is the number of the observed data and $\mathbf{W_d}$ is a diagonal data weighting matrix which contains the reciprocal of the estimated uncertainty of each datum ($\epsilon_j$) on the main diagonal,  $\mathbf{d}^{obs}$ is a vector containing the observed data, $\mathbf{d}^{pred}$ is a vector containing calculated data from a linear equation given in equation (\ref{eq9}).
-The model objective function, $\phi_m$, is a measure of the amount structure in the model and upon minimization this will generate a smooth model which is close to a reference model, $m_{ref}$. 
-=======
 where $N$ is the number of the observed data and $\mathbf{W_d}$ is a diagonal data weighting matrix which contains the reciprocal of the estimated uncertainty of each datum ($\epsilon_j$) on the main diagonal,  $\mathbf{d}^{obs}$ is a vector containing the observed data, $\mathbf{d}^{pred}$ is a vector containing calculated data from a linear eq. given in eq. (\ref{eq9}).
-The model objective function, $\phi_m$ is a measure of amount structure in the model and upon minimization this will generate a smooth model which is close to a reference model, $m_{ref}$. 
->>>>>>> 400211212976afa1d3176705894ca3ff688bbba0
+The model objective function, $\phi_m$, is a measure of the amount structure in the model and upon minimization this will generate a smooth model which is close to a reference model, $m_{ref}$. 
 We define $\phi_m$ as
 \begin{linenomath*}
 \begin{equation}
@@ -572,7 +554,7 @@ Because we are inverting each time channel of $\dip$ datum, separately, we may n
 \end{equation}
 \end{linenomath*}
 where $\mathbf{z}$ and $\mathbf{z_0}$ are discretized depth locations and reference depth in the 3D domain.
-For the implementation of our IP inversion algorithm, we use an open source python package for simulation and gradient-based parameter estimation in geophysics called SimPEG \cite[]{Cockett2015}. 
+For the implementation of our IP inversion algorithm, we use an open source python package for simulation and gradient-based parameter estimation in geophysics called \SimPEG \cite[]{Cockett2015}. 
 
 %% ===========================================================================
 %% SUBSECTION
@@ -740,13 +722,6 @@ Second, we validate the linearized functional by computing the approximate IP cu
 Third, we investigate the feasibility of detecting an effective pseudo-chargeability in 3D IP inversion when multi-transmitters are used. 
 Fourth, we invert the IP data and recover 3D distributions of pseudo-chargeability at multiple times.  Lastly, we use the recovered pseudo-chargeabilities to examine the potential to extract intrinsic Cole-Cole parameters. 
 
-\begin{figure}
-  \figbox*{}{}{
-  \includegraphics[width=1.0\textwidth]{figures/IPModel.png} }
-  \caption{Plan (a) and section b) views of the IP model. The solid line in (a) delineates the boundary of the IP body. Solid circles in (a) denote the sounding locations. In (b) the conductivity $\sigma_2$ is variable so that  canonical, conductive and resistive blocks can be examined}
-  \label{F: IPModel}
-\end{figure}
-\clearpage
 
 %%% ===========================================================================
 %%% SUBSECTION
@@ -760,27 +735,13 @@ The plots for the canonical and resistive bodies show that the time that separat
 The decay curves from a sounding location  provide insight about the IP response but more is gleaned by looking at data from all  sounding locations in the ATEM survey. We focus on $b_z^{IP}$ for the conductive block at selected time channels. Fig. \ref{F:IPresp_Plan} shows interpolated maps of the observed, fundamental and IP responses at (a) 0.86 ms and (b) 6.7 ms which are respectively included in the charging and discharging times. For the conductive block, 0.86 ms is close to the peak time when transition from charging to discharging occurs, but it is still included in the charging time. 
 At this time, the observations are dominated by the fundamental response and no negative values,  which are the signature of the IP effect, are observed. Subtracting the fundamental however, yields a residual $\dip$ data map that has a strong negative. This  example  shows that our EM decoupling procedure can  work satisfactorily.  At 6.7 ms, obtaining good IP data are easier because the observed data already show negative values. There is still a weak fundamental field and the subtraction process improves the $\dip$ response. The $\dip$ data at  0.86 ms and 6.7 ms shown in Fig. \ref{F:IPresp_Plan} are of sufficient quality to be inverted. 
 
-\begin{figure}
-  \figbox*{}{}{
-  \includegraphics[width=1.\textwidth]{figures/Three_IPresp.png} }
-  \caption{Time decaying curves of the observations  ($d$; black line), fundamental ($d^F$; blue line) and IP ($\dip$; red line) responses. All three cases: (a) canonical, (b) conductive and (c) resistive are presented. Right and left panels show $b_z$ and $\frac{\partial b_z}{\partial t}$. Black dotted line indicates the maximum polarization time.}
-  \label{F:Three_IPresp}
-\end{figure}
-\begin{figure}
-  \figbox*{}{}{
-  \includegraphics[width=1.\textwidth]{figures/IPresp_Plan.png} }
-  \caption{Interpolated maps of observed (left panel), fundamental (middle panel) and IP (right panel) responses. Two time channels at (a) 0.86 ms and (b) 6.7 ms are presented. White line contours a zero-crossing in the observed response.  
-  }
-  \label{F:IPresp_Plan}
-\end{figure}
-\clearpage
 
 %%% ===========================================================================
 %%% SUBSECTION
 \subsection{Polarization currents}
 % Doug: What exactly is this section verifying wrt to any approximations?
 
-To evaluate the polarization current shown in eq. (\ref{eq:polarization_current}) for the linear functional, we assumed $\e(t) \approx \eref w^e(t)$ and defined our reference current as $\j^{ref}=\siginf \eref$. That yielded our approximation of the polarization current to be $\j^{pol}(t) \approx -\j^{\ ref} \peta(t)$. This approximation says that the polarization current is antiparallel to the reference current and that direction is the same for all times. The only time dependence occurs through the scalar $\peta(t)$. 
+To evaluate the polarization current shown in eq. (\ref{eq:polarization_current}) for the linear functional, we assumed $\e(t) \approx \eref w^e(t)$ and defined our reference current as $\j^{ref}=\siginf \eref$. That yielded our approximation of the polarization current to be $\j^{pol}(t) \approx -\j^{\ ref} \peta(t)$. This approximation says that the polarization current has a fixed direction antiparallel to the reference current and that direction is the same for all times. The only time dependence occurs through the scalar $\peta(t)$. 
 
 %This approximation includes two crucial points: a) a polarization current correspond to a reference current aligned in a constant direction because $\peta(t)$ is scalar property. b) Direction of polarization currents does not change in time. 
 
@@ -803,6 +764,198 @@ For an EIP survey conducted over one of the blocks, we expect  IP responses that
 However, for the ISIP additional complexity arises due to vortex currents induced in a conductor because these generate complicated polarization currents within the chargeable medium. 
 Our choice of reference currents effectively incorporates this complicated direction of polarization currents for a conductive medium. 
 
+%%% ===========================================================================
+%%% SUBSECTION
+\subsection{IP currents}
+The IP currents, as provided in eq. (\ref{eq:IP_current}), are given as 
+\begin{linenomath*}
+\begin{equation}
+  \j^{IP}=\siginf  \e^{IP} + \j^{pol}
+\end{equation}
+\end{linenomath*}
+
+In most analyses, e.g. \cite{Smith1988a}, the term $\siginf \e^{IP}$ is neglected. We have included this term but with an approximation that $\e^{IP} \approx -\nabla \phi$  (eq. \ref{eq: eip_approx}). Here we can investigate these approximations, and under what circumstances they hold. 
+
+Using the forward modelling we can evaluate $\e^{IP}$.
+This field can be broken into galvanic and inductive parts using the Helmholtz decomposition: $\e=-\grad \phi-\vec{a}$ so that $\j^{IP} = \j^{pol} -\siginf \grad\phi^{IP} - \siginf \vec{a}^{IP}$.
+In our work we included the effects from the scalar potential but neglected entirely any contribution from the vector potential. We look at the contributions of each of these terms  for the three cases of canonical, conductive and resistive bodies. 
+Fig. ~\ref{F:IPcurrents_helmholtz_early} respectively shows plan view maps of $\j^{pol}$, $-\siginf \phi^{IP}$, and $-\siginf \vec{a}^{IP}$for (a) canonical, (b) conductive, and (c) resistive models at 0.86 ms. 
+
+For all three cases the polarization currents have the greatest strength in the body and the strength of these currents is largest in the conductive body and smallest in the resistive body.
+In all cases, the polarization currents are the largest contribution to $\j^{IP}$. 
+The second column in Fig. \ref{F:IPcurrents_helmholtz_early} is related to the scalar potential for the electric field or effectively to the galvanic currents. 
+These exist both inside and outside the chargeable body.
+Again, these are largest for the conductive body. 
+We note that inside the body, these currents have a direction that is opposite to the polarization currents. 
+The third column is associated with the vector potential for $\e^{IP}$ and is associated with vortex currents. 
+The effects of these currents has not been included in our linearized approximations. These currents are quite small for the canonical and resistive models. They are most noticeable for the conductive model where their amplitude starts to be comparable to the galvanic portion. We note that the direction of the vortex currents inside the body is the same as for the galvanic currents and opposite to the polarization currents. 
+
+We evaluate $\j^{IP} $ and its components at two locations in the body for conductive model. These are denoted by white stars in the figures.  For both points, the polarization currents have the greatest strength and vortex currents are smaller than the galvanic currents. At both locations the  IP current is smaller than the polarization current because galvanic and vortex IP currents are in the opposite direction compared to the polarization currents. The results are tabulated in Table \ref{T:DecompjIPcond}. 
+
+
+The above figures provide insight about the three contributions to $\j^{IP}$ but of ultimate interest is the effect of these currents on the measured data. 
+We therefore apply the Biot-Savart law to each current. It suffices to work with the conductive case. 
+Fig. ~\ref{F:DecompjIPcond} shows IP responses computed from the polarization current (stars), galvanic (rectangles) and inductive portions (circles) of the IP current. Here solid and empty markers show negative and positive signs, respectively. 
+The polarization current has the major contribution to the IP response although it is larger than the true value. This overshoot is primarily negated by the galvanic portion of IP responses and further reduced because of the vortex currents. We notice that the contribution of the galvanic currents is generally larger than those due to the vortex currents except they are nearly equal near 0.4 ms. 
+At 6.7 ms, the amplitude of the  IP response due to the polarization current is about 130 percent of the true one, while galvanic portion is 30 percent. 
+These results show that the assumption by \cite{Smith1988a} is reasonable, but incorporation of the galvanic portion to the IP datum is significant and more important at later times. 
+The inductive portion of the IP responses  is small  compared to the galvanic portion except for the time before 0.2 ms, and hence ignoring this inductive portion is generally. 
+
+%%% ===========================================================================
+%%% SUBSECTION
+\subsection{Validations of linearization}
+Forward modelling using eq. (\ref{eq: dIP_lineareq}) requires that we have adequately estimated the IP currents and we can evaluate their response using the Biot-Savart law. To validate this we first compute approximate IP currents using eq. (\ref{eq: jip_approx}), and first compare them with the true IP currents. It suffices to work with the conductive model which is the most challenging. Fig. ~\ref{F:IPcurrent_PlanandSec_early} compares the true and approximate IP currents at 0.86 ms. The approximate IP currents match well, both in direction and amplitude, with the true IP currents both inside and outside the body. As shown in Fig. ~\ref{F:IPcurrent_PlanandSec_late} the agreement improves as time increases.
+
+We next test the validity of the computation of IP responses by using the our formulation of the Biot-Savart law. To do this we compute the ``true'' IP responses  by subtracting the fundamental response from the observations. We next compute the IP responses by evaluating the Biot-Savart law with the true IP currents shown in Fig. ~\ref{F:IPcurrent_PlanandSec_late}(a). As shown in Fig. ~\ref{F:True_vs_approx_IPresp} the agreement between these responses is very good after 0.01 ms. This validates the use of the Biot-Savart law (eq. \ref{eq: BiotbIP_approx}). Lastly, we want to compare responses, evaluated through the Biot Savart law, using our approximated IP currents (Fig. ~\ref{F:IPcurrent_PlanandSec_late}b). The results are shown in Fig. ~\ref{F:True_vs_approx_IPresp}. The responses obtained from using our approximate currents have lower amplitude and differ by 33 percent at the extreme. The difference decreases with increasing time. Overall the two curves are in reasonable agreement, thus validating our linearized forward modeling (eq. \ref{eq: dIP_lineareq}).
+
+The same analysis as above was carried out for the canonical and resistive models. As shown in  Fig. ~\ref{F:True_vs_approx_IPresp} the agreement is further improved. We note however, that despite the fact that our linear functional reasonably explains $\dip$ data for the resistive case, the IP signals are so small that we likely cannot distinguish them in practise.
+
+%%% ===========================================================================
+%%% SUBSECTION
+\subsection{Effective pseudo-chargeability for ATEM data}
+\label{subsection: Effective pseudo-chargeability for ATEM data}
+
+In Section \ref{subsection: Effective pseudo-chargeability for ATEM data} we showed how to define an effective chargeability when we have multi-transmitters. For each pixel we have
+equation: 
+\begin{equation}
+  \peta_i(t) = \peta_i^I(t) \otimes  w_i^e(t),
+\end{equation}
+where $\peta_i^I(t)$ is the intrinsic chargeability associated with an individual pixel. The effective time history of the electric field, $w_i^e(t)$ is a linear combination of the fundamental electric fields due to the individual transmitters. We can calculate $w_i^e(t)$ and carry out the convolution to evaluate the effective pseudo-chargeability. The IP data can then be forward modelled using eq. (\ref{eq: dIP_lineareq}). We can test eq. (\ref{eq: dipeff_kthTx}) by comparing results with the true IP data obtained via forward modelling. It is only necessary to apply this to the conductive model. 
+
+The evaluation of the effective pseudo-chargeability is carried out on  a cell by cell basis. For each cell  we  first evaluate $w^e(t)$ (eq. \ref{eq: we_eff}). This requires calculating normalized weights shown in eq. (\ref{eq: normalized_weights}). 
+Fig. ~\ref{F:NormalizedWeights} shows these weights at a single pixel located at (0 m,0 m,-75 m). These decay away from the pixel because of the decay of the sensitivity functions. $w^e(t)$, evaluated using eq. (\ref{eq: we_eff}), is shown in Fig. ~\ref{F:AveragedWe} (solid line) along with $\hat{w}(t)$ (dashed lines) for each transmitter (the $w^e(t)$ is dominantly affected by the $\hat{w}(t)$ at the center transmitter location (solid circles)). $w^e(t)$ is convolved  with  $\peta^I(t)$ to compute the effective $\peta(t)$ for that cell. When this is carried out for each cell then the approximate IP responses can be computed using eq. (\ref{eq: dIP_lineareq}). These can be compared with the true IP responses. 
+Fig. ~\ref{F:EquivPeta_True_Approx} shows the comparisons at 0.86 ms. The images are nearly identical in shape but the approximate IP responses are nearly a factor of two lower than the true values. This is not entirely unexpected. A similar effect was observed for IP responses for a single transmitter shown in Fig. ~\ref{F:True_vs_approx_IPresp}. At 0.86 ms, the approximate value was about 70 percent of the true $\dip$. These results seem to be a worst case scenario. The discrepancy for a conductive body lessens as time increases and analyses for the canonical and resistive bodies shows that the approximate and true IP data are in very good agreement. 
+
+%%% ===========================================================================
+%%% SUBSECTION
+\subsection{3D IP inversions}
+Using our linearized sensitivity, we now proceed with 3D IP inversion, which recovers a pseudo-chargeability given by eq. (\ref{eq: dIP_lineareq}). 
+We limit our attention to the conductive case. For the computation of the sensitivity we use the true conductivity ($\siginf$) and then invert data at successive time channels and recover 3D pseudo-chargeability at multiple times. 
+Our 3D inversion is based upon \cite[]{doug1994,Li2000}, and it requires some choices for inversion parameters. 
+
+For data uncertainties, we used one percent of the maximum amplitude of the observed data (0.01$max(|\mathbf{d}^{obs}|)$). Coefficients for smallness and smoothness are set to $\alpha_s=10^{-5}$ and $\alpha_x=\alpha_y=\alpha_z=1$, respectively. The reference model is zero and we also applied a depth weighting. 
+The need for a depth weighting arises because the sensitivity function $J$ is primarily controlled by a $1/r^3$ decay associated with the Biot-Savart kernels.  Thus an ATEM data set is not unlike that commonly acquired  magnetic data where it is well established that a depth weighting is required to image objects at depth. The following example illustrates this. 
+
+We first generate IP responses at a single time using the linear functional by assuming that the pseudo-chargeability is unity inside the body and zero outside, as shown in  Fig. \ref{F:Depthweight}(a). 
+Fig. \ref{F:Depthweight}(b) shows the recovered pseudo-chargeability without depth weighting. 
+The recovered anomalous pseudo-chargeability is concentrated  near the surface and the magnitude of the pseudo-chargeability is underestimated; it is $\sim$0.2 rather than unity. 
+By using the depth weighting shown in eq. (\ref{eq: weight_mat}),  the IP body is imaged closer to its true depth (Fig. \ref{F:Depthweight}b). 
+Also, the magnitude of the recovered pseudo-chargeability ($\sim$0.6) is closer to the true value than the result without depth weighting. 
+Based on this analysis, we use the same depth weighting for our  following examples. 
+
+%%% ===========================================================================
+\subsubsection{Incorrect conductivity}
+The background conductivity $\siginf$ plays a central role in our analysis. It is used in the EM decoupling process and it is also needed to compute the linearized sensitivities for inversion. Since we need to estimate $\siginf$, usually through the inversion of EM survey data, it will never be correct. Here we explore some effects of an incorrect conductivity but  the consequences are problem dependent.
+
+We return to our conductive block in a halfspace and evaluate the $\dip$ data when the background is the true value ($\sigma_1 = 10^{-3}$ S/m) as well as a factor of two too large (2$\times10^{-3}$ S/m) and a factor of two too small (5$\times10^{-4}$ S/m). The data along a survey line are plotted in Fig. \ref{F:Reg_IPresp}.
+
+We invert these three IP responses, and provide sections of the recovered pseudo-chargeability at 0 m-northing. 
+Fig. \ref{F:Regional_IPInv}(a), (b) and (c) correspondingly show the recovered pseudo-chargeability when the conductivity is: the true value, too high, or too low.  
+With the correct conductivity the geometry of the IP body is reasonably recovered. 
+When the conductivity is too high, the $\dip$ have a negative bias that results in larger pseudo-chargeabilities and positive-valued artifacts near the IP body (Fig. \ref{F:Regional_IPInv}b).  
+When the conductivity is too small, the IP data have a positive bias and this produces  negative-valued artifacts near the IP body (Fig. \ref{F:Regional_IPInv}c). However, based on the  definition of the pseudo-chargeability shown in eq. (\ref{eq: petaeff}), the sign of the pseudo-chargeability should be positive. By incorporating positivity as a constraint in the inversion, and re-inverting the IP data having a positive bias, we obtain the result in  Fig. \ref{F:Regional_IPInv}(d).  This is a much better result than Fig. \ref{F:Regional_IPInv}(c)  and comparison of the observed and predicted data for this case shown in Fig. \ref{F:Reg_obspred} clearly shows how this constraint prevents the fitting of positive residual fields. We shall use this positivity  constraint for our following 3D IP inversion examples. 
+
+The background conductivity is also needed when computing the sensitivity function, since we need the reference electric field, which is dependent on conductivity. 
+An incorrect conductivity will affect the sensitivity function as well. 
+In order to test this, we compute the sensitivity  matrix using a half-space conductivity model ($\siginf = \sigma_1$). 
+Fig. \ref{F:True_vs_approx_sensitivity} compares the recovered pseudo-chargeability from the 3D IP inversion of the IP datum at 0.86 ms with the true and incorrect sensitivity function using half-space conductivity. 
+There is not a large difference between the two inversions  which suggests that an approximate conductivity may still provide sensitivities that are adequate for inversion. This parallels results from EIP where even an approximate conductivity can still yield good results when inverting the data. Thus there is some robustness in our sensitivity function with respect to an  incorrect conductivity and even if we  not have an accurate 3D conductivity model we can still apply our 3D IP inversion using half-space conductivity so long as the ATEM data includes distinctive IP response such as negative transients.
+
+%%% ===========================================================================
+\subsubsection{Extracting intrinsic IP parameters}
+By applying our inversion to each time channel of $\dip$ data separately, we can recover 3D distributions of pseudo-chargeability at multiple times. 
+The pseudo-chargeability at each time carries different information about the state of polarization and we can use these to recover information about intrinsic IP parameters. 
+Diverse time-dependent conductivity models such Cole-Cole model and stretched-exponential can be used for this interpretation.
+We use the Cole-Cole model with $c=1$. 
+We parametrize pseudo-chargeability at a single pixel in terms of chargeability and time constant as described in Section \ref{section: extract_intrinsicIP}, and solve a small inverse problem. This parallels \cite[]{Yuval1997,Hordt2006}.
+
+As an example, we use the conductive and chargeable block presented in the previous section and invert 14 time channels of data ranging from 1-10 ms.  The EM data are forward modelled using EMTDIP code and the true $\siginf$ model is used  to evaluate the IP datum and compute the sensitivity function. The recovered pseudo-chargeability from one of the 14 inversions is shown in Fig. \ref{F:True_vs_approx_sensitivity}a. In that pseudo-chargeability model, we select cells that have a pseudo-chargeability value greater than 0.001, and then carry out the nonlinear inversion to estimate the time constant ($\tau$) and chargeability ($\eta$) for each cell separately. The forward modelling for this inversion is shown in eq. (\ref{eq: pseudochargeability_petaI}), which requires $w^e(t)$. 
+The $w^e(t)$ for a pixel in the block is shown in Fig. \ref{F:AveragedWe}.
+
+Fig. ~\ref{F:EtaTauSection}(a) and (b) correspondingly show the estimated time constants and chargeability as section maps.
+The estimated time constants show good agreement with the true value $\tau= 0.005$. 
+There is less agreement about chargeability for which the true value is $\eta=0.2$. Recovered values range from about 0.04-0.2 so most values are underestimated. 
+In Fig. \ref{F:IntrinsicIP}, we also provide time decays of the observed and predicted pseudo-chargeabilities at a single pixel marked as a black empty rectangle in Fig. ~\ref{F:EtaTauSection}. The estimated time constant ($\tau_{est}$) and chargeability ($\eta_{est}$) for this pixel are 0.0046 and 0.09, respectively. 
+These results imply there is greater  stability on recovering the time constant than on recovering chargeability with our approach. Again, similar experiments were carried out for the canonical and resistive bodies and the conclusions were also that the time constant was adequately recovered with better fidelity than was the intrinsic chargeability.  
+
+%% =============================================================================
+%% Section. Conclusions
+%% =============================================================================
+\section{Conclusions}
+In this paper, we have introduced a procedure for recovering IP information from TEM data with inductive sources.  Three main steps are required: 1) subtraction of the fundamental responses from the observations to generate IP data, 2) linearization of the IP responses as a function of the pseudo-chargeability, and 3) restoration of 3D pseudo-chargeability at multiple times, and further interpretation of the pseudo-chargeability to extract intrinsic IP parameters like Cole-Cole model. We used the ATEM survey to test our IP inversion procedure.
+
+The first step requires that we have a good estimate for the background conductivity $\siginf$. This is important for two reasons. It is first used to generate the fundamental fields that are subtracted from the observations to produce the IP data. This conductivity is also needed to compute the sensitivities for our linear relationship between the IP data and pseudo-chargeability. To construct $\siginf$ for our work we used the early time data that was felt to be uncontaminated with significant IP responses and inverted them with our 3D algorithms. For the mid-time data, subtraction of the fundamental responses from the observations revealed negative data even though the observations had been positive. At very late times however, this subtraction process was not necessary since the EM fields had sufficiently decayed. Maps of the $d^{IP}$ data can, in themselves, be a useful processing tool for anomaly hunting.
+
+The second item, linearization of the IP responses with respect to a pseudo-chargeability, required that a number of assumptions  be made. This pseudo-chargeability is defined as the ratio of the polarization current to a reference current. Unlike the EIP case, the electric fields for an inductive source do not achieve steady-state and hence neither do the polarization currents. This fundamental difference is addressed by evaluating the fundamental fields at each location in the earth and generating a reference electric field that has the direction and magnitude of the field at time when the fundamental field, which is responsible for charging the earth, reaches its maximum value. The pseudo-chargeability at a point in the earth thus depends upon the intrinsic chargeability, the reference electric field, and the time history of the fundamental electric field. The situation becomes more complicated when data from many transmitters are to be inverted simultaneously because the time history of the electric field at a point in the earth is different for each transmitter. We handle this by defining an effective pseudo-chargeability and an associated reference electric field that accommodates, in a least squares fashion, the effects of all transmitters acting on a single cell.
+
+To have confidence in when, and under what circumstances, our approximations are sufficiently valid, we proceed with a number of rigorous tests. First we introduce 3 test models which are respectively a chargeable block in a halfspace. The block can be conductive, canonical, or resistive with respect to the background. Our evaluations show that: 
+(a) our choice of reference electric field and its time history produces a good estimate of the polarization currents;
+(b) the IP currents are dominated by the polarization currents, which is an assumption that is often made. However, the galvanic and vortex currents arising from the scalar and vector potentials in the Helmholtz decomposition of $\e^{IP}$ can be significant in some circumstances. They both oppose the direction of the polarization currents in the body. In our work we have included the galvanic currents and neglected the vortex currents which are almost always smaller than the galvanic currents.
+(c) Evaluating the IP responses using the Biot-Savart law provides accurate results.
+(d) With our approximate IP currents, the predicted responses are in reasonably good agreement with those from the true models although they are underestimated for highly conductive example. These results lead us to infer that our linearized formulation $d^{IP}(t)=J\peta(t)$ is a viable representation for the forward modelling at late times when  the IP effect is substantial compared to the EM effects which will occur in the discharging phase. 
+(e) For the multi-transmitter case we derived an effective pseudo-chargeability, which is a linear combination of the pseudo-chargeability of each transmitter. These were forward modelled with the linearized formulation and compared to the true responses. The computed responses showed the same shape; the values were underestimated for the conductive model but were almost identical for the canonical and resistive models.  
+
+The third component is the 3D inversion of the IP data using the linearized formulation to recover an effective pseudo-chargeability for each cell. ATEM data have only one receiver for each transmitter and a data map at a single time channel is essentially a potential field. The data do not have intrinsic resolving power and hence, as in magnetics or gravity inversions, we attempt to counteract this by introducing a depth weighting.  When this is done, our 3D IP inversion recovers a reasonable geometric shape and location of the chargeable body but the amplitude is underestimated. An incorrect $\siginf$ has two effects in the inversion. Firstly it can generates errors in the $d^{IP}$ data because the fundamental field, which is subtracted from the observations, is incorrect. To obtain insight we looked at the effects when the $\sigma_{est}$ was too low or two high. This respectively yielded positive or negative residual fields in the IP response. A positivity constraint on the pseudo-chargeability (similar to that used in EIP surveys) greatly ameleorated the effects of the positive residuals. The other avenue by which an incorrect $\siginf$ can affect the inversion is through the sensitivity matrix $J$. We showed that even with a poor sensitivity function, computed using half-space conductivity model, we recovered important information of the chargeable body such as geometric shape and location. Individual inversions are carried out at multiple time channels and the pseudo-chargeability as a function of time for each pixel is recovered. The pseudo-chargeability for pixels that had significant chargeability were subsequently fit to a Cole-Cole model to estimate $\tau$ and $\eta$ by assuming $c=1$. The estimated $\tau$ was close to the true value whereas $\eta$ was underestimated and less robust. This suggests that there is a possibility to extract intrinsic IP parameters from the recovered pseudo-chargeability from ATEM surveys.  
+
+Our IP inversion procedure provides a framework for recovering IP information from inductive source EM surveys and in particular from ATEM surveys that are commonly flown. Our examples show: (a)  that the horizontal location of a target body can be well recovered; (b) the overall geometry might be recovered but much of that inference requires a depth weighting to be included; (c)  we can recover estimates of intrinsic $\tau$ and $\eta$ that may be useful for distinguishing between two chargeable targets. Our procedure depends on having a good estimate for the background conductivity and this aspect this should be carefully investigated in future practical applications of our inversion methodology.  Other areas for follow-up research include quantitative depth resolution of the airborne IP surveys and inversions, and robust inversion strategy to extract intrinsic IP parameters from TEM data. 
+Lastly, our numerical examples  only treated the ATEM survey, but the procedure is applicable to other types of inductive source TEM survey such as large-loop TEM with many receivers. There will be details that need to be addressed for those applications but the work presented here provides the  fundamental backgrounds for those future studies whose goal is to extract some information about polarization from an inductive time domain system. 
+
+\begin{acknowledgments}
+  We wish to thank David Marchant for providing EMTDIP code, and other UBC-GIF members for their constructive comments. We would like to thank Rowan Cockett and Lindsey Heagy for their contributions to \SimPEG (http://www.simpeg.xyz). 
+\end{acknowledgments}
+\bibliographystyle{gji}
+\bibliography{reference}
+
+\clearpage
+
+\begin{table}
+ \caption{Amplitudes of decomposed IP currents at two marked points (white stars) shown in Fig. ~\ref{F:DecompjIPcond}(b). Units in $A/m^2$}
+ \label{T:DecompjIPcond}
+ \begin{tabular}{@{}lccccc}
+  Division & $| \j^{IP} |$ & $| \j^{pol} |$ & $| -\siginf\grad \phi^{IP} |$ & $| -\siginf\vec{a}^{IP} |$ \\
+  Left  & $1.5\times 10^{-10}$ & $2.5\times 10^{-10}$ & $7.6\times 10^{-11}$ & $1.9\times 10^{-12}$ \\
+  Right & $5.4\times 10^{-11}$ & $1.2\times 10^{-10}$ & $3.5\times 10^{-11}$ & $3.3\times 10^{-11}$ \\
+ \end{tabular}
+\end{table}
+
+\clearpage
+
+\begin{figure}
+  \figbox*{}{}{
+  \includegraphics[width=1.0\textwidth]{figures/FDandTDCole.png}}
+  \caption{Cole-Cole model in frequency domain (a) and time (b) domain. The Cole-Cole parameters are $\siginf$ = $10^{-2}$ S/m, $\eta $ = 0.5, $\tau$ = 0.01, and $c$=1.}
+  \label{Fig:FDandTDCole}
+\end{figure}
+
+\begin{figure}  
+  \figbox*{}{}{
+  \includegraphics[width=1.0\textwidth]{figures/DCEM_F_current.png} }
+  \caption{Conceptual diagram for the amplitude of the fundamental electric fields. (a) EIP and (b) ISIP cases.}
+  \label{F:DCEM_F_current}
+\end{figure}   
+
+\begin{figure}
+  \figbox*{}{}{
+  \includegraphics[width=1.0\textwidth]{figures/IPModel.png} }
+  \caption{Plan (a) and section b) views of the IP model. The solid line in (a) delineates the boundary of the IP body. Solid circles in (a) denote the sounding locations. In (b) the conductivity $\sigma_2$ is variable so that  canonical, conductive and resistive blocks can be examined}
+  \label{F: IPModel}
+\end{figure}
+
+\begin{figure}
+  \figbox*{}{}{
+  \includegraphics[width=1.\textwidth]{figures/Three_IPresp.png} }
+  \caption{Time decaying curves of the observations  ($d$; black line), fundamental ($d^F$; blue line) and IP ($\dip$; red line) responses. All three cases: (a) canonical, (b) conductive and (c) resistive are presented. Right and left panels show $b_z$ and $\frac{\partial b_z}{\partial t}$. Black dotted line indicates the maximum polarization time.}
+  \label{F:Three_IPresp}
+\end{figure}
+
+\begin{figure}
+  \figbox*{}{}{
+  \includegraphics[width=1.\textwidth]{figures/IPresp_Plan.png} }
+  \caption{Interpolated maps of observed (left panel), fundamental (middle panel) and IP (right panel) responses. Two time channels at (a) 0.86 ms and (b) 6.7 ms are presented. White line contours a zero-crossing in the observed response.  
+  }
+  \label{F:IPresp_Plan}
+\end{figure}
+
 \begin{figure}
   \figbox*{}{}{
   \includegraphics[width=1\textwidth]{figures/ReferenceCurrent.png} }
@@ -823,44 +976,6 @@ Our choice of reference currents effectively incorporates this complicated direc
   \caption{Maps of polarization currents: (a) canonical and (b) conductive models at 6.7 ms. Left and right panels show plan and section views at -125 m-depth and 0 m-easting, respectively. A transmitter is located at (-200 m, 0 m, 30 m). Black arrows and shaded values indicate the direction and amplitude of the current, respectively. Black solid outlines boundary of the surface or the chargeable body.}
   \label{F:Polarizationcurrent_late}
 \end{figure}
-\clearpage
-
-%%% ===========================================================================
-%%% SUBSECTION
-\subsection{IP currents}
-The IP currents, as provided in eq. (\ref{eq:IP_current}), are given as 
-\begin{linenomath*}
-\begin{equation}
-  \j^{IP}=\siginf  \e^{IP} + \j^{pol}
-\end{equation}
-\end{linenomath*}
-
-In most analyses, e.g. \cite{Smith1988a}, the term $\siginf \e^{IP}$ is neglected. In our work we have included this term but with an approximation that $\e^{IP} \approx -\nabla \phi$  (eq. \ref{eq: eip_approx}). Here we can investigate these approximations, and under what circumstances they hold. Using the forward modelling we can evaluate $\e^{IP}$.
-This field can be broken into galvanic and inductive parts using the Helmholtz decomposition: $\e=-\grad \phi-\vec{a}$ so that $\j^{IP} = \j^{pol} -\siginf \grad\phi^{IP} - \siginf \vec{a}^{IP}$.
-In our work we have included the effects from the scalar potential but neglected entirely any contribution from the vector potential. 
-
-We look at the contributions of each of these terms  for the three cases of canonical, conductive and resistive bodies. 
-Fig. ~\ref{F:IPcurrents_helmholtz_early} respectively show plan view maps of $\j^{pol}$, $-\siginf \phi^{IP}$, and $-\siginf \vec{a}^{IP}$for (a) canonical, (b) conductive, and (c) resistive models at 0.86 ms. 
-
-For all three cases the polarization currents have the greatest strength in the body and the strength of these currents is largest in the conductive body and smallest in the resistive body.
-In all cases, the polarization currents are the largest contribution to $\j^{IP}$. 
-The second column in Fig. \ref{F:IPcurrents_helmholtz_early} is related to the scalar potential for the electric field or effectively to the galvanic currents. 
-These exist both inside and outside the chargeable body.
-Again, these are largest for the conductive body. 
-We note that inside the body, these currents have a direction that is opposite to the polarization currents. 
-The third column is associated with the vector potential for $\e^{IP}$ and is associated with vortex currents. 
-The effects of these currents has not been included in our linearized approximations. These currents are quite small for the canonical and resistive models. They are most noticeable for the conductive model where their amplitude starts to be comparable to the galvanic portion. We note that the direction of the vortex currents inside the body is the same as for the galvanic currents and opposite to the polarization currents. 
-
-We evaluate $\j^{IP} $ and its components at two locations in the body for conductive model. These are denoted by white stars in the figures.  For both points, the polarization currents have the greatest strength and vortex currents are smaller than the galvanic currents. At both locations the  IP current is smaller than the polarization current because galvanic and vortex IP currents are in the opposite direction compared to the polarization currents. The results are tabulated in Table \ref{T:DecompjIPcond}. 
-
-
-The above figures provide insight about the three contributions to $\j^{IP}$ but of ultimate interest is the effect of these currents on the measured data. 
-We therefore apply the Biot-Savart law to each current. It suffices to work with the conductive case. 
-Fig. ~\ref{F:DecompjIPcond} shows IP responses computed from the polarization current (stars), galvanic (rectangles) and inductive portions (circles) of the IP current. Here solid and empty markers show negative and positive signs, respectively. 
-The polarization current has the major contribution to the IP response although it is larger than the true value. This overshoot is primarily negated by the galvanic portion of IP responses and further reduced because of the vortex currents. We notice that the contribution of the galvanic currents is generally larger than those due to the vortex currents except they are nearly equal near 0.4 ms. 
-At 6.7 ms, the amplitude of the  IP response due to the polarization current is about 130 percent of the true one, while galvanic portion is 30 percent. 
-These results show that the assumption of \cite{Smith1988a} is reasonable, but , a more accurate analysis shows that the contribution of the galvanic portion to the IP datum becomes more important at later times. 
-The inductive portion of the IP responses  is small  compared to the galvanic portion except for the time before 0.2 ms, and hence ignoring this inductive portion is reasonable. 
 
 \begin{figure}
   \figbox*{}{}{
@@ -875,28 +990,6 @@ The inductive portion of the IP responses  is small  compared to the galvanic po
   \caption{Comparisons of contributions of $\j^{pol}$, $-\siginf\grad \phi^{IP}$, and $-\siginf\vec{a}^{IP}$ to the observed IP responses. Solid line indicates true $b_z^{IP}$ responses. Stars, rectangles, and circles correspondingly indicate each IP response generated by applying Biot-Savart law to $\j^{pol}$, $-\siginf\grad \phi^{IP}$, and $-\siginf\vec{a}^{IP}$. Empty and solid markers represent positive and negative values, respectively. }
   \label{F:DecompjIPcond}
 \end{figure}
-
-\begin{table}
- \caption{Amplitudes of decomposed IP currents at two marked points (white stars) shown in Fig. ~\ref{F:DecompjIPcond}(b). Units in $A/m^2$}
- \label{T:DecompjIPcond}
- \begin{tabular}{@{}lccccc}
-  Division $| \j^{IP} |$ & $| \j^{pol} |$ & $| -\siginf\grad \phi^{IP} |$ & $| -\siginf\vec{a}^{IP} |$ \\
-  Left  & $1.5\times 10^{-10}$ & $2.5\times 10^{-10}$ & $7.6\times 10^{-11}$ & $1.9\times 10^{-12}$ \\
-  Right & $5.4\times 10^{-11}$ & $1.2\times 10^{-10}$ & $3.5\times 10^{-11}$ & $3.3\times 10^{-11}$ \\
- \end{tabular}
-\end{table}
-
-\clearpage
-
-
-%%% ===========================================================================
-%%% SUBSECTION
-\subsection{Validations of linearization}
-Forward modelling using eq. (\ref{eq: dIP_lineareq}) requires that we have adequately estimated the IP currents and we can evaluate their response using the Biot-Savart law. To validate this we first compute approximate IP currents using eq. (\ref{eq: jip_approx}), and first compare them with the true IP currents. It suffices to work with the conductive model which is the most challenging. Fig. ~\ref{F:IPcurrent_PlanandSec_early} compares the true and approximate IP currents at 0.86 ms. The approximate IP currents match well, both in direction and amplitude, with the true IP currents both inside and outside the body. As shown in Fig. ~\ref{F:IPcurrent_PlanandSec_late} the agreement improves as time increases.
-
-We next test the validity of the computation of IP responses by using the our formulation of the Biot-Savart law. To do this we compute the ``true'' IP responses  by subtracting the fundamental response from the observations. We next compute the IP responses by evaluating the Biot-Savart law with the true IP currents shown in Fig. ~\ref{F:IPcurrent_PlanandSec_late}(a). As shown in Fig. ~\ref{F:True_vs_approx_IPresp} the agreement between these responses is very good after 0.01 ms. This validates the use of the Biot-Savart law (eq. \ref{eq: BiotbIP_approx}). Lastly, we want to compare responses, evaluated through the Biot Savart law, using our approximated IP currents (Fig. ~\ref{F:IPcurrent_PlanandSec_late}b). The results are shown in Fig. ~\ref{F:True_vs_approx_IPresp}. The responses obtained from using our approximate currents have lower amplitude and differ by 33 percent at the extreme. The difference decreases with increasing time. Overall the two curves are in reasonable agreement, thus validating our linearized forward modeling (eq. \ref{eq: dIP_lineareq}).
-
-The same analysis as above was carried out for the canonical and resistive models. As shown in  Fig. ~\ref{F:True_vs_approx_IPresp} the agreement is further improved. We note however, that despite the fact that our linear functional reasonably explains $\dip$ data for the resistive case, the IP signals are so small that we likely cannot distinguish them in practise.
 
 \begin{figure}
   \figbox*{}{}{
@@ -918,24 +1011,6 @@ The same analysis as above was carried out for the canonical and resistive model
   \caption{Comparison of true and approximate IP respones ($b_z^{IP}$). Black, blue, and red color respectively indicate canonical, conductive, and resistive cases. Solid lines indicate true $b_z^{IP}$ computed by subtraction process. The stars are the application of Biot-Savart to true IP current and generate $b_{z \ BS}^{IP}$. Empty circles show our approximate $b_{z \  approx}^{IP}$ response. }
   \label{F:True_vs_approx_IPresp}
 \end{figure}
-\clearpage
-
-
-%%% ===========================================================================
-%%% SUBSECTION
-\subsection{Effective pseudo-chargeability for ATEM data}
-\label{subsection: Effective pseudo-chargeability for ATEM data}
-
-In Section \ref{subsection: Effective pseudo-chargeability for ATEM data} we showed how to define an effective chargeability when we have multi-transmitters. For each pixel we have
-equation: 
-\begin{equation}
-  \peta_i(t) = \peta_i^I(t) \otimes  w_i^e(t),
-\end{equation}
-where $\peta_i^I(t)$ is the intrinsic chargeability associated with an individual pixel. The effective time history of the electric field, $w_i^e(t)$ is a linear combination of the fundamental electric fields due to the individual transmitters. We can calculate $w_i^e(t)$ and carry out the convolution to evaluate the effective pseudo-chargeability. The IP data can then be forward modelled suing eq. (\ref{eq: dIP_lineareq}). We can test eq. (\ref{eq: dipeff_kthTx}) by comparing results with the true IP data obtained via forward modelling. It is only necessary to apply this to the conductive model. 
-
-The evaluation of the effective pseudo-chargeability is carried out on  a cell by cell basis. For each cell  we  first evaluate $w^e(t)$ (eq. \ref{eq: we_eff}). This requires calculating normalized weights shown in eq. (\ref{eq: normalized_weights}). 
-Fig. ~\ref{F:NormalizedWeights} shows these weights at a single pixel located at (0 m,0 m,-75 m). These decay away from the pixel because of the decay of the sensitivity functions. $w^e(t)$, evaluated using eq. (\ref{eq: we_eff}), is shown in Fig. ~\ref{F:AveragedWe} (solid line) along with $\hat{w}(t)$ (dashed lines) for each transmitter (the $w^e(t)$ is dominantly affected by the $\hat{w}(t)$ at the center transmitter location (solid circles)). $w^e(t)$ is convolved  with  $\peta^I(t)$ to compute the effective $\peta(t)$ for that cell. When this is carried out for each cell then the approximate IP responses can be computed using eq. \ref{eq: dIP_lineareq}. These can be compared with the true IP responses. 
-Fig. ~\ref{F:EquivPeta_True_Approx} shows the comparisons at 0.86 ms. The images are nearly identical in shape but the approximate IP responses are nearly a factor of two lower than the true values. This is not entirely unexpected. A similar effect was observed for IP responses for a single transmitter shown in Fig. ~\ref{F:True_vs_approx_IPresp}. At 0.86 ms, the approximate value was about 70 percent of the true $\dip$. These results seem to be a worst case scenario. The discrepancy for a conductive body lessens as time increases and analyses for the canonical and resistive bodies shows that the approximate and true IP data are in very good agreement. 
 
 \begin{figure}
   \figbox*{}{}{
@@ -958,24 +1033,6 @@ Fig. ~\ref{F:EquivPeta_True_Approx} shows the comparisons at 0.86 ms. The images
   \caption{Comparison of true and approximate $b_z^{IP}$ responses at 0.86 ms on plan view map. }
   \label{F:EquivPeta_True_Approx}
 \end{figure}
-\clearpage
-
-%%% ===========================================================================
-%%% SUBSECTION
-\subsection{3D IP inversions}
-Using our linearized sensitivity, we now proceed with 3D IP inversion, which recovers a pseudo-chargeability given by eq. (\ref{eq: dIP_lineareq}). 
-We limit our attention to the conductive case. For the computation of the sensitivity we use the true conductivity ($\siginf$) and then invert data at successive time channels and recover 3D pseudo-chargeability at multiple times. 
-Our 3D inversion is based upon \cite[]{doug1994,Li2000}, and it requires some choices for inversion parameters. 
-
-For data uncertainties, we used one percent of the maximum amplitude of the observed data (0.01$max(|\mathbf{d}^{obs}|)$). Coefficients for smallness and smoothness are set to $\alpha_s=10^{-5}$ and $\alpha_x=\alpha_y=\alpha_z=1$, respectively. The reference model is zero and we also applied a depth weighting. 
-The need for a depth weighting arises because the sensitivity function $J$ is primarily controlled by a $1/r^3$ decay associated with the Biot-Savart kernels.  Thus an ATEM data set is not unlike that commonly acquired  magnetic data where it is well established that a depth weighting is required to image objects at depth. The following example illustrates this. 
-
-We first generate IP responses at a single time using the linear functional by assuming that the pseudo-chargeability is unity inside the body and zero outside, as shown in  Fig. \ref{F:Depthweight}(a). 
-Fig. \ref{F:Depthweight}(b) shows the recovered pseudo-chargeability without depth weighting. 
-The recovered anomalous pseudo-chargeability is concentrated  near the surface and the magnitude of the pseudo-chargeability is underestimated; it is $\sim$0.2 rather than unity. 
-By using the depth weighting shown in eq. (\ref{eq: weight_mat}),  the IP body is imaged closer to its true depth (Fig. \ref{F:Depthweight}b). 
-Also, the magnitude of the recovered pseudo-chargeability ($\sim$0.6) is closer to the true value than the result without depth weighting. 
-Based on this analysis, we use the same depth weighting for our  following examples. 
 
 \begin{figure}
   \figbox*{}{}{
@@ -983,25 +1040,6 @@ Based on this analysis, we use the same depth weighting for our  following examp
   \caption{Effect of depth weight in 3D IP inversion. (a) True pseudo-chargeability model on vertical section at 0 m-northing. Recovered pseudo-chargeability models (b) without depth weight and (c) with depth weight.}
   \label{F:Depthweight}
 \end{figure}
-\clearpage
-
-%%% ===========================================================================
-\subsubsection{Incorrect conductivity}
-The background conductivity $\siginf$ plays a central role in our analysis. It is used in the EM decoupling process and it is also needed to compute the linearized sensitivities for inversion. Since we need to estimate $\siginf$, usually through the inversion of EM survey data, it will never be correct. Here we explore some effects of an incorrect conductivity but  the consequences are problem dependent.
-
-We return to our conductive block in a halfspace and evaluate the $\dip$ data when the background is the true value ($\sigma_1 = 10^{-3}$ S/m) as well as a factor of two too large (2$\times10^{-3}$ S/m) and a factor of two too small (5$\times10^{-4}$ S/m). The data along a survey line are plotted in Fig. \ref{F:Reg_IPresp}.
-
-We invert these three IP responses, and provide sections of the recovered pseudo-chargeability at 0 m-northing. 
-Fig. \ref{F:Regional_IPInv}(a), (b) and (c) correspondingly show the recovered pseudo-chargeability when the conductivity is: the true value, too high, or too low.  
-With the correct conductivity the geometry of the IP body is reasonably recovered. 
-When the conductivity is too high, the $\dip$ have a negative bias that results in larger pseudo-chargeabilities and positive-valued artifacts near the IP body (Fig. \ref{F:Regional_IPInv}b).  
-When the conductivity is too small, the IP data have a positive bias and this produces  negative-valued artifacts near the IP body (Fig. \ref{F:Regional_IPInv}c). However, based on the  definition of the pseudo-chargeability shown in eq. (\ref{eq: petaeff}), the sign of the pseudo-chargeability should be positive. By incorporating positivity as a constraint in the inversion, and re-inverting the IP data having a positive bias, we obtain the result in  Fig. \ref{F:Regional_IPInv}(d).  This is a much better result than Fig. \ref{F:Regional_IPInv}(c)  and comparison of the observed and predicted data for this case shown in Fig. \ref{F:Reg_obspred} clearly shows how this constraint prevents the fitting of positive residual fields. We shall use this positivity  constraint for our following 3D IP inversion examples. 
-
-The background conductivity is also needed when computing the sensitivity function, since we need the reference electric field, which is dependent on conductivity. 
-An incorrect conductivity will affect the sensitivity function as well. 
-In order to test this, we compute the sensitivity  matrix using a half-space conductivity model ($\siginf = \sigma_1$). 
-Fig. \ref{F:True_vs_approx_sensitivity} compares the recovered pseudo-chargeability from the 3D IP inversion of the IP datum at 0.86 ms with the true and incorrect sensitivity function using half-space conductivity. 
-There is not a large difference between the two inversions  which suggests that an approximate conductivity may still provide sensitivities that are adequate for inversion. This parallels results from EIP where even an approximate conductivity can still yield good results when inverting the data. Thus there is some robustness in our sensitivity function with respect to an  incorrect conductivity and even if we  not have an accurate 3D conductivity model we can still apply our 3D IP inversion using half-space conductivity so long as the ATEM data includes distinctive IP response such as negative transients.
 
 \begin{figure}
   \figbox*{}{}{
@@ -1020,7 +1058,7 @@ There is not a large difference between the two inversions  which suggests that 
 \begin{figure}
   \figbox*{}{}{
   \includegraphics[width=1.\textwidth]{figures/Reg_obspred.png} }
-  \caption{Comparison of the observed (solid line) and predicted (empty circles) data. $\dip$ response was generated with underestimated half-space conductivity (0.5$\times \sigma_1$). The positivity constraint was used the 3D IP inversion.}
+  \caption{Comparison of the observed (solid line) and predicted (empty circles) data. $\dip$ response was generated with underestimated half-space conductivity (0.5$\times \sigma_1$). The positivity constraint was used in the 3D IP inversion.}
   \label{F:Reg_obspred}
 \end{figure}
 
@@ -1030,24 +1068,6 @@ There is not a large difference between the two inversions  which suggests that 
   \caption{Recovered pseudo-chargeabilty sections from the 3D IP inversions at 0 m-northing.  (a) True and (b) incorrect $\siginf$ is used to compute sensitivity function. For the incorrect sensitivity we used half-space conductivity ($\sigma_1$).}
   \label{F:True_vs_approx_sensitivity}
 \end{figure}
-\clearpage
-
-%%% ===========================================================================
-\subsubsection{Extracting intrinsic IP parameters}
-By applying our inversion to each time channel of $\dip$ data separately, we can recover 3D distributions of pseudo-chargeability at multiple times. 
-The pseudo-chargeability at each time carries different information about the state of polarization and we can use these to recover information about intrinsic IP parameters. 
-Diverse time-dependent conductivity models such Cole-Cole model and stretched-exponential can be used for this interpretation.
-We use the Cole-Cole model with $c=1$. 
-We parametrize pseudo-chargeability at a single pixel in terms of chargeability and time constant as described in Section \ref{section: extract_intrinsicIP}, and solve a small inverse problem. This parallels \cite[]{Yuval1997,Hordt2006}.
-
-As an example, we use the conductive and chargeable block presented in the previous section and invert 14 time channels of data ranging from 1-10 ms.  The EM data are forward modelled using EMTDIP code and the true $\siginf$ model is used  to evaluate the IP datum and compute the sensitivity function. The recovered pseudo-chargeability from one of the 14 inversions is shown in Fig. \ref{F:True_vs_approx_sensitivity}a. In that pseudo-chargeability model, we select cells that have a pseudo-chargeability value greater than 0.001, and then carry out the nonlinear inversion to estimate the time constant ($\tau$) and chargeability ($\eta$) for each cell separately. The forward modelling for this inversion is shown in eq. (\ref{eq: pseudochargeability_petaI}), which requires $w^e(t)$. 
-The $w^e(t)$ for a pixel in the block is shown in Fig. \ref{F:AveragedWe}.
-
-Fig. ~\ref{F:EtaTauSection}(a) and (b) correspondingly show the estimated time constants and chargeability as section maps.
-The estimated time constants show good agreement with the true value $\tau= 0.005$. 
-There is less agreement about chargeability for which the true value is $\eta=0.2$. Recovered values range from about 0.04-0.2 so most values are underestimated. 
-In Fig. \ref{F:IntrinsicIP}, we also provide time decays of the observed and predicted pseudo-chargeabilities at a single pixel marked as a black empty rectangle in Fig. ~\ref{F:EtaTauSection}. The estimated time constant ($\tau_{est}$) and chargeability ($\eta_{est}$) for this pixel are 0.0046 and 0.09, respectively. 
-These results imply there is greater  stability on recovering time constant than on recovering chargeability with our approach. Again, similar experiments were carried through for the canonical and resistive bodies and the conclusions were also that the time constant was adequately recovered with better fidelity than was the intrinsic chargeability.  
 
 \begin{figure}
   \figbox*{}{}{
@@ -1060,34 +1080,11 @@ These results imply there is greater  stability on recovering time constant than
   \figbox*{}{}{
   \includegraphics[width=1.\textwidth]{figures/IntrinsicIP.png} }
   \caption{Comparisons of the observed and predicted pseudo-chargeability at a single pixel in a chargeable body. 
-  Empty circles and solid line indicate predicted and observed pseudo-chargeability, respectively. Estimated time constant and chargeability for each inversion are expressed as $\tau_{est}$ and $\eta_{est}$, respectively.}
+  Empty circles and solid line indicate predicted and observed pseudo-chargeability, respectively. Estimated time constant and chargeability are expressed as $\tau_{est}$ and $\eta_{est}$, respectively.}
   \label{F:IntrinsicIP}
 \end{figure}
+
 \clearpage
-
-%% =============================================================================
-%% Section. Conclusions
-%% =============================================================================
-\section{Conclusions}
-In this paper, we have introduced a procedure for recovering IP information from TEM data with inductive sources.  Three main steps are required: 1) subtraction of the fundamental responses from the observations to generate IP data, 2) linearization of the IP responses as a function of the pseudo-chargeability, and 3) restoration of 3D pseudo-chargeability at multiple times, and further interpretation of the pseudo-chargeability to extract intrinsic IP parameters like Cole-Cole model. We used the ATEM survey to test our IP inversion procedure.
-
-The first step requires that we have a good estimate for the background conductivity $\siginf$. This is important for two reasons. It is first used to generate the fundamental fields that are subtracted from the observations to produce the IP data. This conductivity is also needed to compute the sensitivities for our linear relationship between the IP data and pseudo-chargeability. To construct $\siginf$ for our work we used the early time data that was felt to be uncontaminated with significant IP responses and inverted them with our 3D algorithms. For the mid-time data, subtraction of the fundamental responses from the observations revealed negative data even though the observations had been positive. At very late times however, this subtraction process was not necessary since the EM fields had sufficiently decayed. Maps of the $d^{IP}$ data can, in themselves, be a useful processing tool for anomaly hunting.
-
-The second item, linearization of the IP responses with respect to a pseudo-chargeability, required that a number of assumptions  be made. This pseudo-chargeability is defined as the ratio of the polarization current to a reference current. Unlike the EIP case, the electric fields for an inductive source do not achieve steady-state and hence neither do the polarization currents. This fundamental difference is addressed by evaluating the fundamental fields at each location in the earth and generating a reference electric field that has the direction and magnitude of the field at time when the fundamental field, which is responsible for charging the earth, reaches its maximum value. The pseudo-chargeability at a point in the earth thus depends upon the intrinsic chargeability, the reference electric field and the time history of the fundamental electric field. The situation becomes more complicated when data from many transmitters are to be inverted simultaneously because the time history of the electric field at a point in the earth is different for each transmitter. We handle this by defining an effective pseudo-chargeability and an associated reference electric field that accommodates, in a least squares fashion, the effects of all transmitters acting on a single cell.
-
-To have confidence in when, and under what circumstances, our approximations are sufficiently valid, we proceed with a number of rigorous tests. First we introduce 3 test models which are respectively a chargeable block in a halfspace. The block can be conductive, canonical, or resistive with respect to the background. Our evaluations show that: 
-(a) our choice of reference electric field and its time history produces a good estimate of the polarization currents;
-(b) the IP currents are dominated by the polarization currents, which is an assumption that is often made. However, the galvanic and vortex currents arising from the scalar and vector potentials in the Helmholtz decomposition of $\e^{IP}$ can be significant in some circumstances. They both oppose the direction of the polarization currents in the body. In our work we have included the galvanic currents and neglected the vortex currents which are almost always smaller than the galvanic currents.
-(c) Evaluating the IP responses using the Biot-Savart law provides accurate results.
-(d) With our approximate IP currents, the predicted responses are in reasonably good agreement with those from the true models although they are underestimated for highly conductive example. These results lead us to infer that our linearized formulation $d^{IP}(t)=J\peta(t)$ is a viable representation for the forward modelling at late times when  the IP effect is substantial compared to the EM effects which will occur in the discharging phase. 
-(e) For the multi-transmitter case we derived an effective pseudo-chargeability, which is a linear combination of the pseudo-chargeability of each transmitter. These were forward modelled with the linearized formulation and compared to the true responses. The computed responses showed the same shape; the values were underestimated for the conductive model but were almost identical for the canonical and resistive models.  
-
-The third component is the 3D inversion of the IP data using the linearized formulation to recover an effective pseudo-chargeability for each cell. ATEM data have only one receiver for each transmitter and a data map at a single time channel is essentially a potential field. The data do not have intrinsic resolving power and hence, as in magnetics or gravity inversions, we attempt to counteract this by introducing a depth weighting.  When this is done, our 3D IP inversion recovers a reasonable geometric shape and location of the chargeable body but the amplitude is underestimated. An incorrect $\siginf$ has two effects in the inversion. Firstly it can generates errors in the $d^{IP}$ data because the fundamental field, which is subtracted from the observations, is incorrect. To obtain insight we looked at the effects when the $\sigma_{est}$ was too low or two high. This respectively yielded positive or negative residual fields in the IP response. A positivity constraint on the pseudo-chargeability (similar to that used in EIP surveys) greatly ameleorated the effects of the positive residuals. The other avenue by which an incorrect $\siginf$ can affect the inversion is through the sensitivity matrix $J$. We showed that even with a poor sensitivity function, computed using half-space conductivity model, we recovered important information of the chargeable body such as geometric shape and location. Individual inversions are carried out at multiple time channels and recovered pseudo-chargeability as a function of time for each pixel in the earth. The pseudo-chargeability for pixels that had significant chargeability were subsequently fit to a Cole-Cole model to estimate $\tau$ and $\eta$ by assuming $c=1$. The estimated $\tau$ was close to the true value whereas $\eta$ was underestimated and less robust. This suggests that there is a possibility to extract intrinsic IP parameters from the recovered pseudo-chargeability from ATEM surveys.  
-
-Our IP inversion procedure provides a framework for recovering IP information from inductive source EM surveys and in particular from ATEM surveys that are commonly flown. Our examples show: (a)  that the horizontal location of a target body can be well recovered; (b) the overall geometry might be recovered but much of that inference requires a depth weighting to be included; (c)  we can recover estimates of intrinsic $\tau$ and $\eta$ that may be useful for distinguishing between two chargeable targets. Our procedure depends on having a good estimate for the background conductivity and this aspect this should be carefully investigated in future practical applications of our inversion methodology.  Other areas for follow-up research include quantitative depth resolution of the airborne IP surveys and inversions, and robust inversion strategy to extract intrinsic IP parameters from TEM data. 
-Lastly, our numerical examples  only treated the ATEM survey, but the procedure is applicable to other types of inductive source TEM survey such as large-loop TEM with many receivers. There will be details that need to be addressed for those applications but the work presented here provides the  fundamental backgrounds for those future studies whose goal is to extract some information about polarization from an inductive time domain system. 
-
-
 % =======================================================================
 % SECTION (Appendix)
 % =======================================================================
@@ -1096,17 +1093,17 @@ Lastly, our numerical examples  only treated the ATEM survey, but the procedure 
 %% SUBSECTION
 \section{Discretization of steady-state Maxwell's equations}
 \label{section:maxwell_discrete}
-As shown eq. (\ref{eq: phiIPapprox_general}), computation of our linearized kernel requires solving steady-state Maxwell's equations. 
-We discretize this system using mimetic finite volume (FV) method with weak formulation \cite[]{Eldadbook}. 
+As shown in eq. (\ref{eq: phiIPapprox_general}), computation of our linearized kernel requires solving steady-state Maxwell's equations. 
+We discretize this system using a mimetic finite volume (FV) method with weak formulation \cite[]{Yee1966,Eldadbook}. 
 For the discretization, we assume that the electric field $\e$ is discretized by grid function $\de$ on cell edges and magnetic flux density $\b$ is discretized by grid fuction $\db$ on cell faces. 
-Electrical potential $\phi$ is discretized by grid fucntion  $\phi$ on cell nodes. For clear representation of the derivation, recall Maxwell's equations in steady state as
+The electrical potential $\phi$ is discretized by a grid fucntion  $\phi$ on cell nodes. For a clear representation of the derivation, recall Maxwell's equations in steady state as
 \begin{align}
   \j = \siginf\e = -\siginf\grad \phi, \\
   -\div \j = \div \j_s, \\
   \j\big|_{\partial \Omega}\cdot\hat{n} = 0,
   \label{eq:DCBCneumann}
 \end{align}
-where $\partial \Omega$ indicates boundary surface of the system and $\hat{n}$ is the normal vector of the boundary surface. Weak form of those eqs can be written as
+where $\partial \Omega$ indicates boundary surface of the system and $\hat{n}$ is the normal vector of the boundary surface. The weak form of those eqs can be written as
 \begin{align}
   (\j, \vec{w}) + (\siginf \grad \phi, \vec{w}) = 0, \\
   -(\j, \grad \psi) = (\j_s, \grad \psi).
@@ -1130,26 +1127,29 @@ where $\Omega$ is the volume of the system. By discretizing $\grad$ operator and
   \label{eq:DCdisceq2}
 \end{equation}
 \end{linenomath*}
-where $\mathbf{M}^e_i$ is the mass matrices, which discretize the edge based inner product (\cite[]{Eldadbook}). This inner products are defined  as
-\begin{align}
-  \mathbf{M}^e_i = \diag(\Ace^T\diag(\vol)\mathbf{i}).
-\end{align}
-Here, $\mathbf{i}$ indicates a grid function on cell center like $\siginf$, and $\vol$ is the grid function for the cell volume. The averaging matrix $\Ace$ averages discrete function defined on the edges to the cell center. The mass matrix $\Me$ without subscript $i$ indicates that $\mathbf{i}$ is equal to the identity column vector of which all elements are one. By substituting eq. (\ref{eq:DCdisceq1}) to (\ref{eq:DCdisceq2}), we have
+where $\mathbf{M}^e$ performs volume averaging, and $\mathbf{M}^e_{\siginf}$ is the mass matrix of conductivity ($\siginf$), which discretizes the edge based inner product.
+Further details on the formation of this matrix see \cite{Eldadbook}. 
+% \begin{align}
+%   \mathbf{M}^e_i = \diag(\Ace^T\diag(\vol)\mathbf{i}).
+% \end{align}
+% Here, $\mathbf{i}$ indicates a grid function on cell center like $\siginf$, and $\vol$ is the grid function for the cell volume. The averaging matrix $\Ace$ averages discrete function defined on the edges to the cell center. The mass matrix $\Me$ without subscript $i$ indicates that $\mathbf{i}$ is equal to the identity column vector of which all elements are one.
+
+By substituting eq. (\ref{eq:DCdisceq1}) to (\ref{eq:DCdisceq2}), we have
 \begin{linenomath*}
 \begin{equation}
   \A_{\siginf}\boldsymbol{\phi} = \mathbf{rhs}^{DC},
   \label{eq:DCdiscLin}
 \end{equation}
 \end{linenomath*}
-where $\A_{\siginf} = \dgrad^T \MeSigInf\dgrad$ and $\mathbf{rhs}^{DC} = \dgrad^T \Me\dj_s$. 
+where $\A_{\siginf} = \dgrad^T \MeSigInf\dgrad$ and $\mathbf{rhs}^{DC} = \dgrad^T \Me\dj_s$. We use \SimPEG's tensor mesh and solver classes to form and solve above linear system \cite[]{Cockett2015}.
 
 %% ===========================================================================
 %% SUBSECTION
 \section{Discretization of the linearized kernel}
 \label{section:linearkernel_discrete}
-To obtain linear form of eq. shown in eq. (\ref{eq: dIP_lineareq}),
-we first discretize Biot-Savart law shown in eqs (\ref{eq: BiotbIP_approx}) and (\ref{eq: BiotbIPdt_approx}). In our discretization $\j^{IP}$ and  $\peta$ are defined on the cell center, and those for each time channel are constant in a cell volume, whereas $\eref$ is defined on the cell edges. 
-We define the number of cells and edges in 3D space as $nC$ and $nE$, respectively. Discretized IP current density, $\dj^{IP}_{cc} \in \mathbb{R}^{3nC}_{1}$, and defined on the cell center, since $\j^{IP}$ has three components, we first discretize integration operator including cross product ($\int_{v}\frac{ \times \hat{r}}{r^2}dv$) as
+To obtain a linear form of equation shown in eq. (\ref{eq: dIP_lineareq}),
+we first discretize Biot-Savart law shown in eqs (\ref{eq: BiotbIP_approx}) and (\ref{eq: BiotbIPdt_approx}). In our discretization $\j^{IP}$ and  $\peta$ are defined on the cell centers, and those for each time channel are constant in a cell volume, whereas $\eref$ is defined on the cell edges. 
+We define the number of cells and edges in 3D space as $nC$ and $nE$, respectively. The discretized IP current density, $\dj^{IP}_{cc} \in \mathbb{R}^{3nC}_{1}$, is defined at the cell center. Since $\j^{IP}$ has three components, we first discretize the integration operator including cross product ($\int_{v}\frac{ \times \hat{r}}{r^2}dv$) as
 \begin{linenomath*}
 \begin{equation}
   \mathbf{G}_{Biot} =
@@ -1178,14 +1178,14 @@ Then we discretize $\j^{IP}$ shown in eq. (\ref{eq: jip_approx}) as
   \dj^{IP}_{cc}(t) = \mathbf{S}\diag(\de^{F}_{max})\Ace^T\diag(\vol)\diag(\siginf)\peta(t),
 \end{equation}
 \end{linenomath*}
-where
+where $\mathbf{A}^{e}_{c}$ is discrete averaging matrix from edge to cell center and 
 \begin{linenomath*}
 \begin{equation}
   \mathbf{S} = \mathbf{A}^{e}_{ccv}\Me^{-1}[\MeSigInf \mathbf{G} \A_{\siginf}^{-1}\mathbf{G}^T  - \mathbf{I}] \diag(\de^{F}_{max})\Ace^T\diag(\vol)\diag(\siginf).
 \end{equation}
 \end{linenomath*}
-and $\mathbf{A}^{e}_{ccv}$ is discrete averaging matrix from edge to cell center with consideration of three component vector: $\in \mathbb{R}^{3nC}_{nE}$. 
-Thus, we can have linear eq. for a single time channel as
+Here $\mathbf{A}^{e}_{ccv}$ is discrete averaging matrix from edge to cell center with consideration of three component vector: $\in \mathbb{R}^{3nC}_{nE}$. 
+Thus, we can have a linear equation for a single time channel as
 \begin{linenomath*}
 \begin{equation*}
   \db^{IP} = \Gbiot \mathbf{S} \peta,
@@ -1212,9 +1212,6 @@ where $\mathbf{J}$ is the Jacobian matrix of the linear equation, and since $\ma
   \label{eq: dbIPdt_linear}
 \end{equation}
 \end{linenomath*}
-
-\bibliographystyle{gji}
-\bibliography{reference}
 
 \end{document}
 
