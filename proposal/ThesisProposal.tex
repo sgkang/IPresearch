@@ -1,0 +1,730 @@
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[tight,nice]{units}
+\usepackage{graphicx,color,float,url,amsmath,parskip,multicol}
+%\usepackage[super]{cite}
+\usepackage{subfigure}
+\usepackage{listings}
+\usepackage{sectsty}
+\usepackage{appendix}
+\usepackage{amssymb}
+\usepackage{url}
+\sectionfont{\normalsize}
+\subsectionfont{\normalsize}
+\title{\normalsize}
+\usepackage{setspace}
+\usepackage{natbib}
+\usepackage[nottoc,numbib]{tocbibind}
+\usepackage{fancyhdr}
+\usepackage[outercaption]{sidecap}
+\usepackage{eqnarray}
+
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue}
+
+\renewcommand{\bibname}{REFERENCES}
+\newcommand{\om}{{$\Omega$m }} 
+\newcommand{\bfm}{{\bf m}}
+\newcommand{\bfd}{{\bf d}}
+\newcommand{\bfp}{{\bf p}}
+\newcommand{\hf}{\frac 12}
+\newcommand{\bfepsilon}{{\boldsymbol \epsilon}}
+\newcommand{\bfSigma}{{\boldsymbol \Sigma}}
+
+\pagestyle{fancy}
+
+\fancyhead{}
+\fancyhead[L]{Thesis Proposal}
+\fancyhead[R]{Michael S. G. McMillan}
+
+\begin{document}
+\input{title.tex}
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{INTRODUCTION}
+
+Electromagnetics (EM) is an important tool in mineral exploration because it produces 3D computer models of electrical resistivity distributions in the subsurface of the earth. Electrical resistivity, hereafter resistivity, measures the degree to which a material opposes the flow of electric current, and this physical property can help distinguish rock types and alteration zones due to resistivity contrasts compared to background lithologies \cite[]{Keller1988}.  Resistivity and its reciprocal, conductivity, will be referred to interchangeably in this proposal. Conventionally, an individual EM survey is inverted with finite-volume \cite[]{Haber2007}, finite-difference \cite[]{Commer2004}, or integral equation techniques \cite[]{Cox2010}, to create a single resistivity inversion model. However, in certain scenarios, conventional inversion techniques encounter problems.  Such instances include modeling multiple spatially overlapping electromagnetic surveys or imaging thin conductive targets with large conductivity contrasts to the background environment. The former can lead to inconsistent inversion models and the latter can be difficult to image with conventional inversion codes, and may produce spurious inversion artifacts.  Both of these scenarios can lead to difficulties in interpretation, and warrant alternative approaches to the electromagnetic inverse problem.  
+
+\subsection{Cooperative inversion background} 
+The first research scenario is what to do with multiple electromagnetic surveys, possibly from different time periods, that exist over a shared area.  The goal is to recover a common physical property model, such as conductivity, through either a joint or cooperative inversion. In a joint approach, multiple data are inverted simultaneously \cite[]{Vozoff1975, Haber1997, Albouy2001, Gallardo2004, Sosa2013}. This requires being able to forward model and compute sensitivities for all data within a single code, and it also requires proper relative assignments of uncertainties. Any problematic data within the entire suite of data can cause the inversion to proceed very slowly, and may produce unwanted artifacts in the final model. In a cooperative inversion, results from inverting one data set are used in the inversion of another data set \cite[]{Lines1988, Oldenburg1997, Commer2009}. The cooperation between data sets can be applied through the use of reference models, constraints, or weightings in the regularization term of the objective function. These previous cooperative studies focused on incorporating features of one dataset into another in a one step process, such as taking the final model of one inversion and using it as a starting model, or weighting scheme, for the next set of data. The problem with these techniques is that often the data are not perfectly complementary, and an iterative method of incorporating all the data sets is preferential. 
+
+The advantage of a cooperative approach is that individual algorithms, tailored to inverting a particular type of data, can be used.  This is beneficial because carrying out inversions of multiple data sets individually is generally much faster than inverting them simultaneously. The potential disadvantage of cooperative inversion is that there are many strategies that could be invoked in an attempt to find a single model that fits both data sets.  Therefore, a cooperative inversion needs a set methodology or work flow to address specific issues in implementation.  
+
+
+\subsection{Parametric inversion background}
+The second research scenario is when an airborne electromagnetic (AEM) survey is flown over a thin discrete conductive anomaly with a large contrast in resistivity compared to the background. Conventional voxel-based inversion techniques such as \cite{Haber2007,Oldenburg2013,Haber2014} can have difficulties in imaging these sharp contrasts, and in certain situations can encounter spurious inversion artifacts known as ringing. The ringing phenomenon is not completely understood, and has not yet been thoroughly studied in literature.  A possible cause for this ringing may be related to the circular nature of the sensitivity matrix associated with a coincident loop airborne system such as the Versatile Time Domain Electromagnetic System (VTEM) \cite[]{Allard2007}. This will be discussed in more detail in section 4. 
+
+%An example of the sensitivities from a VTEM survey are shown in Figure~\ref{fig:sens}, and an example of an inversion with ringing artifacts is displayed in Figure~\ref{fig:ringing}.
+
+To image sharp conductivity contrasts and to avoid unwanted features such as ringing, a new direction was taken for AEM inversions, one using a parametric approach. Parametric inversions are well researched methods of reducing the parameter space of an inverse problem \cite[]{Dorn2000,Pidlisecky2011,Zhdanov2013} and can alleviate some of the issues conventional inversions face.  Instead of solving for a physical property in every voxel or mesh cell, parametric inversions solve for a set of parameters that describe the physical property space. The reduction in the number of variables can typically be many orders of magnitude, from $\sim 10^6$ to $\sim 10^1$.  Parametric inversions can also be coupled with such methods as level sets \cite[]{Osher1988,Osher2001}, and together they can solve for the boundary of a target of interest \cite[]{Dorn2000,VandenDoel2006,Aghasi2011}. This enables a computationally efficient method of imaging compact anomalies and sharp boundaries with greater ease without the issue of ringing. 
+
+%Consequently, we incorporate a parametric inversion with level sets for time domain airborne electromagnetics, and demonstrate its applicability to both synthetic and field data sets.
+
+
+%\begin{figure}[h]
+%\centering
+%\begin{minipage}{.45\textwidth}
+%\centering
+%\includegraphics[width=0.8\columnwidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/sens_03_vertplate_halfspace_sens007norm.png}
+%\caption{Sensitivities calculated from a 1000 $ \Omega $m half-space at 383 $\mu$s using a coincident loop AEM survey. Notice the circular nature with a low value in the center.}
+%\label{fig:sens}
+%\end{minipage}
+%\begin{minipage}{.45\textwidth}
+%\centering
+%\includegraphics[width=0.8\columnwidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/ringing_08_vertPlateFineMesh_inv05.png}
+%\caption{Ringing artifacts from a synthetic voxel-based inversion. Inversion recovery shown as a blue ring. True model is rectangular conductor in the center.}
+%\label{fig:ringing}
+%\end{minipage}
+%\end{figure}
+
+\subsection{Electromagnetic methods}
+Maxwell's equations govern electromagnetism, and the various relationships in time are shown below with vector quantities in bold:
+\begin{align}
+\nabla \cdot \mathbf{E} &= \frac{\rho}{\epsilon} \label{eq:Gauss}\\
+\nabla \cdot \mathbf{B} &= 0 \label{eq:divB}\\
+\nabla \times \mathbf{E}  &= -\frac{\partial\mathbf{B}}{\partial t} \label{eq:Faraday}\\
+\nabla \times \mathbf{H} &= \sigma \mathbf{E} + \epsilon\frac{\partial\mathbf{E}}{\partial t} + \mathbf{s}
+\label{eq:Ampere}
+\end{align}
+
+where $\mathbf{E}$ is the electric field, $\mathbf{H}$ is the magnetic field, $ \mathbf{B} $ is the magnetic flux density, $ \rho $ is the charge density, $ \epsilon $ is the dielectric permittivity, $\sigma$ is the electrical conductivity, $ \mathbf{s} $ is a source term, and $ t $ is time. The fields are related to the fluxes by constitutive relations in the frequency domain $\mathbf{J} = \sigma \mathbf{E}$, $\mathbf{B} = \mu \mathbf{H}$ and $ \mathbf{D} = \epsilon \mathbf{E}$ where $\mathbf{J}$ is the current density, $ \mathbf{D} $ is the dielectric displacement and $ \mu $ is the magnetic permeability. Some assumptions made to simplify these equations are to presume the magnetic permeability of the earth is fixed at $ \mu_0 $, the magnetic permeability of free space, and that the quasi-static approximation holds, meaning the displacement current term $\epsilon\frac{\partial\mathbf{E}}{\partial t}$ is ignored. 
+
+Electromagnetic experiments can be collected on the ground or in the air, and typically consist of a transmitter that carries a time-varying current. For an inductive source method such as time-domain AEM, the airborne transmitter produces a time-varying magnetic field that induces currents in the earth. In turn, the induced currents create a secondary magnetic field that can be measured by a receiver on the airborne platform. A cartoon showing the process of electromagnetic induction is shown in Figure~\ref{fig:AEMcartoon} \cite[]{Reynolds1998} and Figure~\ref{fig:VTEMsetup} shows the setup of a commercial coincident loop system, VTEM. The data collected by a coincident loop system is most often $ x,y,z $  component $ \frac{\partial\mathbf{B}}{\partial t} $ data, although $ \mathbf{B} $ fields can also be measured. For grounded source surveys, electric fields and voltages are commonly measured, such as in controlled source audio frequency magnetotellurics (CSAMT) \cite[]{Zonge1991} and direct current (DC) \cite[]{Inman1973} experiments. 
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=0.7\linewidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/AEMcartoon.jpg}
+  \caption{Electromagnetic induction. Figure from \cite{Reynolds1998}}
+  \label{fig:AEMcartoon}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=0.7\linewidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/VTEMconfig.jpg}
+  \caption{VTEM coincident loop setup. Figure from Geoscience Australia.}
+  \label{fig:VTEMsetup}
+\end{minipage}
+\end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Inversion of EM data}
+AEM, CSAMT and DC inversions follow algorithms outlined in \cite{Oldenburg1994,Haber2004,Haber2007,Oldenburg2013,Haber2014}, which minimize an objective function
+\begin{equation}
+\phi = \phi_d + \beta \phi_m
+\label{eq:objectiveFunction}
+\end{equation}
+to obtain an optimal conductivity distribution. $\phi_d$ is the data-misfit, $\phi_m$ is the model regularization term, and $\beta$ is a trade-off parameter. In a least squares regularization, the data misfit is defined by the measure
+\begin{equation}
+\phi_d = \|\mathbf{W}_d(\mathbf{d}^{\mathrm{obs}} - \mathbf{d}^{\mathrm{pred}}) \|^2_2
+\label{eq:dataMisfit}
+\end{equation}
+where $\mathbf{d}^{\mathrm{obs}}$ is an observation vector, $\mathbf{d}^{\mathrm{pred}}$ is a predicted data vector, $\mathbf{W_d}$ is a diagonal matrix containing the reciprocal of data error standard deviations, and $\|\ \|^{2}_2$ is the squared $\ell^2$ norm. The model regularization term is given by 
+\begin{align}
+ \phi_m = \ &\alpha_{s} \int_{\mathbf{V}} \mathbf{W}_{s}(\mathbf{m}-\mathbf{m}_0)^{2}\mathrm{d}\mathbf{V} + \alpha_{x} \int_{\mathbf{V}} \mathbf{W}_{x} \left (\frac{\partial{\mathbf{m}}}{\partial{x}} \right)^2 \mathrm{d}\mathbf{V} + \nonumber \\ &\alpha_{y} \int_{\mathbf{V}} \mathbf{W}_{y} \left (\frac{\partial{\mathbf{m}}}{\partial{y}} \right)^2 \mathrm{d}\mathbf{V} + 
+ \alpha_{z} \int_{\mathbf{V}} \mathbf{W}_{z} \left (\frac{\partial{\mathbf{m}}}{\partial{z}} \right)^2 \mathrm{d}\mathbf{V} 
+ \end{align}
+ where the $ \alpha $ values are user-defined weights, $ \mathbf{W} $ terms are diagonal weighting matrices, $ \mathbf{m} $ is a model vector, $ \mathbf{m}_0 $ is a reference model vector, and $ \mathbf{V} $ is a volume matrix.
+The minimization of the objective function at the $(i+1)^{th}$ iteration in a Gauss-Newton method requires the solution of
+\begin{equation}
+(\mathbf{J}^T \mathbf{W}_d^T \mathbf{W}_d \mathbf{J} + \beta \mathbf{R}) \delta \mathbf{m} = -\mathbf{J}^T \mathbf{W}_d^T \mathbf{W}_d(\mathbf{d}_{\mathrm{obs}} - \mathbf{d}^{(i)}) - \beta \mathbf{R}
+(\mathbf{m}^{(i)} - \mathbf{m}_0)
+\label{eq:GaussNewton}
+\end{equation}
+where $\mathbf{J}$ is a Jacobian matrix of sensitivities, $\mathbf{R}$ is a regularization matrix, and $\delta \mathbf{m}$ is a model perturbation vector. The inversion terminates when the data misfit reaches its target level $ \phi_d^* $, which for this proposal will equal the total number of data measurements.
+
+When possible, ocTree meshes are used for inversion to minimize computation time \cite[]{Haber2007a,Haber2007b} with direct solvers for AEM inversions \cite[]{Amestoy2001,Schenk2001}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{RESEARCH QUESTIONS}
+
+The primary research questions in this Ph.D. proposal are:
+\begin{enumerate}
+\item to develop a 3D cooperative inversion method that incorporates time-domain AEM and other spatially overlapping geophysical EM data sets into one consistent inversion model in order to improve the resulting inversion accuracy.
+\item to develop a 3D parametric inversion method for time-domain AEM to recover a target with potentially sharp boundaries and a large conductivity contrast to its host environment.
+\item to develop a general 3D parametric inversion method for airborne or ground EM to recover multiple targets of variable geometries and conductivities.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{COOPERATIVE INVERSION: Methods and Results}
+
+The goal of a cooperative inversion is to incorporate all the information from each data set into a final inversion model.  As such, we developed the following cooperative algorithm as seen in Figure~\ref{fig:CoopAlgorithm}. The iterative nature of this algorithm differentiates it from recent cooperative works such as \cite{Commer2009}. For a detailed analysis of this method, refer to \cite{McMillan2014}, and the essentials of the method are summarized below.  
+
+The approach outlined here uses the advantages of both joint and cooperative inversion.  The synthetic and field examples used for the cooperative inversion have time-domain AEM \cite[]{Eaton2013}, CSAMT and DC measurements. The DC resistivity data are modeled as a very low frequency domain survey, and hence both DC resistivity and CSAMT are jointly inverted using our generalized frequency domain code. A cooperative strategy is then adopted to include the AEM data. 
+
+Following the algorithm from Figure~\ref{fig:CoopAlgorithm}, we start with an initial model $ \sigma_0 $, and the first task is to take a single Gauss-Newton step as shown in Equation~\ref{eq:GaussNewton}, with data $d_1$ and a starting beta, $\beta_1^{(1)}$. The subscript refers to the data set number and the superscript in parenthesis refers to the $\beta-$iteration.  This first Gauss-Newton step produces an updated model $ \sigma_1^{(1)}$.   This updated model becomes the initial and reference model for the first $\beta-$iteration for data set $ d_2 $, and the output is  $ \sigma_2^{(1)}$.  Subsequently, this becomes the initial and reference model for a second $\beta-$iteration. The values of $\beta$ for this next, and future, iterations are reduced according to a schedule $\beta_1^{(i+1)} = \gamma \beta_1^{(i)}$ and $\beta_2^{(i+1)} = \gamma \beta_2^{(i)}$, where $\gamma \leq 1$.  
+
+This co-operative work flow continues, up to a maximum number of iterations $ i_{\mathrm{max}} $, until the target misfit is reached for one or both data sets.  If a single model hits both target misfits, $ \phi_{d1}^{*} $ for $d_1$ and  $ \phi_{d2}^{*} $ for $d_2$, each data set has been adequately fit and the process stops.
+
+If only one data set is fit, i.e. $d_1$, then the emphasis shifts to continued $\beta-$iterations for $d_2$. If the ensuing model $\sigma_2^{(i)}$ is still compatible with the $d_1$ data set, but not yet with $ d_2 $, then further $\beta-$iterations are performed on $d_2$ until convergence. However, if the misfit for $d_1$ is significantly increased, then a $\beta$ iteration on $d_1$ is performed by starting with the last used $\beta_1^{(i)}$ and the co-operative inversion cycle resumes. The process continues until convergence, or until the data misfit for $d_2$ increases compared to a previous iteration. At this point we feel that we have done as well as possible and the current model is accepted as the final result. 
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.4\linewidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/Coop_Algorithm.jpg}
+  \caption{Cooperative inversion algorithm.}
+  \label{fig:CoopAlgorithm}
+\end{figure}
+
+
+\subsection{Synthetic Inversions}
+To test the cooperative algorithm, a synthetic model, shown in Figure~\ref{fig:AntSynthModel}, was designed based on a field area with multiple spatially overlapping electromagnetic data sets: the Antonio high sulfidation gold deposit in Peru \cite[]{Teal2010}.  Three synthetic geophysical data sets were simulated, AEM, CSAMT and DC resistivity, based on actual field experiments, and the locations of the data points are plotted on Figure~\ref{fig:CoopSynthInversions}. The results from inverting each data set separately, compared to a cooperative inversion are also displayed on Figure~\ref{fig:CoopSynthInversions}.  The results are analyzed quantitatively with a residual R shown below in Equation~\ref{eq:R} and the various residuals are summarized in Table~\ref{table:R}.  This table displays that the cooperative approach performs better than any of the inversions alone.
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{.45\textwidth}
+  \centering
+  \includegraphics[width=0.8\linewidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/Ant_synth_survey_sizeQC-eps-converted-to.pdf}
+  \caption{Synthetic model at a 3870 m  \newline elevation slice ($ \sim $ 75 m depth) designed \newline to test the cooperative algorithm.}
+  \label{fig:AntSynthModel}
+\end{minipage}%
+  \begin{minipage}{.45\textwidth}
+  \includegraphics[width=\linewidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/Ant_synth_individual_and_coop_sizeQC-eps-converted-to.pdf}
+  \caption{Resistivity 3D inversions from synthetic data at a 3870 m elevation slice with receiver locations shown. True resistor outline in black. a) AEM b) CSAMT c) DC Resistivity d) Cooperative.}
+  \label{fig:CoopSynthInversions}
+    \end{minipage}
+\end{figure}
+
+\begin{equation}
+\mathrm{R} =  \frac{1}{N}\|\mathrm{log}_{10}(\mathbf{m}) - \mathrm{log}_{10}(\mathbf{m_{\mathrm{true}}}) \|^{2}_{2}
+\label{eq:R}
+\end{equation}
+
+\begin{table}[h]
+\caption{Quantitative assessment of synthetic inversions using a residual (R) value. A lower residual refers to a more accurate recovery. The cooperative inversion has the lowest R value.}
+\begin{center}
+\begin{tabular}{ll}
+$ \mathbf{Inversion \ Model} $    & $ \mathbf{Residual \ (R)} $\\ \hline
+50 $ \Omega $m half-space   & 1.62        \\ \hline
+AEM                         & 0.80        \\ \hline
+CSAMT                       & 0.66        \\ \hline
+DC                          & 0.55        \\ \hline
+Co-operative                & 0.47        \\ \hline
+\end{tabular}
+\label{table:R}
+\end{center}
+\end{table}
+
+
+\subsection{Field Inversions}
+Based on the success of the synthetic inversions, the cooperative approach was tested on the actual field data over the Antonio gold deposit. The overlapping  geophysical surveys, which are in the same location as the synthetic case are imaged in Figure~\ref{fig:AntonioSurveys}. This figure also outlines the surficial extent of silica alteration, which is highly resistive compared to the surrounding background rocks and contains economic mineralization \cite{Goldie2000}. This resistive nature makes the anomaly a prime electromagnetic target \cite[]{Oldenburg2004}. As in the synthetic example, the results of the individual inversions and the subsequent cooperative inversion are displayed in Figure~\ref{fig:CoopFieldInversions}.  The results show that the individual inversion results have many differences between them, and that the overall resistor geometry is defined with greater clarity with the cooperative approach compared to any of the individual inversions.  Extensive drilling over the deposit corroborates this finding, and geologic constraints can also be added to the cooperative inversion as discussed in \cite{McMillan2014}.
+
+\subsection{Summary}
+The synthetic and field results have shown that a cooperative inversion method can improve the accuracy of resulting inversion models. Additional questions that could be further analyzed include:
+
+\begin{itemize}
+\item incorporating weighting between data sets in the case of highly variable data quality or quantity.
+\item finding an optimal approach for the case when a cooperative model fits one data set well but not the other.
+\item including complex conductivity to factor in the frequency dependent nature of conductivity.
+\end{itemize}
+
+\clearpage
+
+\begin{figure}[h]
+  \centering
+    \begin{minipage}{.45\textwidth}
+  \centering
+  \includegraphics[width=0.8\linewidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/Survey_ALL_field.jpg}
+  \caption{Three overlapping geophysical \newline surveys over the Antonio deposit.}
+  \label{fig:AntonioSurveys}
+    \end{minipage}
+    \begin{minipage}{.45\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/Ant_field_individual_and_coop_sizeQC-eps-converted-to.pdf}
+  \caption{Resistivity 3D inversions from field data at a 3870 m elevation slice with receiver locations shown. Near-surface silica alteration outline in dashed red and geologic faults in thin solid blue. a) AEM b) CSAMT c) DC Resistivity d) Cooperative.}
+  \label{fig:CoopFieldInversions}
+  \end{minipage}
+\end{figure}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+
+\section{RINGING}
+The issue of ringing, or circular spurious inversion artifacts usually found around conductive anomalies in time-domain AEM inversions, came to light following the cooperative inversion studies.  From synthetic and field studies over the Antonio deposit, it was noticed that AEM inversions had difficulties resolving conductive targets within the large resistor. Fundamentally time-domain electromagnetic systems should be highly sensitive to conductive structures \cite[]{Nabighian1988,Macnae1998}; therefore, this observation seemed inconsistent. Consequently, a synthetic example was established to investigate how well a coincident loop time domain AEM system could resolve a thin conductive block. The synthetic model consisted of a 1 \om vertical block of dimensions 100 x 300 x 200 m in $ \mathit{x,y,z} $ respectively, buried 100 m below the surface in a 1000 \om background as seen in Figure~\ref{fig:SynthVertPlate}.  The simulated survey consisted of coincident loop time-domain AEM $z$-component $ \frac{\partial\mathbf{B}}{\partial t} $ data with 14 time channels between 167 $ \mu $s and 1010 $ \mu $s. The data are contaminated with 5\% Gaussian noise and the first time channel responses are shown in Figure~\ref{fig:SynthVertPlateData}. 
+
+As described in \cite{Ward1988}, the diffusion distance $ d $, or the maximum amplitude of the electric or magnetic field at a fixed time from an impulse response, is given by Equation~\ref{eq:diffusion}
+
+\begin{equation}
+d = \sqrt{\frac{2t}{\mu_0 \sigma}}
+\label{eq:diffusion}
+\end{equation}
+
+where $ t $ is time, $ \mu_0 $ is the magnetic permeability of free-space and $ \sigma $ is conductivity. This becomes important when deciding how much padding to surround the core area of the inversion mesh. According to \cite{Yang2012}, a minimum of two largest diffusion distances (hereafter referred to as $ \mathit{d} $) should surround the core mesh area to appropriately satisfy boundary conditions. For this synthetic example, the largest diffusion distance is 1268 m. The difference between applying one and two diffusion distances worth of padding for the inversion mesh is seen in Figures~\ref{fig:SynthVertPlateFineMesh} and~\ref{fig:SynthVertPlateFinerMesh}. A clear ring of conductive material surrounds the true anomaly when only one diffusion distance of padding exists, shown at a depth slice of 200 m in Figure~\ref{fig:SynthVertPlateFineMesh}. A typical smooth recovery without ringing ensues when the padding increases to two diffusion distances at the same depth in Figure~\ref{fig:SynthVertPlateFinerMesh}. Such a dramatic effect was not expected, and little has been found in the literature that discusses these erroneous ringing features. Furthermore, at a depth of 400 m, below the true conductive block, even the larger padded mesh displays rings as demonstrated by Figures~\ref{fig:SynthVertPlateFineMesh400m} and~\ref{fig:SynthVertPlateFinerMesh400m}. Increasing the padding distance to 3 diffusion distances does not alleviate these rings at depth, and the cause of these artifacts will be researched in more detail during my Ph.D. 
+
+The effect of additional padding cells in the inversion mesh can be visualized by looking at the data produced by a simple half-space. Using a 1000 $ \Omega $m half-space, the $ z $-component $\frac{\partial\mathbf{B}}{\partial t} $ AEM responses from each mesh are shown in Figure~\ref{fig:SynthVertPlatedpred0}.  In Figures~\ref{fig:SynthVertPlatedpred0}a, b, and c, the half-space response with 1$ \mathit{d} $, 2$ \mathit{d} $ and 3$ \mathit{d} $ worth of padding cells around the core receiver area of the mesh are depicted. The normalized residuals of each mesh with respect to the true data (computed with an extended core region and 2$ \mathit{d} $ worth of padding) are shown in Figures~\ref{fig:SynthVertPlatedpred0}d, e and f. These figures demonstrate that the 2$ \mathit{d} $ and 3$ \mathit{d} $ padded mesh data are much closer to the true synthetic data compared to the 1$ \mathit{d} $ padded mesh data. This helps to demonstrate why the 1$ \mathit{d} $ padded inversion is much poorer.
+
+In terms of explaining the cause of the ringing artifacts, the sensitivity matrix of a coincident loop time-domain AEM system is circular in nature as calculated and shown in Figure~\ref{fig:SynthVertPlateSens} for a 1000 \om half-space. The sensitivity matrix, a topic discussed in many previous EM studies \cite[]{McGillivray1994,Farquharson1996,Hordt1998,Newman2005}, is defined as the change in data $ d $ in the $ \mathit{i}^{th} $ location related to a change in the physical property $ m $ in the $ \mathit{j}^{th} $ model cell, as written in Equation~\ref{eq:sensEq}.  This matrix is fundamental to calculate the model update $ \delta \mathbf{m} $ as described in Equation~\ref{eq:GaussNewton} of the previous section, and may be causing the ringing artifacts in some unknown way.  Discovering the exact cause, and ultimately a solution to prevent ringing will be researched further, but the presence of ringing is a primary motivation for the next section.
+
+\begin{equation}
+\mathbf{J_{\mathrm{ij}}} = \frac{\partial d_i}{\partial m_j}
+\label{eq:sensEq}
+\end{equation} 
+
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{.45\textwidth}
+\centering
+\includegraphics[width=0.75\columnwidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/synthVertPlateLabel.jpg}
+\caption{Synthetic 1 \om vertical block in \newline a 1000 \om background.}
+\label{fig:SynthVertPlate}
+\end{minipage}
+\begin{minipage}{.45\textwidth}
+\centering
+\includegraphics[width=0.85\columnwidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/synthVertPlateData167us_label.jpg}
+\caption{Simulated AEM $ \frac{\partial\mathbf{B}z}{\partial t} $ data over the synthetic vertical plate with coincident transmitter and receiver locations shown in black.}
+\label{fig:SynthVertPlateData}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{.5\textwidth}
+\centering
+\includegraphics[width=0.7\columnwidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/ringing_08_vertPlateFineMesh_inv05_Labels200m.png}
+\caption{Synthetic vertical plate inversion \newline model sliced at 200 m depth, using 1 largest  \newline diffusion distance worth of padding.}
+\label{fig:SynthVertPlateFineMesh}
+\end{minipage}
+\begin{minipage}{.45\textwidth}
+\centering
+\includegraphics[width=0.75\columnwidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/ringing_08_vertPlateFinerMesh_inv06_Labels200m.png}
+\caption{Synthetic vertical plate inversion model sliced at 200 m depth, using 2 largest diffusion distances worth of padding.}
+\label{fig:SynthVertPlateFinerMesh}
+\end{minipage}
+\end{figure}
+
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{.5\textwidth}
+\centering
+\includegraphics[width=0.7\columnwidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/ringing_08_vertPlateFineMesh_inv05_Labels400m.png}
+\caption{Synthetic vertical plate inversion \newline model sliced at 400 m depth, using 1 largest \newline diffusion distance worth of padding.}
+\label{fig:SynthVertPlateFineMesh400m}
+\end{minipage}
+\begin{minipage}{.45\textwidth}
+\centering
+\includegraphics[width=0.75\columnwidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/ringing_08_vertPlateFinerMesh_inv06_Labels400m.png}
+\caption{Synthetic vertical plate inversion model sliced at 400 m depth, using 2 largest diffusion distances worth of padding.}
+\label{fig:SynthVertPlateFinerMesh400m}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\columnwidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/vertPlatedpred0_label.jpg}
+\caption{Synthetic vertical plate initial model responses. 1000 $ \Omega $m half-space response at time channel 167 $ \mu $s with different meshes.  Meshes incorporated different amounts of padding based on maximum diffusion distance $ \mathit{d} $.  a) response from mesh with padding = 1$ \mathit{d} $ b) response from mesh with padding = 2$ \mathit{d} $ c) response from mesh with padding = 3$ \mathit{d} $ d) normalized residual from 1 diffusion distance mesh e) normalized residual from 2 diffusion distance mesh f) normalized residual from 3 diffusion distance mesh.}
+\label{fig:SynthVertPlatedpred0}
+\end{figure}
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.65\columnwidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/sens_03_vertplate_halfspace_sens007norm.png}
+\caption{Sensitivity matrix values from a 1000 $ \Omega $m half-space in each cell at time channel 383 $ \mu $s for a data point at location (0,0). Note the circular nature.}
+\label{fig:SynthVertPlateSens}
+\end{figure}
+
+\clearpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{PARAMETRIC INVERSION: Methods and Results}
+As a means to prevent ringing in time-domain AEM inversions, and to image anomalies with sharp boundaries and large resistivity contrasts compared to the background, we propose using a parametric approach. In this framework, consider an inverse problem where the forward problem has the form
+\begin{eqnarray}
+\label{forpro}
+F(m(x)) +\bfepsilon = \bfd
+\end{eqnarray}
+
+where $F$ maps the function $m(x)$ to the discrete data $\bfd$ and $\bfepsilon$ is the noise that is
+assumed to be Gaussian with a known covariance matrix $\bfSigma_{d}$.
+After discretization of the model we obtain a discrete problem
+\begin{eqnarray}
+\label{forprod}
+F(\bfm) +\bfepsilon = \bfd
+\end{eqnarray}
+where $\bfm$ is a discrete approximation to the function $m(x)$.
+A maximum likelihood approach would minimize the misfit
+\begin{eqnarray}
+\min_{\bfm} \phi(\bfm) =  \hf (F(\bfm) - \bfd)^{\top}\bfSigma_{d}^{-1}(F(\bfm) - \bfd).
+\end{eqnarray}
+
+However, this problem is typically ill-posed, and there are many possible solutions that minimize
+the misfit. To obtain a well posed problem two possible routes can be taken.
+First, if the model $\bfm$ does not have any particular form we can assume some smoothness
+and this results in a regularized least squares approach.
+A second option is where some very specific a-priori information is available, and
+we assume that the model $\bfm$ can be expressed by a very small number of $k$ parameters $\bfp$. This can be expressed by
+\begin{eqnarray}
+\label{modfun}
+\bfm = f(\bfp) 
+\end{eqnarray}
+where $f: \ \mathbb{R}^{k} \rightarrow \mathbb{R}^{n}$ is a known smooth function that is continuously differentiable. 
+
+In some cases both assumptions on the solution are plausible. The model can be made of
+a smooth background and an anomalous body that can be parametrized. That is, we can write
+\begin{eqnarray}
+\label{modfun2}
+\bfm = \bfm_{s} + f(\bfp)
+\end{eqnarray}
+where $\bfm_{s}$ is some smooth background and $f(\bfp)$ describes an anomalous conductive
+body. This leads to the following regularized problem to be solved
+\begin{eqnarray}
+\label{minmis}
+\min_{\bfm_{s},\bfp} \phi(\bfm_{s},\bfp) =  \hf (F(\bfm_{s}+f(\bfp)) - \bfd)^{\top}\bfSigma_{d}^{-1}(F(\bfm_{s} + f(\bfp)) - \bfd)
++ \beta \mathbf{R}(\bfm_{s}).
+\end{eqnarray}
+Here $\mathbf{R}(\cdot)$ is a regularization term that enforces smoothness on the background model
+and $\beta$ is a regularization parameter.
+
+Equation \eqref{minmis} is a discrete optimization problem for the smooth background model $\bfm_{s}$
+and the parameters $\bfp$. In general, it is non convex and therefore care must be taken to obtain
+feasible solutions.
+Here we propose to use a block coordinate descent approach \cite[]{Gill}. In the first stage
+we fix $\bfm_{s}$ and minimize over $\bfp$ and in the second we fix $\bfp$ and minimize over $\bfm_{s}$.
+We repeat the process to convergence.
+This approach has the advantage of scale separation, in that the parametric inversion typically affects data locally, while the inversion for $\bfm_{s}$ affects all the data and can fit global smooth features. 
+
+In the first stage, where we minimize over $ \bfp $, our parametric approach searches for one anomaly of interest, either conductive or resistive, in a background $ \mathbf{m}_s $. This background can either be a uniform half-space or a heterogeneous conductivity from a priori information or another inversion algorithm. The parametric inversion solves time-dependent quasi-static Maxwell's equations shown in Equations~\ref{eq:Gauss} to~\ref{eq:Ampere} with a finite volume discretization, where the anomalous conductivity body has the shape of a skewed Gaussian ellipsoid. The initial guess for the problem is composed of the quantities, $ r_x $, $ r_y $, $ r_z $, $ \phi_x $, $ \phi_y $, $ \phi_z $, $ x_0 $, $ y_0 $, $ z_0 $, $ \rho_0 $, and $ \rho_1 $. The values $ r $ and $ \phi $ represent the radius and rotation angle of the ellipsoid in each Cartesian direction, $ x_0 $, $ y_0 $ and $ z_0 $ represent the center of the anomaly, and $ \rho_0 $ and $ \rho_1 $ are the background and anomalous conductivity values.  These conductivity values can be fixed by the user, or alternatively, the optimal conductivity can be set as a parameter in the inversion. Based on the initial guesses, the parameters are scaled to improve the conditioning of the system to form $ \mathbf{p}_s $, based on Equations~\ref{eq:S} to~\ref{eq:pscale}.
+
+
+\begin{equation}
+\mathbf{S} =
+\begin{pmatrix}
+     \frac{1}{r_x} & 0              & 0  \\
+     0             & \frac{1}{r_y}  & 0 \\
+     0             & 0              & \frac{1}{r_z}
+\end{pmatrix}
+\label{eq:S}
+\end{equation}
+
+\begin{equation}
+\mathbf{R}_x =
+\begin{pmatrix}
+     1 & 0           & 0 \\
+     0 & cos(\phi_x) & -sin(\phi_x) \\
+     0 & sin(\phi_x) & cos(\phi_x)
+\end{pmatrix}
+\label{eq:Rx}
+\end{equation}
+
+\begin{equation}
+\mathbf{R}_y =
+\begin{pmatrix}
+     cos(\phi_y) & 0    &sin(\phi_y)  \\
+     0           & 1    & 0 \\
+     -sin(\phi_y)& 0    & cos(\phi_y)
+\end{pmatrix}
+\label{eq:Ry}
+\end{equation}
+
+\begin{equation}
+\mathbf{R}_z =
+\begin{pmatrix}
+     cos(\phi_z) & -sin(\phi_y) & 0  \\
+     sin(\phi_z) & cos(\phi_z)  & 0 \\
+     0           & 0            & 1
+\end{pmatrix}
+\label{eq:Rz}
+\end{equation}
+
+
+
+\begin{equation}
+\mathbf{T} = \mathbf{S} \mathbf{R_x} \mathbf{R_y} \mathbf{R_z}
+\label{eq:T}
+\end{equation}
+
+
+\begin{equation}
+\mathbf{M} = 
+\begin{pmatrix}
+  m_1 & m_4 & m_5 \\
+  m_4 & m_2 & m_6 \\
+  m_5 & m_6 & m_3
+ \end{pmatrix} = 
+\mathbf{T}^{\mathrm{T}} \mathbf{T}
+\label{eq:M}
+\end{equation}
+
+\begin{equation}
+\mathbf{p} =
+\begin{pmatrix}
+m_1 \\
+m_2 \\
+m_3 \\
+m_4 \\
+m_5 \\
+m_6 \\
+x_0 \\
+y_0 \\
+z_0 \\
+\sigma_0 \\
+\sigma_1 \\
+\end{pmatrix} \ \ \
+\mathbf{s} =
+\begin{pmatrix}
+{L^2} \\
+{L^2} \\
+{L^2} \\
+{L^2} \\
+{L^2} \\
+{L^2} \\
+{L^{-1}} \\ 
+{L^{-1}} \\ 
+{L^{-1}} \\ 
+{\sigma_0}^{-1} \\
+{\sigma_1}^{-1}
+\end{pmatrix}
+\label{eq:pands}
+\end{equation}
+
+\begin{equation}
+\mathbf{p}_{s} = \mathbf{p} \circ \mathbf{s}
+\label{eq:pscale}
+\end{equation}
+
+By incorporating the scaled parameters, and setting 
+\begin{equation}
+\mathbf{x} = 
+\begin{pmatrix}
+x \\
+y \\
+z
+\end{pmatrix} \ \ \
+\mathbf{x_0} = 
+\begin{pmatrix}
+x_0 \\
+y_0 \\
+z_0 
+\end{pmatrix}
+\end{equation}
+where $ x,y,z $ are observation locations, a smoothly varying function $ \boldsymbol{\tau} $ is computed
+
+\begin{equation}
+\boldsymbol{\tau} = c - ( \mathbf{x-x_0})^{\mathbf{T}}\mathbf{M}(\mathbf{x-x_0})
+\label{eq:tau}
+\end{equation}
+
+where c represents a positive constant. The quantity $\boldsymbol{\tau}$ is then passed to an analytic step-off function $ \mathit{s} $
+
+\begin{equation}
+s(\boldsymbol{\tau}) = \sigma_0 + 0.5\left(1 + \mathrm{tanh}(a\boldsymbol{\tau})\right)(\sigma_1-\sigma_0)
+\label{eq:stepFunction}
+\end{equation}
+
+ 
+that assigns the conductivity to either a background ($ \rho_0 $) or anomalous ($ \rho_1 $) level. We have chosen to use a hyperbolic tangent for the analytic step function, but other choices are available \cite[]{Tai2004}.  When $ \tau $ = 0, also known as the zero level set \cite[]{Osher1988}, a transition zone occurs between $ \rho_0 $ and $ \rho_1 $ with a width controlled by the parameter $ a $. The optimization of the inversion follows a Gauss-Newton procedure as in the conventional voxel-based code TDocTree \cite[]{Haber2014}, and the sensitivity is composed of derivatives of the function $ s $ with respect to the inversion parameters.  A line search determines an appropriate step length within a minimum and maximum value, and the program terminates once it has either reached a desired level of convergence, a maximum number of iterations, or when a Gauss-Newton step that lowers the data misfit by a minimum of 0.1\% can no longer be found. The parametric result can then be set as the initial and reference model for a conventional inversion to optimize over $ \mathbf{m}_s $.
+
+
+\subsection{Synthetic Inversion}
+A synthetic time-domain AEM study constitutes the first parametric example, where we attempt to recover a thin conductive dipping plate of 3 $ \Omega $m in a background of 3000 $ \Omega $m as shown in Figure~\ref{fig:ParSynthModel}a. Seven east-west lines of $ z $-component $ \frac{\partial\mathbf{B}}{\partial t} $ data are generated by simulating a coincident loop airborne survey with a line spacing and data spacing of 100 m.  There are a total of 49 transmitter locations, each 37.5 m above topography. The data consists of 19 time channels between 10 $ \mu $s and 7000 $ \mu $s, contaminated with 5\% Gaussian noise. The initial starting guess consists of a 50 m radius sphere of 3 $ \Omega $m centred over the anomaly at an elevation of 200 m below surface, illustrated in Figure~\ref{fig:ParSynthModel}b. The guess is designed to provide little in the way of a priori depth information and no dip information. The conductivity of the plate and background are presumed known and are kept fixed throughout the inversion. After 31 Gauss-Newton iterations the parametric inversion result is shown in Figure~\ref{fig:ParSynthModel}c.
+
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\linewidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/ParametricSynthModelInitialGuess.jpg}
+  \caption{ a) Synthetic true model with an 80 degree dip. Plate parameters: 3 $ \Omega $m, 60 m thick, 320 m in strike length, depth ranges from 160 - 800 m below surface. Background = 3000 $ \Omega $m \newline b) 50 m sphere initial guess c) Parametric recovery with an estimated dip of 71 degrees.}
+  \label{fig:ParSynthModel}
+\end{figure}
+
+\clearpage
+
+The parametric inversion recovers a thin dipping plate with a dip of 71 degrees to the East compared to 80 degrees in the true model.  The width and strike length of the parametric recovery are also comparable to the true model.  The result is not able to image the conductor lower than 600 m, and this could be a result of reduced sensitivity at these depths. Figure~\ref{fig:ParSynthData} shows the good agreement between the observed and predicted data at a time channel of 1110 $ \mu $s, and the data misfit normalized by the number of data points ($ {\frac{\phi_d}{N}} $) decreases by 1.5 orders of magnitude as seen in Table~\ref{table:ParInvStats}, where the target ($ {\frac{\phi_d}{N}} $) is 1.0. In comparison, the result from a conventional inversion \cite[]{Haber2014}, with a 3000 $ \Omega $m half-space initial guess, is shown in Figure~\ref{fig:VoxelSynthInversion}.  This figure depicts the aforementioned ringing issue, consisting of conductive material placed around the target. This issue is avoided with the parametric code. 
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\linewidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/ParametricSynthData.pdf}
+  \caption{ Synthetic $ z $-component $ \frac{\partial\mathbf{B}}{\partial t} $ data a) Observed data at 1110 $ \mu $s ) Predicted data at 1110 $ \mu $s. The predicted data closely matches the observed data. Coincident transmitter and receiver points shown as black dots.}
+  \label{fig:ParSynthData}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.5\linewidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/VoxelSynthInversion.jpg}
+  \caption{Synthetic inversion result at a depth of 400 m using a conventional voxel-based inversion. The true outline of the dipping plate is shown in solid white. Ringing structures occur around the true anomaly.}
+  \label{fig:VoxelSynthInversion}
+\end{figure}
+
+
+\subsection{Field Inversions}
+\subsubsection{TKC}
+To more thoroughly test the parametric code, we present two time-domain AEM field examples. The first comes from the Tli Kwi Cho (TKC), DO-27, diamondiferous kimberlite in the North-West Territories, Canada. A cross section through the kimberlite pipe, located in the Slave craton, is shown in Figure~\ref{fig:TKCGeology}. This figure displays a mostly vertical pipe that widens as it approaches the surface \cite[]{Harder2008}.  In this Arctic setting, the conductivity of the background rock, which is primarily granite, is quite resistive, whereas the pyroclastic kimberlite itself possesses a more conductive signature, due to extreme alteration and the presence of serpentine \cite[]{Pell2014}. This results in a noticeable and distinct $ \frac{\partial\mathbf{B}}{\partial t} $ anomaly as seen in previous studies \cite[]{Jansen2004}, which is ideal for our parametric inversion.  
+
+In 2004, a VTEM survey measured $z$-component $ \frac{\partial\mathbf{B}}{\partial t} $ data over the TKC kimberlite.  Six east-west lines, with a line spacing of 75 m were inverted with the 3D parametric code.  The inversion includes a total of 194 transmitter locations, with ten time channels between 90 $ \mu $s and 350 $ \mu $s. 
+
+%Later time channels exist but contain too much noise to be deemed beneficial.
+
+The initial guess for the parametric inversion is a 150 m radius sphere of 1 $ \Omega $m in a 1000 $ \Omega $m background centred over the anomaly. Unlike the synthetic example, the conductivity of the anomaly and background can freely change and Figure~\ref{fig:TKCParInv} portrays a cross-section through the resulting parametric model after 18 Gauss-Newton iterations, along the same Northing as the geologic image from Figure~\ref{fig:TKCGeology}. The final conductivity values of the anomaly and background are 27 and 1009 $ \Omega $m respectively. The resemblance between Figures~\ref{fig:TKCGeology} and~\ref{fig:TKCParInv} is quite similar, as the parametric inversion does an excellent job in capturing the boundaries of the kimberlite, and even the slight dip to the West. Observed and predicted data agree to a satisfactory level as shown in Figure~\ref{fig:TKCParData} for time channel 190 $ \mu $s, and although the normalized data misfit reduces by an order of magnitude as shown in Table~\ref{table:ParInvStats}, it is still well above the target of 1.0. Because of a lack of additional features in the data apart from the kimberlite anomaly, the iterative process of inverting for the smooth background does not change the result significantly.
+
+\clearpage
+\begin{figure}[h]
+\centering
+\begin{minipage}{.48\textwidth}
+  \centering
+  \includegraphics[width=6cm,height=5cm,keepaspectratio]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/TKC_Geology.jpg}
+  \caption{TKC geology cross-section. \newline Modified from \cite{Harder2008}}
+  \label{fig:TKCGeology}
+\end{minipage}
+\begin{minipage}{.48\textwidth}
+  \centering
+  \includegraphics[width=7cm,height=6cm,keepaspectratio]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/TKC_Par_04_test_model17.pdf}
+  \caption{TKC cross-section through parametric inversion. Geology outline in dashed white.}
+  \label{fig:TKCParInv}
+\end{minipage}
+\end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.52\linewidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/TKC_Obs_Pred_04test_GN17.pdf}
+  \caption{TKC VTEM $ z $-component $ \frac{\partial\mathbf{B}}{\partial t} $ field data a) Observed data at 190 $ \mu $s ) Parametric predicted data at 190 $ \mu $s. The predicted data closely matches the observed data. Coincident transmitter and receiver points shown as black dots.}
+  \label{fig:TKCParData}
+\end{figure}
+
+\clearpage
+\subsubsection{Caber}
+The second parametric field example is from the Caber volcanogenic massive sulphide (VMS) deposit in Quebec, Canada.  In this area, the target of interest is a thin dipping conductor representing an economic nickel and zinc deposit \cite[]{Carr,Adair2011}. In 2012, eight lines of $ x $ and $z$-component $ \frac{\partial\mathbf{B}}{\partial t} $ AEM data over the deposit were acquired with the VTEM-35 system \cite[]{Geotech2012}.  Lines were separated by 50 m for a total of 102 transmitter locations, and time channels ranged from 505 $ \mu $s to 2021 $ \mu $s. A simplified cross-section through the deposit modified from \cite{Legault2010} is displayed in Figure~\ref{fig:CaberGeology}.  This image illustrates a steep South-West dipping mineralized area next to a shear zone in amongst a host of resistive intrusive rocks underneath a conductive overburden.  The mineralized region, coupled with the adjacent shear zone, represent the conductive target of interest. However, in this setting, the conductive overburden represents another conductive feature to consider.  To start with, only the $z$-component data are looked at, but future work could include also $ x $-component data.
+
+Due to the more complex geologic setting compared to TKC, we applied a starting model based on a priori information \cite[]{Geotech2012}.  This was a near-vertical 100 m thick, 0.13 $ \Omega $m thin plate in a 1000 $ \Omega $m background.  The final parametric inversion conductivity values are 0.008 $ \Omega $m and 1700 $ \Omega $m respectively after 39 Gauss-Newton iterations. A depth slice at 250 m below surface, along with two cross-sections through the parametric initial and final model are displayed in Figures~\ref{fig:CaberParInitial} and~\ref{fig:CaberParVarCond}.  These figures show that the final parametric result images the dipping conductor quite well.  The normalized data misfit decreases by 1.5 orders of magnitude as shown in Table~\ref{table:ParInvStats}, and the observed and predicted data at 580 $ \mu $s are shown in Figure~\ref{fig:CaberParVarObsPred}. In general, there is a high level of agreement between the observed and predicted data, although local detailed features within the observed data are not captured with the parametric approach.
+
+\begin{figure}[h]
+ \centering
+  \includegraphics[width=0.4\linewidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/CaberGeologyCrossSimple.jpg}
+   \caption{Simplified geologic cross-section through the Caber VMS deposit. Image modified from \cite{Legault2010}}
+   \label{fig:CaberGeology}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/Caber9aModelMATLAB_Initial_blue_label.jpg}
+  \caption{Parametric initial model a) 250 m depth slice b) East-West cross-section along 551348N c) North-South cross-section along 710186E}
+  \label{fig:CaberParInitial}
+\end{figure}
+
+%\begin{figure}
+%\centering
+%\includegraphics[width=\linewidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/Caber9aModelMATLAB_16blue_label.jpg}
+%  \caption{Parametric fixed conductivity inversion a) 250m depth slice b) 551348 Northing cross-section (East-West) c) 710186 Easting cross-section (North-South) }
+%  \label{fig:CaberParFixedCond}
+%\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/Caber9aModelMATLAB_39blue_label.jpg}
+  \caption{Parametric final model a) 250 m depth slice b) East-West cross-section along 551348N c) North-South cross-section along 710186E}
+  \label{fig:CaberParVarCond}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\linewidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/CaberParametricObsPred580us_label.jpg}
+  \caption{Caber VTEM-35 $z$-component $ \frac{\partial\mathbf{B}}{\partial t} $ field data a) Observed data at 580 $ \mu $s b) Parametric predicted data at 580 $ \mu $s. The predicted data captures the general asymmetric shape of the observed data.}
+  \label{fig:CaberParVarObsPred}
+\end{figure}
+
+To account for additional global features such as the conductive overburden, we incorporate the iterative approach of importing the parametric result into a conventional voxel-based EM inversion code, TDOcTree \cite[]{Haber2014}. This iterative process can be performed multiple times, and a cross section through the resulting model at the centre of the deposit is shown in Figure~\ref{fig:CaberParVarCondSection}. This image shows that after a voxel-based inversion iteration, the Caber deposit is still clearly imaged as a thin sharp boundary anomaly, while the overburden that thickens to the North-East is now also imaged. These characteristics are in agreement with Figure~\ref{fig:CaberGeology}. 
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{C:/UBC/_PhDThesis/Meetings/candidacyExam/latex/figs/Caber_TDOctree_2014-10-17A_iter6_label.jpg}
+  \caption{Cross-section through the voxel-based 3D AEM inversion with the parametric result as an initial model.  This model keeps the sharp boundaries of the Caber deposit from the parametric inversion while imaging smooth features such as the near-surface conductive overburden.}
+  \label{fig:CaberParVarCondSection}
+\end{figure}
+
+
+
+\begin{table}
+\caption{Parametric inversion error assignments and final data misfits}
+\begin{center}
+\begin{tabular}{lllll}
+$ \mathbf{Inversion \ Model} $    & $ \mathbf{Assigned \ Error} $ & $ \mathbf{Initial \ }{\frac{\phi_d}{N}} $  & $ \mathbf{Final \ }{\frac{\phi_d}{N}} $ & $ \mathbf{\# GN \ iter} $ \\ \hline
+Synthetic (fixed $ \sigma $)  &  5 \% + 0 floor                  & 70.4   & 3.83    & 31 \\ \hline
+TKC (variable $ \sigma $)     & 5 \% + 1e-11 $ \frac{\mathrm{V}}{\mathrm{Am^2}} $ floor & 354.07 & 30.81   & 18 \\ \hline
+%Caber (fixed $ \sigma $)      & 5 \% + variable floor  & 183.25 & 41.85  & 17 \\ \hline
+Caber (variable $ \sigma $)   & 5 \% + variable floor  & 183.25 & 6.29   & 39 \\ \hline
+\end{tabular}
+\label{table:ParInvStats}
+\end{center}
+\end{table}
+
+
+\subsection{Summary}
+From these synthetic and field examples, I have shown that 3D time-domain AEM parametric inversions are possible and display encouraging results; however, several questions remain for future examination.  These include:
+\begin{itemize}
+\item are there additional improvements to be made for the one anomaly parametric inversion? ie. different averaging or scaling procedures.
+\item incorporating multiple anomalies into the parametric inversion scheme. Build upon methods developed from previous research such as \cite{Aghasi2011}.
+\item applying this parametric method to other inversion algorithms, such as frequency domain EM inversions.
+\end{itemize}
+
+\clearpage
+
+\section{CONCLUSION}
+The proposed work outlines methodologies and examples for cooperatively inverting multiple spatially overlapping electromagnetic data sets and parametrically inverting time-domain AEM data in three-dimensions. Background research has been completed for these topics, and more investigation needs to be done to thoroughly understand the source of the ringing problem in voxel-based time-domain AEM inversions. For the remainder of my Ph.D., the primary areas of research will be:
+\begin{itemize}
+\item implementing a robust 3D time-domain AEM parametric inversion code for one anomaly. 
+\item implementing a robust 3D time-domain AEM parametric inversion code for multiple anomalies.
+\item investigating the cause of the ringing issue in coincident loop AEM data, and attempt to minimize these spurious effects in voxel-based 3D time-domain inversions.
+\end{itemize}
+
+
+%This research will provide a complete work-flow to monitor the SAGD processes in the oil sands.
+
+\subsection{Intellectual merits and impact}
+Each section of this thesis proposal has an impact to both academia and industry.  For cooperative inversion, the novel method outlined provides a consistent conductivity model, using an iterative approach, which is beneficial for increasing inversion accuracy. The methodology is also general and can be applied to any combination of datasets as long as the physical property of interest remains the same. The biggest advantage of this method for industry, is that differing interpretations from multiple surveys can be prevented, and new inferences can be made from the improved cooperative model.  
+
+For the issue of ringing, this artifact is not completely understood in academia and results that stem from this research could provide insight to others working in 3D electromagnetic inversion. 
+
+For parametric inversion, the approach is new for time-domain AEM data, and leverages off other parametric inversion techniques outlined in the introduction. The impact is that thin conductors with large conductivity contrasts compared to the background can now be imaged, without ringing artifacts, either with the parametric code alone or in combination with a conventional voxel-based algorithm. 
+
+
+
+\subsection{Research timeline}
+A paper on cooperative inversion was written in early 2014 and published in $ \mathit{Geophysics} $ in June 2014. A paper on single anomaly parametric inversion is currently being written with the goal of submitting in early 2015. A third publication will summarize the multiple anomaly parametric inversion, and will be completed by early 2016. Along the way, the research has been and will continue to be presented at appropriate conferences, such as those listed below. I aim to defend the thesis in the Fall of 2016.
+
+\newpage
+\subsection{Relevant conference presentations - (* = presenting author)}
+\begin{itemize}
+\item
+$\mathbf{McMillan, M. \ S.}$*, Oldenburg, D. W., (2012), Three-dimensional electromagnetic and electrical inversions over the Antonio gold deposit in Peru, $82nd \ Annual \ International \ Meeting \\ SEG,$  Las Vegas, USA - Winner: Best student talk, Mining \& Geothermal Section.
+\item
+ $\mathbf{McMillan, M. \ S.}$*, Oldenburg, D. W., (2013), Enhancing Resolution of 3D-EM Inversion Models through a Co-operative Approach, $ 5th \ International \ Symposium \ on \ Three \ \\ Dimensional \ Electromagnetics$, Sapporo, Japan
+\item
+$\mathbf{McMillan, M. \ S.}$*, Schwarzbach, C., Oldenburg, D. W., Haber, E., Holtham, E., Prikhodko, A., (2014), Recovering a thin dipping conductor with 3D electromagnetic inversion over the Caber deposit, $ 84th \ Annual \ International \ Meeting \ SEG,$ Denver, USA
+\item
+Devriese, S. G. R*, Corcoran, N., Cowan, D., Davis, K., Bild-Enkin, D., Fournier, D., Heagy, L., Kang, S., Marchant, D., $\mathbf{McMillan, M. \ S.}$, Mitchell, M., Rosenkjar, G., Yang, D., Oldenburg, D. W., (2014) Magnetic inversion of three airborne data sets over the Tli Kwi Cho kimberlite complex,
+$ 84th \ Annual \ International \ Meeting \ SEG,$ Denver, USA
+\item
+Fournier, D.,*, Corcoran, N., Cowan, D., Davis, K., Bild-Enkin, D., Devriese, S. G. R., Heagy, L., Kang, S., Marchant, D., $\mathbf{McMillan, M. \ S.}$, Mitchell, M., Rosenkjar, G., Yang, D., Oldenburg, D. W., (2014) Multi-EM systems inversion - Towards a common conductivity model for the Tli Kwi Cho complex,
+$ 84th \ Annual \ International \ Meeting \ SEG,$ Denver, USA
+
+\item
+$\mathbf{McMillan, M. \ S.}$*, Schwarzbach, C., Oldenburg, D. W., Haber, E., (2015), Parametric 3D inversion of airborne time domain electromagnetics, $ 24th \ International \ Conference \ ASEG, $ Perth, Australia (Accepted Presentation)
+
+\end{itemize}
+
+\subsection{Peer reviewed publications}
+\begin{itemize}
+%\item
+%$\mathbf{McMillan, M. \ S.}$, \& Oldenburg, D. W., (2012). Three-dimensional electromagnetic and electrical inversions over the Antonio gold deposit in Peru, $\mathit 82nd \ Annual \ International \ Meeting \\ SEG, \ Expanded \ Abstracts $, $ \mathbf{31} $, 1316-1320
+\item
+$\mathbf{McMillan, M. \ S.}$, \& Oldenburg, D. W., (2014). Cooperative constrained inversion of multiple electromagnetic data sets, $\mathit Geophysics$, $ \mathbf{79.4} $, B173-B185
+%\item
+%$\mathbf{McMillan, M. \ S.}$, Schwarzbach, C., Oldenburg, D. W., Haber, E., Holtham, E., Prikhodko, A., (2014). Recovering a thin dipping conductor with 3D electromagnetic inversion over the Caber deposit, $\mathit 84th \ Annual \ International \ Meeting \ SEG, \ Expanded \ Abstracts $, $ \mathbf{33} $, 1720-1724
+
+
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\bibliographystyle{C:/SEGTex/SEG2014/seg}
+\bibliography{CandidacyExam}
+
+
+\end{document}
+
