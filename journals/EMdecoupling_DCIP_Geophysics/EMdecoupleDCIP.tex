@@ -1,0 +1,348 @@
+
+\documentclass[paper]{geophysics}
+% \documentclass[manuscript,revised]{geophysics}
+% \documentclass[paper,twocolumn,twoside]{geophysics}
+\usepackage{xspace, mathrsfs,amsmath, multirow}
+% An example of defining macros
+\newcommand{\rs}[1]{\mathstrut\mbox{\scriptsize\rm #1}}
+\newcommand{\rr}[1]{\mbox{\rm #1}}
+
+% My equations
+%-----------------------------------------------------------
+\renewcommand{\div}{\nabla\cdot}
+\newcommand{\grad}{\vec \nabla}
+\newcommand{\curl}{{\vec \nabla}\times}
+\renewcommand{\H}{{\vec H}}
+\newcommand {\J}{{\vec J}}
+\newcommand {\E}{{\vec E}}
+\newcommand{\siginf}{\sigma_\infty}
+\newcommand{\dsig}{\triangle\sigma}
+\newcommand{\dcurl}{{\mathbf C}}
+\newcommand{\dgrad}{{\mathbf G}}
+\newcommand{\Acf}{{\mathbf A_c^f}}
+\newcommand{\Ace}{{\mathbf A_c^e}}
+\renewcommand{\S}{{\mathbf \Sigma}}
+\newcommand{\St}{{\mathbf \Sigma_\tau}}
+\newcommand{\T}{{\mathbf T}}
+\newcommand{\Tt}{{\mathbf T_\tau}}
+\newcommand{\diag}{\mathbf{diag}}
+\newcommand{\M}{{\mathbf M}}
+\newcommand{\MfMui}{{\M^f_{\mu^{-1}}}}
+\newcommand{\MfMuoi}{{\M^f_{\mu_0^{-1}}}}
+\newcommand{\dMfMuI}{{d_m (\M^f_{\mu^{-1}})^{-1}}}
+\newcommand{\dMfMuoI}{{d_m (\M^f_{\mu_0^{-1}})^{-1}}}
+\newcommand{\MeSig}{{\M^e_\sigma}}
+\newcommand{\MeSigInf}{{\M^e_{\sigma_\infty}}}
+\newcommand{\MeSigInfEtab}{{\M^e_{\sigma_\infty \bar{\eta}}}}
+\newcommand{\MeSigInfEtat}{{\M^e_{\sigma_\infty \peta}}}
+\newcommand{\MedSig}{{\M^e_{\triangle\sigma}}}
+\newcommand{\MeSigO}{{\M^e_{\sigma_0}}}
+\newcommand{\Me}{{\M^e}}
+\newcommand{\Js}{\mathbf{J}^s}
+\newcommand{\Mes}[1]{{\M^e_{#1}}}
+\newcommand{\Mee}{{\M^e_e}}
+\newcommand{\Mej}{{\M^e_j}}
+\newcommand{\BigO}[1]{\mathcal{O}\bigl(#1\bigr)}
+\newcommand{\bE}{\mathbf{E}}
+\newcommand{\bEp}{\mathbf{E}^p}
+\newcommand{\bB}{\mathbf{B}}
+\newcommand{\bBp}{\mathbf{B}^p}
+\newcommand{\bEs}{\mathbf{E}^s}
+\newcommand{\bBs}{\mathbf{B}^s}
+\newcommand{\bH}{\mathbf{H}}
+\newcommand{\B}{\vec{B}}
+\newcommand{\D}{\vec{D}}
+\renewcommand{\H}{\vec{H}}
+\newcommand{\s}{\vec{s}}
+\newcommand{\bfJ}{\bf{J}}
+\newcommand{\vecm}{\vec m}
+\renewcommand{\Re}{\mathsf{Re}}
+\renewcommand{\Im}{\mathsf{Im}}
+\renewcommand {\j}  { {\vec j} }
+\newcommand {\h}  { {\vec h} }
+\renewcommand {\b}  { {\vec b} }
+\newcommand {\e}  { {\vec e} }
+\renewcommand {\d}  { {\vec d} }
+\renewcommand {\u}  { {\vec u} }
+
+\renewcommand {\dj}  { {\mathbf{j} } }
+\renewcommand {\dh}  { {\mathbf{h} } }
+\newcommand {\db}  { {\mathbf{b} } }
+\newcommand {\de}  { {\mathbf{e} } }
+
+\newcommand{\vol}{\mathbf{v}}
+\newcommand{\I}{\vec{I}}
+\newcommand{\A}{\mathbf{A}}
+\newcommand{\bI}{\mathbf{I}}
+\newcommand{\bus}{\mathbf{u}^s}
+\newcommand{\brhss}{\mathbf{rhs}_s}
+\newcommand{\bup}{\mathbf{u}^p}
+\newcommand{\brhs}{\mathbf{rhs}}
+%%-------------------------------
+\newcommand{\bon}{b^{on}(t)}
+\newcommand{\bp}{b^{p}}
+\newcommand{\dbondt}{\frac{db^{on}(t)}{dt}}
+\newcommand{\dfdt}{\frac{df(t)}{dt}}
+\newcommand{\dbdt}{\frac{\partial \b}{\partial t}}
+\newcommand{\dfdtdsiginf}{\frac{\partial\frac{df(t)}{dt}}{\partial\siginf}}
+\newcommand{\dfdsiginf}{\frac{\partial f(t)}{\partial\siginf}}
+\newcommand{\dbgdsiginf}{\frac{\partial b^{Impulse}(t)}{\partial\siginf}}
+\newcommand{\digint}{\frac{2}{\pi}\int_0^{\infty}}
+\newcommand{\Gbiot}{\mathbf{G}_{Biot}}
+%%-------------------------------
+\newcommand{\peta}{\tilde{\eta}}
+\newcommand{\petadt}{\frac{\partial \tilde{\eta}}{\partial t}}
+\newcommand{\eFmax}{\e^{F}_{max}}
+\newcommand{\dip}{d^{IP}}
+\newcommand{\sigpert}{\delta\sigma}
+\newcommand{\sigest}{\sigma_{est}}
+%%-------------------------------
+\newcommand{\SimPEG}{\textsc{SimPEG}\xspace}
+
+\begin{document}
+
+\title{TEM-IP inversion workflow for galvanic source time domain electromagnetic data}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\ms{...} % manuscript number
+
+\address{
+\footnotemark[1]Geophyscial Inversion Facility, \\
+University of British Columbia, Canada\\
+BC, Vancouver}
+
+\author{Seogi Kang\footnotemark[1] and Douglas W. Oldenburg}
+\footer{TEM-IP inversion workfow for galvanic source TEM data}
+\lefthead{Kang \& Oldenburg}
+\righthead{TEM-IP inversion workfow}
+
+\maketitle
+
+\begin{abstract}
+Electrical induced polarization (EIP) surveys have been used to detect chargeable materials in the earth. For interpretation of the time domain EIP data, the DC-IP inversion method, which first invert DC data (on-time) to recover conductivity, then inverts IP data (off-time) to recover chargeability, has been successfully used especially for mining applications finding porphyry deposits. It is assumed that the off-time data are free of EM induction effects. When this is not the case, an EM-decoupling technique, which removes EM induction in the observation, needs to be implemented. Usually responses from a half-space or a layered earth are subtracted. Recent capability in 3D TEM forward modelling and inversion allows us to revisit this procedure. Here we apply a TEM-IP inversion workflow to the galvanic source example. This includes three steps: a) invert DC and early time channel TEM data to recover the 3D conductivity, b) use that conductivity to compute the TEM response at later time channels. Subtract this fundamental response from the observations to generate the IP response, and c) invert the IP responses to recover a 3D chargeability. This workflow effectively removes EM induction effects in the observations and produces better chargeability and conductivity models compared to conventional approaches.
+\end{abstract}
+
+\renewcommand{\figdir}{Figures} % figure directory
+\graphicspath{{./Figures/}}
+%% ==================================================================
+%% ==================================================================
+
+
+%%% =================================================================
+%%% SECTION 1.
+%%% =================================================================
+
+\section{Introduction}
+The rock is electrically polarizable, and this can be explained as frequency- or time-dependent conductivity model \cite[]{Pelton1978,Tarasov2013,Placencia2014,Revil2015}. Controlled-source electromagnetic (EM) methods excite the earth using either galvanic (a generator attached to two grounded electrodes) or inductive source (arising from currents flowing in a wire loop). For both cases electrical field will be generated in the earth, and polarization charges will be accumulated if chargeable materials exist. Effectively, induced polarization (IP) data from those materials possibly be measured on the surface. A typical electrical induced polarization (EIP) survey layout \cite[]{seigel1974} is shown in Figure 1. It consists of grounded electrodes carrying a current waveform (like the square wave with half-duty cycle shown) and electrodes to measure voltage differences. When the ground is chargeable the received voltage looks like that in Figure 2. The decay in the off-time is the IP effect. To interpret observed IP data, a two-stage inversion is usually deployed \cite[]{doug1994}. The first step is to invert late on-time data ($V_0$) using a DC inversion to obtain the background conductivity. The second step is to use the obtained conductivity to generate a sensitivity function, and then invert late off-time data ($V_s$); this is often called DC-IP inversion.
+
+Although application of this method has been successful especially for mining applications finding porphyry deposits \cite[]{Fink1990,DougMilli1997}, a main concern is the second step. The time decaying fields are assumed to be purely the result of IP phenomena and any EM induction effects in the data are ignored. This assumption can be violated when the earth has a significant conductivity and  EM coupling can remain even in the late off-time. Removing the effects of EM induction from the measured data is referred to as EM-decoupling and it has been a focus of attention for many years. Most analyses have used simple earth structures: half-space and layered earth to ameliorate its effects \cite[]{routh2001,Wait1986,Wynn1975}. Further, all of them focused on frequency domain IP data. However, with our current capability to handle 3D TEM forward modelling and inversion, it is timely to revisit this issue \cite[]{Um2010,Commer2004,Oldenburg2013}. In addition, full 3D TEM forward modelling with consideration of complex conductivity model is currently available \cite[]{Marchant2014} enabling computation of realistic TEM data with IP effects. With these modern tools we focus our attention on two questions: a) how to decouple EM effects in the EIP data, and b) what are the impacts of the decoupling in both conductivity and chargeability models.
+
+In a recent work \cite[]{Kang2016}, we developed a workflow for inverting airborne IP data using inductive sources. This involved three main steps: 1) inverting early time TEM data (less affected by IP) to recover a 3D conductivity, 2) EM-decoupling (forward modelling the EM response and then subtracting it from the observations), and 3) IP inversion to recover pseudo-chargeability distribution at each time channel.
+% , and 4) extracting intrinsic IP parameters such as Cole-Cole chargeability and time constant from the recovered pseudo-chargeability.
+
+The current problem of inverting IP data using grounded or galvanic sources follows the same workflow but some aspects are greatly simplified because EIP measures data when electric fields, and charge accumulations, have reached a steady state. This provides another data set from which information about the electrical conductivity can be extracted.  A major difference between conventional EIP inversion and our approach is the use made of early time channels in the EIP data. In conventional work these have been considered as ``noise'' and hence been thrown away. However, we consider these as``signal'' to recover conductivity. In this study, we apply a TEM-IP inversion workflow to the synthetic galvanic source example (gradient array). This will include the three steps in the workflow listed above but the first step is altered so that we invert the DC data, and early time channels of TEM data, to recover the 3D conductivity.
+
+
+\plot{eipconcept}{width=\columnwidth}{Conceptual diagram of a ground-based galvanic source with half-duty cycle current waveform.}
+
+\plot{overvoltage}{width=\columnwidth}{A typical overvoltage effects in EIP data.}
+
+\plot{voltagefull}{width=\columnwidth}{Observed voltage with EM induction effects. EM effects dominate the early off-time data.}
+
+%%% =================================================================
+%%% SECTION 2.
+%%% =================================================================
+\section{SEPARATION OF EM AND IP RESPONSE}
+Assuming the earth includes chargeable materials, the observed data from any TEM survey has both EM and IP responses. To be more specific, we first define the complex conductivity in the frequency domain as
+\begin{equation}
+  \sigma(\omega)= \sigma_{\infty} + \triangle\sigma(\omega),
+  \label{eq:sigmafreq}
+\end{equation}
+where $\omega$ is angular frequency (rad/s), and $\siginf$ is the conductivity at infinite frequency. For the Cole-Cole model from Pelton et al. (1978),
+\begin{equation}
+  \triangle\sigma(\omega) = \sigma_{\infty}\frac{\eta}{1+(1-\eta)(\omega\tau)^c},
+  \label{eq:sigmaColeCole}
+\end{equation}
+where $\eta$ is intrinsic chargeability, $\tau$ is time constant (s), and $c$ is frequency dependency.
+
+The observed datum can be expressed as $d=F[\sigma(\omega)]$, where $F[\cdot]$ is a Maxwell’s operator taking  conductivity and computes TEM responses; this will include both EM and IP effects. Following Smith et al. (1988), observed datum can be decomposed as
+\begin{equation}
+  d = d^F + \dip
+  \label{eq:totaldata}
+\end{equation}
+where $d^F$ and $\dip$ are respectively the fundamental and IP responses. Here the fundamental response is $d^F = F[\siginf]$ without IP effects. Note that $\sigma(\omega)=\siginf$ when $\eta=0$.
+
+A main goal of this study is to evaluate the $d^F$ and $\dip$ components. To illustrate the challenge, we perform a simple TEM forward modelling using a galvanic source as shown in Figure ~\ref{fig:eipconcept}. We inject a half-duty cycle rectangular current through a grounded wire. A chargeable body is embedded in the earth.  Figure ~\ref{fig:voltagefull} shows an example of the measured voltage at a pair of potential electrodes located between current electrodes. It is different from the conventional over-voltage diagram shown in Figure ~\ref{fig:overvoltage}. At early on- and off-time, we observe significant EM induction effects. It is only at late off-times that we can identify typical over-voltage effects which are characteristic of the IP responses. The fact that EM dominates the data at early times and IP effects dominate the late-time data suggests it may be possible to separate the EM and IP responses in time.
+
+For a clearer demonstration of this, we view only the off-time data, and plot them on a log-log plot as shown in Figure 4. Black, blue, and red lines correspondingly indicate $d$, $d^F$, and $\dip$ responses; solid and dotted lines distinguish negative and positive datum. $\dip$ response was evaluated using a simple subtraction:
+\begin{equation}
+  \dip = d - F[\siginf].
+  \label{eq:ipdata}
+\end{equation}
+Note that normalized potential, $V_s/V_0$ (mV/V) shows positive sign meaning that the measured secondary voltage at off-time, $V_s$ has the same sign with DC voltage $V_0$. $d^F$ (mV/V) has negative datum, whereas $\dip$ (mV/V)  has positive datum for this particular example (gradient array). At early times, $d^F$ is much greater than $\dip$; this is the region of EM dominance.  At later times, the $\dip$ is much greater than the $d^F$; this is the region of IP-dominance. Importantly, there is an intermediate region  of both $d^F$ and $\dip$ are considerable.
+
+A fundamental assumption made for the interpretation of conventional EIP data is that the measured data have late enough time channels satisfying $|\dip| \gg |d^F|$  effectively resulting in $d \approx \dip$. In Figure ~\ref{fig:voltageofflog}, this will be reasonable after 600 ms (IP-dominant). However, depending on the measured time band, we can have EIP data having significant EM effects such as $d$ between 20-600 ms shown in Figure ~\ref{fig:voltageofflog}. Therefore, separating EM and IP is a critical component of successful interpretation of the EIP data. For this separation, we use a TEM-IP inversion workflow based upon natural separation of EM and IP in time.
+
+\plot{voltageofflog}{width=\columnwidth}{Transients of observed (black line), fundamental (blue line) and IP (red line) at the off-time in the log-log plot. Solid and dotted lines distinguish positive and negative datum.}
+
+% \plot{XXX}{width=\columnwidth}{XXX}
+
+
+%%% =================================================================
+%%% SECTION 2.
+%%% =================================================================
+\section{TEM-IP inversion workflow}
+Our inversion workflow is based upon \cite{Kang2016} which was built for an inductive source case, but is applicable here. The workflow has four steps. The first step is to invert the TEM data to recover the 3D model. As in our inductive source work, we use only early time data that we feel are not IP-contaminated. We note that these early time data have previously been considered as “noise” in conventional analyses and hence have been thrown away. However, here we consider these as “signal” and use them to recover a better conductivity model. Another possibility for obtaining a background conductivity is to use the steady-state fields just prior to switching the current off. These are the potentials that are traditionally used in DC-IP inversion. Inversion of these data yields a conductivity that is  $\sigma_0 = \siginf (1-\eta)$ but if $\eta$ is small enough then this will be a reasonable approximation to $\siginf$. The inversion of DC data is analogous to inverting only one frequency in a frequency-domain data set. Hence it might be expected that inverting data at multi-times (equivalent to multi-frequencies) would produce a better result. Our experience verifies this. Nevertheless, the DC fields are valuable and we wish to use them. The options are to invert the DC and TEM data together, or treat them as two separate data sets. For the present we have chosen the latter since we then do not have to contend with the issue that the DC fields are really $\sigma_0$. The approach implemented here is first to invert the DC data and then use the resulting model as a starting and reference model for the TEM inversion.
+
+The second step of the workflow is EM-decoupling. The estimated conductivity model, $\sigest$, from step 1 is used to generate raw IP data, $\dip_{raw}$ according to
+\begin{equation}
+  \dip_{raw}[\sigest] = d - F[\sigest],
+  \label{eq:rawIPdata}
+\end{equation}
+where $F[\sigest]$ is estimated fundamental data. Here, we identify that the $F[\sigest]$ might be different from $F[\siginf]$, because $\sigest$ is not the same as $\siginf$. Potential errors in raw IP data will be significant especially at early times, but they will decrease as time increases. The effective region for EM-decoupling will be in the intermediate time when both EM and IP are considerable (Figure ~\ref{fig:voltageofflog}). Note that at late time (IP-dominant) EM-decoupling may not be required.
+
+The final step in the process is to carry out the IP inversion. We adopt the conventional IP inversion approach \cite[]{doug1994}, which uses a linear form of IP responses written as
+\begin{equation}
+  \mathbf{d}^{IP}_i = \mathbf{J} \boldsymbol{\peta}_i
+  \label{eq:linearIP}
+\end{equation}
+where $\mathbf{J}$ is the sensitivity matrix, and $\boldsymbol{\peta}_i$ is a column vector for the pseudo-chargeability at $i$-th time channel. The conductivity model $\sigest$ is required to generate the sensitivity matrix. We invert each time channel of IP data separately, and recover pseudo-chargeability at multiple times. Effectively recovered pseudo-chargeability will be 4D property: $\peta(x, y, z; t)$. Interpreting this recovered pseudo-chargeability to extract intrinsic IP information such as $\eta$, $\tau$, and $c$ is possible, but we do not treat that in this study.
+
+
+%%% =================================================================
+%%% SECTION 3.
+%%% =================================================================
+\section{Synthetic Example}
+%% ==================================================================
+%% SECTION 3.XXX
+\subsection{TEM data}
+As an example, we use a galvanic source and multiple receivers which measures voltages as shown in Figure ~\ref{fig:modelmesh}; this is often called gradeint array. Four blocks (A1-A4) presented in Figure ~\ref{fig:modelmesh} have different $\siginf$ and $\eta$ values (see Table ~\ref{tbl:ColeColeParam}); all blocks have  $\tau$=0.5 s and $c$=1  (Debye model). Only A2 and A3 blocks are chargeable. The length of the transmitter wire is 6 km and potential differences between two electrodes along easting lines are measured at 625 locations (200 m-length for potentail electrodes). Simulations performed using EMTDIP code \cite[]{Marchant2014} with step-off waveform. The initial condition of this simulation corresponds to solving DC problem using DC conductivity, $\sigma_0$, then time-stepping proceeds to compute TEM responses at off times. Two separate simulations are performed calculating $d=F[\sigma(\omega)]$ and $d^F=F[\siginf]$. For the latter one, $\eta$ was set to zero everywhere.
+
+We first present maps of $d$ including both EM and IP effects. Figure ~\ref{fig:dcdata} shows observed DC voltage and its conversion to apparent conductivity at 0 ms.
+Higher apparent conductivity anomalies are reflective of A1 and A3 conductors. After current switch-off, voltages are measured at logarithmic-based time channels ranging from 1-600 ms (60 channels). Computed responses at 5, 80, 130, and 500 ms are shown in Figure ~\ref{fig:emdata}. To investigate EM effects at different times, we present time decaying curves of $d$ and $d^F$ at A1-A4 in Figure ~\ref{fig:timedecays}. Four vertical black lines indicates times that we provded maps of the observed data in Figure ~\ref{fig:emdata}.
+
+At 5 ms, EM induction effects are dominant, and all data are negative. At 80 ms, both EM and IP effects are considerable, but still all data are negative. At 130 ms, now sign reversal occured in particular at A2 and A3 resulting in positive data, but still the observed data include significnat EM effects.
+Note that A2 and A3 are chargeable, but A1, which is conductive, is not. Therefore, it is difficult to differentiate chargeability and conductivity anomalies just by looking at observed data at 80 and 130 ms. At 500 ms, EM induction effects are significantly decayed, hence IP is dominant. Only A2 and A3 show positive anomalies that originate from chargeability. Depending on the measured time window, background conductivity, and IP parameters of chargeable bodies, we could have data in IP-dominant time or not. Hence, whenever our measured time window is not late enough to be considered as IP-dominant time, EM-decoupling is crucial step. Note that the A1 anomaly at 80 and 130 ms could be misinterpreted as a chargeable response.
+
+\tabl{ColeColeParam}{Conductivity at infinite frequency ($\siginf$) and intrinsic chargeability ($\eta$) values for five units: A1-A4 and half-space.}{
+\begin{center}
+\scalebox{0.9}{
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+Division & A1 & A2 & A3 & A4 & Half-space  \\
+\hline
+$\siginf$ (S/m) & 1   & 0.01 & 0.1 & 0.001 & 0.01\\
+$\eta$          & 0   & 0.1  & 0.1 & 0     & 0   \\
+\hline
+\end{tabular}}
+\end{center}
+}
+\plot{modelmesh}{width=\columnwidth}{Plan and section views of the 3D mesh. Black solid lines show the boundaries of four blocks (A1-A4). Only A2 and A3 are chargeable. Arrows indicate a wire path for the galvanic source. Black dots indicate potential electrodes. }
+
+\plot{dcdata}{width=\columnwidth}{Plan maps of the observed DC data: (a) Voltage and (b) Apparent conductivity.}
+\plot{emdata}{width=\columnwidth}{Plan maps of the observed TEM data at (a) 5 ms, (b) 80 ms (c) 130, and (d) 500 ms. Dashed and solid contours differentiate negative and positive data.}
+\plot{timedecays}{width=\columnwidth}{Time decaycing curves of the observed ($d$) and fundamental ($d^F$) data. Four sounding locations close to (a) A1,  (b) A2, (c) A3, and (d) A4 are presented. Blue and black color indicates $d$ and $d^F$.}
+
+
+%% ==================================================================
+%% SECTION 3.XXX
+\subsection{Conductivity inversion}
+To recover $\siginf(x,y,z)$, we use the first six channels of the TEM data (1-6 ms), which have minor contamination from IP. In addition, we have DC data which contain IP effects, but have minor EM induction effects. We first invert the DC data, and recover DC conductivity, $\sigma^{DC}_{est}$. Note that this is closer to $\sigma_0$ rather than $\siginf$. By using the obtained $\sigma^{DC}_{est}$ as a reference model, we invert the TEM data.
+For DC inversion, DC-IP pacakge of \SimPEG is used \cite[]{Cockett2015}, and considering the simple geometry of current and potential electrodes depth weighting is used similar to magnetic or gravity inversion \cite[]{Li1996}. For TEM inversion H3DTD code is used \cite[]{Oldenburg2013}. Logarhimic conductivity below subsurface is set to the inversion model, $\mathbf{m}$, and initial model $\mathbf{m}_{inital}$ is set to half-space earth having homogenous conductivity value, 0.01 S/m.  Inversion parameters of both inversion are reasonalbly determined and summarized in Table ~\ref{tbl:condinversion}. For further details of inversion method see Appendix ~\ref{inversionmethod}.
+The recovered conductivity models from the 3D DC and TEM inversions are shown in Figure ~\ref{fig:condinv}. The conductive blocks A1 and A3 are much better imaged with the TEM inversion.
+
+\tabl{condinversion}{Parameters for the DC and TEM inversions. See Appendix ~\ref{inversionmethod} for exlplanation of parameters. $\sigma_{half}$ indicates conductivity of homogeneous half-space earth of which value is 0.01 S/m.}{
+\begin{center}
+\scalebox{0.9}{
+\begin{tabular}{|c|c|c|}
+\hline
+Parameters & DC inversion & TEM inversion \\
+\hline
+$\alpha_x$, $\alpha_y$, $\alpha_x$ & 1 & 1 \\
+$\alpha_s$ & $ 10^{-4}$ & $ 10^{-5}$ \\
+$\phi_d^*$ & 625 & 625 $\times$ 6 = 3750 \\
+$\varepsilon_j$ & 0.05$|d^{obs}_j|$+0.01 & 0.02$|d^{obs}_j|$ \\
+model weighting & $(z-z_0)^{-3}$ & N/A \\
+$\mathbf{m}_{initial}$ & $log(\boldsymbol{\sigma}_{half})$ & $log(\boldsymbol{\sigma}^{DC}_{est})$\\
+$\mathbf{m}_{ref}$     & $log(\boldsymbol{\sigma}_{half})$ & $log(\boldsymbol{\sigma}_{half})$\\
+\hline
+\end{tabular}}
+\end{center}
+}
+
+\plot{condinv}{width=\columnwidth}{Recovered conductivity models from (a) DC and (b) TEM inversions.}
+
+
+%% ==================================================================
+%% SECTION 3.XXX
+\subsection{EM-decoupling}
+The next step is EM-decoupling. We implement equation ~\ref{eq:rawIPdata} using  $\sigma_{est}$ from the TEM inversion (Figure ~\ref{fig:condinv}). In Figure ~\ref{fig:emdecouple80ms}, we present $d$, $F[\sigma^{EM}_{est}]$ and $\dip_{raw}[\sigma^{EM}_{est}]$ data at 80 ms. At this time, both EM and IP effects are considerable. Our EM-decoupling procedure effectively removes EM effects due to conductivity especially for regions close to A1 (not chargeable) and A3 (chargeable). Removing the conductive anomaly at A1 is crucial, because this could have been misinterpreted as chargeable anomaly.
+
+The important aspect of our EM-decoupling procedure is the effect of the background conductivity. To show this we consider three other candidates, namely true $\siginf$, $\sigma^{DC}_{est}$, and half-space conductivity, $\sigma^{half}_{est}$. We compare performance of EM-decoupling for all four different conductivity models. Figures ~\ref{fig:estfund80ms} and ~\ref{fig:rawip80ms} shows estimated fundamental and raw IP responses, respectively, generated using the four conductivity models. The true fundamental response computed using $\siginf$ clearly shows two conductive anomalies. A similar conclusion can be drawn from the results using $\sigma^{EM}_{est}$ and $\sigma^{DC}_{est}$, whereas $\dip_{raw}[\sigma^{DC}_{est}]$ shows slightly greater artifacts near A1 than $\dip_{raw}[\sigma^{EM}_{est}]$. The A1 and A3 conductive anomalies are effectively removed in both cases (DC and EM conductivity) resulting in A1 being stronger anomaly than A3. As shown in Figure ~\ref{fig:emdecouple80ms} (a), A3 was stronger in the observation. The half-space conductivity however does a poor job at predicting the EM effects and the resultant raw IP data have numerous artifacts, especially at A1 and A3 where there are conductive blocks and where the IP data is overestimated. If these data are input to a 3D IP inversion, they produce strong artifacts from which incorrect conclusions can be drawn.
+
+\plot{emdecouple80ms}{width=\columnwidth}{ Plan maps of (a) observed (left panel), (b) estimated fundamental and (c) raw IP (right panel) at 80 ms. Conductivity model from TEM inversion, $\sigma^{EM}_{}est$, is used. }
+
+\plot{estfund80ms}{width=\columnwidth}{True and estimated fundamental responses at 80 ms. (a) True $\dip$; (b), (c), and (d) correspondingly indicate estimated fundamental responses with use of EM, DC, and half-space conductivity.}
+\plot{rawip80ms}{width=\columnwidth}{True and estimated IP responses. (a) True $\dip$ (b), (c), and (d) correspondingly indicate estimated raw IP responses with use of EM, DC, and half-space conductivity.}
+
+%% ==================================================================
+%% SECTION 3.XXX
+\subsection{IP inversion}
+To recover 3D pseudo-chargeability, we invert raw IP data sets at 80 ms obtained using the two estimated conductivity models: $\sigma^{EM}_{est}$ and $\sigma^{DC}_{est}$. These conductivity are used to generate the linearized sensitivities as outlined in \cite{Kang2016}. The linear system is inverted with the added constraint of positivity on the pseudo-chargeability \cite[]{doug1994}. Similar to the previous DC inversion, the depth weighting is used. The reference model, $\mathbf{m}_{ref}$ is set zero, and uncertainty is set to 5$\%$ of the maximum amplitude of IP data (0.05 $max(\dip_{raw})$) at 80 ms. The recovered 3D pseudo-chargeability models from $\dip_{raw}[\sigma^{DC}_{est}]$ and $\dip_{raw}[\sigma^{EM}_{est}]$ are shown in Figure ~\ref{fig:ipinv}. The two true chargeable bodies, A2 and A3, are well imaged without significant artifacts for both cases. The pseudo-chargeability model from $\dip_{raw}[\sigma^{EM}_{est}]$ shows stronger artifacts near A1 as expected from $\dip_{raw}[\sigma^{EM}_{est}]$. Unit of the pseudo-chargeability is $mV$, because of the unit of inverted raw IP data ($mV$).
+
+\plot{ipinv}{width=\columnwidth}{Recovered chargeability models from IP inversions. Raw IP data computed using estimated conductivity model from (a) DC and (b) TEM inversions are used, respectively.}
+%%% =================================================================
+%%% SECTION 4.
+%%% =================================================================
+\section{Discussion}
+Conductivity inversion is the crucial part of the TEM-IP inversion workflow, and for the time domain EIP case we have two types of data: a) DC (late on-time) and b) TEM (early off-time). Particular challenge is at b) in practice because we do not know which time channels to invert (i.e. EM-dominant time); we assumed that this is known in this study. Therefore, this issue should be carefully investigated as a future study. Fortunately, we have DC data: minor EM effects, but full build-up of polarization charge meaning $\sigma_0=\siginf(1-\eta)$. Often $\eta$ is small ($\ll$1) hence $\sigma_0\approx \siginf$. Within this assumption both DC and TEM data can simultaneously inverted, and by making sure good fit of the DC data in the inversion, false fit of IP-contaminated TEM data can be prevented. Further, IP-decoupling can be considered in the same manner with EM-decoupling. For this, we need to fit multiple time channel of IP datum using spectral IP inversion \cite[]{Yuval1997,Fiandaca2012}, subtract from the observation to obtain EM data. Re-inverting the corrected EM data will provide conductivity model closer to $\siginf$.
+
+On the other hand, for a practical use of the workflow, simply the estimated conductivity from DC inversion, $\sigma^{DC}_{est}$ can be used without TEM inversion; still, a TEM simulation is required for the EM-decoupling.
+As shown in Figure ~\ref{fig:rawip80ms}, performance of the EM-decoupling with the $\sigma^{DC}_{est}$ was good, whereas artifacts at A1 was noticeable. These artifacts was far diminished at 130 ms as shown in Figure ~\ref{fig:rawip130ms}. Figure ~\ref{fig:a3decays} shows time decaying curves of the observed, estimated fundamental and raw IP data at A3 (conductive and chargeable). $\dip_{raw}[\sigma^{DC}_{est}]$ converges to true $\dip$ after 130 ms.
+Thus, even using the suggested workflow without the TEM inversion could be effective for obtaining conventional pseudo-chargeability model.
+
+However, $\dip_{raw}[\sigma^{EM}_{est}]$ converges to true $\dip$ after 20 ms resulting in broader time band of the raw IP data compared to  $\dip_{raw}[\sigma^{DC}_{est}]$. This will be crucial factor for recovering intrinsic IP parameters such as $\eta$ and $\tau$ by spectral IP inversion, because capturing more information in IP decay due to the greater time band will provide less non-unique inverse problem for multiple parameters such as $\eta(x, y, z)$ and $\tau(x, y,z)$ \cite[]{Lajaunie2016}.
+
+\plot{rawip130ms}{width=\columnwidth}{True and estimated IP responses at 130 ms. (a) True $\dip$ (b), (c), and (d) correspondingly indicate estimated raw IP responses with use of EM, DC, and half-space conductivity.}
+\plot{a3decays}{width=\columnwidth}{Time decaying curves of the observed, fundamental and IP data at A3. (a) True and estimated fundamental responses with the observed data. (b) True and raw IP responses with the observed data.}
+
+%%% =================================================================
+%%% SECTION 5.
+%%% =================================================================
+\section{Conclusions}
+In this study, we have applied the TEM-IP inversion workflow to a galvanic source TEM example. First, we inverted DC data and recovered a 3D conductivity. Then, by using that as a reference model, we inverted six of the earliest time channels of TEM data, which have minor IP-contamination, and recovered a 3D conductivity. These early TEM data often have been thrown away because they are considered as ``noise''. However, by considering them as ``signal'' and inverting them, we recovered a better conductivity model. Second, the recovered conductivity, $\sigma^{EM}_{est}$ was used in our EM-decoupling procedure to generate raw IP data. The procedure was effective for removing EM induction in the observations, especially for regions close A1 and A3, which had significant conductivity responses. Third, we inverted the raw IP data set generated from the TEM conductivity model using conventional 3D IP inversion. The recovered pseudo-chargeability successfully imaged two true chargeable anomalies A2 and A3. This demonstrates that our TEM-IP inversion workflow can be effective for recovering a good estimate of electrical conductivity, for removing EM signals from IP data, and for obtaining a 3D distribution of pseudo-chargeability.
+
+%% ==================================================================
+\bibliographystyle{seg}  % style file is seg.bst
+\bibliography{reference}
+
+\append[inversionmethod]{Inversion methodology}
+% TODO: Paraphrase
+Two different inversion algorithms are used in this study: DC-IP (\SimPEG) and TEM (H3DTD), but they have similar theoretical backgrounds. We briefly explain some import details of the inversion methodology.
+The inversion model, $\mathbf{m}$ is recovered by minimizing a global objective function, $\phi$, subject to some constraints (e.g. $\mathbf{m} > 0$ for the IP inversion)
+\begin{equation}
+\min \phi = \phi_d + \beta \phi_m,
+\label{phi}
+\end{equation}
+%
+where $\phi_d$ is the data misfit function and $\phi_m$ contains the model regularization, and the trade-off parameter $\beta$ balances the two terms.
+The data misfit function is a measure of how well the recovered model reproduced the observed data calculated by:
+%
+\begin{equation}
+\phi_d = \left\| \mathbf{W}_d (\mathbf{d}^{pred}(\mathbf{m}) - \mathbf{d}) \right\|^2_2.
+\label{phid}
+\end{equation}
+%
+The diagonal matrix $\mathbf{W}_d$ contains the reciprocal of data uncertainties,
+: $(\mathbf{W}_d)_{j,j}=\varepsilon^{-1}_j$, where subscript $j$ indicates $j$-th datum.
+. The global objective function is minimized such that the data misfit is equal to the desired misfit, $\phi_d^*$. The desired misfit for an independent Gaussian noise distribution with zero mean has an expected value equal to the number of data. The goal is to find a model that has the target data misfit and has a level of structural complexity described by a model objective function $\phi_m$:
+%
+\begin{equation}
+\phi_m = \alpha_s \left\|\mathbf{W}_s (\mathbf{m} - \mathbf{m}_{ref})\right\|^2_2 + \sum_{i=1}^{3} \alpha_i \left\|\mathbf{W}_i (\mathbf{m} - \mathbf{m}_{ref})\right\|^2_2,
+\label{phim}
+\end{equation}
+%
+where $i = 1, 2, 3$ denotes the three spatial directions ($x, y, z$) and $\mathbf{m}_{ref}$ is a reference model. The first term in $\phi_m$ controls how close the model is to the reference model, and the last three terms dictate smoothness in each spatial direction. The four $\alpha$ values regulate the relative importance of each term and balance units. The $\mathbf{W}$ matrices can contain additional weighting or prior information (e.g. depth weighting \cite{Li1996}). In addition, $\mathbf{W}_i$ contains the discretized derivative with respect to each of the spatial directions. Details on how to form each matrix in the model objective function are given in the appendix of \cite{DougTutorial}.
+
+\end{document}
